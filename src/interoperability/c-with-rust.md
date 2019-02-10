@@ -29,7 +29,7 @@ void cool_function(int i, char c, CoolStruct* cs);
 
 When translated to Rust, this interface would look as such:
 
-```rust
+```rust,ignore
 /* File: cool_bindings.rs */
 #[repr(C)]
 pub struct CoolStruct {
@@ -46,27 +46,27 @@ pub extern "C" fn cool_function(
 
 Let's take a look at this definition one piece at a time, to explain each of the parts.
 
-```rust
+```rust,ignore
 #[repr(C)]
 pub struct CoolStruct { ... }
 ```
 
 By default, Rust does not guarantee order, padding, or the size of data included in a `struct`. In order to guarantee compatibility with C code, we include the `#[repr(C)]` attribute, which instructs the Rust compiler to always use the same rules C does for organizing data within a struct.
 
-```rust
+```rust,ignore
 pub x: cty::c_int,
 pub y: cty::c_int,
 ```
 
-Due to the flexibility of how C or C++ defines an `int` or `char`, it is recommended to use primative data types defined in `cty`, which will map types from C to types in Rust
+Due to the flexibility of how C or C++ defines an `int` or `char`, it is recommended to use primitive data types defined in `cty`, which will map types from C to types in Rust
 
-```rust
+```rust,ignore
 pub extern "C" fn cool_function( ... );
 ```
 
 This statement defines the signature of a function that uses the C ABI, called `cool_function`. By defining the signature without defining the body of the function, the definition of this function will need to be provided elsewhere, or linked into the final library or binary from a static library.
 
-```rust
+```rust,ignore
     i: cty::c_int,
     c: cty::c_char,
     cs: *mut CoolStruct
@@ -88,7 +88,7 @@ Rather than manually generating these interfaces, which may be tedious and error
 4. `bindgen` will produce the generated Rust code to the output of the terminal window. This file may be piped to a file in your project, such as `bindings.rs`. You may use this file in your Rust project to interact with C/C++ code compiled and linked as an external library
 
 [bindgen]: https://github.com/rust-lang-nursery/rust-bindgen
-[bindgen user's manual]: https://rust-lang-nursery.github.io/rust-bindgen/
+[bindgen user's manual]: https://rust-lang.github.io/rust-bindgen/
 
 ## Building your C/C++ code
 

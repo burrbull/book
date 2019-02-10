@@ -22,7 +22,7 @@ The goals of this book are:
   project?
 
 This book tries to be as general as possible but to make things easier for both
-the readers and the writers it uses the ARM Cortex-M architectures in all its
+the readers and the writers it uses the ARM Cortex-M architecture in all its
 examples. However, the book assumes that the reader is not familiar with this
 particular architecture and explains details particular to this architecture
 where required.
@@ -56,10 +56,9 @@ If you are unfamiliar with anything mentioned above or if you want more informat
 | Topic        | Resource | Description |
 |--------------|----------|-------------|
 | Rust         | [Rust Book 2018 Edition](https://doc.rust-lang.org/book/2018-edition/index.html) | If you are not yet comfortable with Rust, we highly suggest reading the this book. |
-| Rust         | [Rust Book Second Edition](https://doc.rust-lang.org/book/second-edition) | - |
-| Rust, Embedded | [Embedded Rust Bookshelf](https://rust-embedded.github.io/bookshelf/) | Here you can find several other resources provided by Rust's Embedded Working Group. |
-| Rust, Embedded | [Embedonomicon](https://rust-embedded.github.io/embedonomicon/) | The nitty gritty details when doing embedded programming in Rust. |
-| Rust, Embedded | [embedded FAQ](https://rust-embedded.github.io/bookshelf/faq.html) | Frequently asked questions about Rust in an embedded context. |
+| Rust, Embedded | [Embedded Rust Bookshelf](https://docs.rust-embedded.org) | Here you can find several other resources provided by Rust's Embedded Working Group. |
+| Rust, Embedded | [Embedonomicon](https://docs.rust-embedded.org/embedonomicon/) | The nitty gritty details when doing embedded programming in Rust. |
+| Rust, Embedded | [embedded FAQ](https://docs.rust-embedded.org/faq.html) | Frequently asked questions about Rust in an embedded context. |
 | Interrupts | [Interrupt](https://en.wikipedia.org/wiki/Interrupt) | - |
 | Memory-mapped IO/Peripherals | [Memory-mapped I/O](https://en.wikipedia.org/wiki/Memory-mapped_I/O) | - |
 | SPI, UART, RS232, USB, I2C, TTL | [Stack Exchange about SPI, UART, and other interfaces](https://electronics.stackexchange.com/questions/37814/usart-uart-rs232-usb-spi-i2c-ttl-etc-what-are-all-of-these-and-how-do-th) | - |
@@ -83,18 +82,13 @@ for the purpose of following the examples in this book.
 
 [STM32F3DISCOVERY]: http://www.st.com/en/evaluation-tools/stm32f3discovery.html
 
-> **HEADS UP** Until the official release of this book, which is planned to
-> coincide with the 2018 edition release of the Rust Programming Language,
-> expect the sections of this book to change quite a bit. We recommend
-> bookmarking the root of this book instead of any specific version.
-
 ## Contributing to This Book
 
 The work on this book is coordinated in [this repository] and is mainly
 developed by the [resources team].
 
 [this repository]: https://github.com/rust-embedded/book
-[resources team]: https://github.com/rust-embedded/wg
+[resources team]: https://github.com/rust-embedded/wg#the-resources-team
 
 If you have trouble following the instructions in this book or find that some
 section of the book is not clear enough or hard to follow then that's a bug and

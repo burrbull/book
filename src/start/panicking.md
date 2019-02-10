@@ -34,7 +34,7 @@ that define the `#[panic_handler]` function. Some examples include:
 [`panic-itm`]: https://crates.io/crates/panic-itm
 [`panic-semihosting`]: https://crates.io/crates/panic-semihosting
 
-You may able to find even more crates searching for the [`panic-handler`]
+You may be able to find even more crates searching for the [`panic-handler`]
 keyword on crates.io.
 
 [`panic-handler`]: https://crates.io/keywords/panic-handler
@@ -45,7 +45,7 @@ an application as a single line of code is not only useful as documentation but
 can also be used to change the panicking behavior according to the compilation
 profile. For example:
 
-``` rust
+``` rust,ignore
 #![no_main]
 #![no_std]
 
@@ -81,7 +81,7 @@ use cortex_m_rt::entry;
 fn main() -> ! {
     let xs = [0, 1, 2];
     let i = xs.len() + 1;
-    let y = xs[i]; // out of bounds access
+    let _y = xs[i]; // out of bounds access
 
     loop {}
 }

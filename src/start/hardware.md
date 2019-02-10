@@ -79,7 +79,23 @@ MEMORY
 }
 ```
 
-There's no step three. You can now cross compile programs using `cargo build`
+Make sure the `debug::exit()` call is commented out or removed, it is used
+only for running in QEMU.
+
+``` rust
+#[entry]
+fn main() -> ! {
+    hprintln!("Hello, world!").unwrap();
+
+    // exit QEMU
+    // NOTE do not run this on hardware; it can corrupt OpenOCD state
+    // debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}
+```
+
+You can now cross compile programs using `cargo build`
 and inspect the binaries using `cargo-binutils` as you did before. The
 `cortex-m-rt` crate handles all the magic required to get your chip running,
 as helpfully, pretty much all Cortex-M CPUs boot in the same fashion.
@@ -93,8 +109,8 @@ $ cargo build --example hello
 Debugging will look a bit different. In fact, the first steps can look different
 depending on the target device. In this section we'll show the steps required to
 debug a program running on the STM32F3DISCOVERY. This is meant to serve as a
-reference; for device specific about debugging check out the [New Book
-(temporary name)](https://github.com/rust-embedded/new-book).
+reference; for device specific information about debugging check out [the
+Debugonomicon](https://github.com/rust-embedded/debugonomicon).
 
 As before we'll do remote debugging and the client will be a GDB process. This
 time, however, the server will be OpenOCD.
@@ -277,7 +293,7 @@ set print asm-demangle on
 
 # detect unhandled exceptions, hard faults and panics
 break DefaultHandler
-break UserHardFault
+break HardFault
 break rust_begin_unwind
 
 monitor arm semihosting enable

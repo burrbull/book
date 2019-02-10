@@ -14,7 +14,7 @@ any dependencies.
 Create a new `cargo` project as usual.
 
 There are flags to tell `cargo` to emit a systems library, instead of
-it's regular rust target.
+its regular rust target.
 This also allows you to set a different output name for your library,
 if you want it to differ from the rest of your crate.
 
@@ -51,7 +51,7 @@ documented [here](https://doc.rust-lang.org/reference/items/external-blocks.html
 
 Putting these parts together, you get a function that looks roughly like this.
 
-```rust
+```rust,ignore
 #[no_mangle]
 pub extern "C" fn rust_function() {
 
@@ -77,7 +77,7 @@ the function signatures.
 
 Every function in your Rust-ffi API needs to have a corresponding header function.
 
-```rust
+```rust,ignore
 #[no_mangle]
 pub extern "C" fn rust_function() {}
 ```

@@ -1,5 +1,3 @@
-> **⚠️: This section was last checked on 2018-09-13
-
 # Linux
 
 Here are the installation commands for a few Linux distributions.
@@ -22,7 +20,7 @@ Here are the installation commands for a few Linux distributions.
 <!-- QEMU 2.11.1 -->
 
 ``` console
-$ sudo apt-get install \
+$ sudo apt install \
   gdb-multiarch \
   openocd \
   qemu-system-arm
@@ -39,7 +37,7 @@ $ sudo apt-get install \
 <!-- QEMU 2.0.0 (?) -->
 
 ``` console
-$ sudo apt-get install \
+$ sudo apt install \
   gdb-arm-none-eabi \
   openocd \
   qemu-system-arm

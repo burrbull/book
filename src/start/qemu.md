@@ -129,7 +129,7 @@ to mark the entry point of the program. As we are not using the standard `main`
 interface we need another way to indicate the entry point of the program and
 that'd be `#[entry]`.
 
-[`#[entry]`]: https://rust-embedded.github.io/cortex-m-rt/0.6.1/cortex_m_rt_macros/fn.entry.html
+[`#[entry]`]: https://docs.rs/cortex-m-rt-macros/latest/cortex_m_rt_macros/attr.entry.html
 [`cortex-m-rt`]: https://crates.io/crates/cortex-m-rt
 
 `fn main() -> !`. Our program will be the *only* process running on the target
@@ -284,8 +284,8 @@ Reset:
      430:       bl      #0x1c
      434:       b       #-0x4 <Reset+0x34>
 
-UserHardFault_:
-     436:       b       #-0x4 <UserHardFault_>
+HardFault_:
+     436:       b       #-0x4 <HardFault_>
 
 UsageFault:
      438:       b       #-0x4 <UsageFault>
@@ -417,7 +417,7 @@ $ head -n3 .cargo/config
 ``` toml
 [target.thumbv7m-none-eabi]
 # uncomment this to make `cargo run` execute programs on QEMU
-runner = ["qemu-system-arm", "-cpu", "cortex-m3", "-machine", "lm3s6965evb", "-nographic", "-semihosting-config", "enable=on,target=native", "-kernel"]
+runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"
 ```
 
 This runner only applies to the `thumbv7m-none-eabi` target, which is our

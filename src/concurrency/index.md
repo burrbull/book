@@ -52,7 +52,7 @@ because without taking special care, you might trigger a race condition,
 where your access to the variable is interrupted halfway through by an
 interrupt which also accesses that variable.
 
-[`static mut`]: https://doc.rust-lang.org/book/second-edition/ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable
+[`static mut`]: https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable
 
 For an example of how this behaviour can cause subtle errors in your code,
 consider an embedded program which counts rising edges of some input signal
@@ -68,10 +68,10 @@ fn main() -> ! {
     loop {
         let state = read_signal_level();
         if state && !last_state {
-            last_state = state;
             // DANGER - Not actually safe! Could cause data races.
             unsafe { COUNTER += 1 };
         }
+        last_state = state;
     }
 }
 
@@ -109,12 +109,12 @@ fn main() -> ! {
     loop {
         let state = read_signal_level();
         if state && !last_state {
-            last_state = state;
             // New critical section ensures synchronised access to COUNTER
             cortex_m::interrupt::free(|_| {
                 unsafe { COUNTER += 1 };
             });
         }
+        last_state = state;
     }
 }
 
@@ -172,10 +172,10 @@ fn main() -> ! {
     loop {
         let state = read_signal_level();
         if state && !last_state {
-            last_state = state;
             // Use `fetch_add` to atomically add 1 to COUNTER
             COUNTER.fetch_add(1, Ordering::Relaxed);
         }
+        last_state = state;
     }
 }
 
@@ -254,10 +254,10 @@ fn main() -> ! {
     loop {
         let state = read_signal_level();
         if state && !last_state {
-            last_state = state;
             // No unsafe here!
             interrupt::free(|cs| COUNTER.increment(cs));
         }
+        last_state = state;
     }
 }
 
@@ -353,10 +353,10 @@ fn main() -> ! {
     loop {
         let state = read_signal_level();
         if state && !last_state {
-            last_state = state;
             interrupt::free(|cs|
                 COUNTER.borrow(cs).set(COUNTER.borrow(cs).get() + 1));
         }
+        last_state = state;
     }
 }
 
@@ -448,14 +448,13 @@ fn main() -> ! {
         });
 
         if state && !last_state {
-            last_state = state;
-
             // Set PA1 high if we've seen a rising edge on PA0.
             interrupt::free(|cs| {
                 let gpioa = MY_GPIO.borrow(cs).borrow();
                 gpioa.as_ref().unwrap().odr.modify(|_, w| w.odr1().set_bit());
             });
         }
+        last_state = state;
     }
 }
 
@@ -474,7 +473,7 @@ fn timer() {
 
 That's quite a lot to take in, so let's break down the important lines.
 
-```rust
+```rust,ignore
 static MY_GPIO: Mutex<RefCell<Option<stm32f405::GPIOA>>> =
     Mutex::new(RefCell::new(None));
 ```
@@ -488,7 +487,7 @@ to something empty, and only later actually move the variable in. We cannot
 access the peripheral singleton statically, only at runtime, so this is
 required.
 
-```rust
+```rust,ignore
 interrupt::free(|cs| MY_GPIO.borrow(cs).replace(Some(dp.GPIOA)));
 ```
 
@@ -496,7 +495,7 @@ Inside a critical section we can call `borrow()` on the mutex, which gives us
 a reference to the `RefCell`. We then call `replace()` to move our new value
 into the `RefCell`.
 
-```rust
+```rust,ignore
 interrupt::free(|cs| {
     let gpioa = MY_GPIO.borrow(cs).borrow();
     gpioa.as_ref().unwrap().odr.modify(|_, w| w.odr1().set_bit());
