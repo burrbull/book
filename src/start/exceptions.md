@@ -37,7 +37,7 @@ fn SysTick() {
 ```
 
 As you may know, using `static mut` variables in a function makes it
-*non-reentrant*. It's undefined behavior to call a non-reentrant function,
+[*non-reentrant*](https://en.wikipedia.org/wiki/Reentrancy_(computing)). It's undefined behavior to call a non-reentrant function,
 directly or indirectly, from more than one exception / interrupt handler or from
 `main` and one or more exception / interrupt handlers.
 
@@ -251,6 +251,7 @@ ResetTrampoline:
  800094c:       b       #-0x4 <ResetTrampoline+0xa>
 ```
 
-You'll see that a load operation (`ldr r0, [r0]` ) caused the exception and that
-the value of the register `r0` was `0x3fff_fffe` at that time. This value
-matches the `r0` field of `ExceptionFrame`.
+You can lookup the value of the program counter `0x0800094a` in the dissassembly.
+You'll see that a load operation (`ldr r0, [r0]` ) caused the exception.
+The `r0` field of `ExceptionFrame` will tell you the value of register `r0`
+was `0x3fff_fffe` at that time.

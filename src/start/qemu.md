@@ -1,15 +1,15 @@
 # QEMU
 
 We'll start writing a program for the [LM3S6965], a Cortex-M3 microcontroller.
-We have chosen this as our initial target because it can be emulated using QEMU
+We have chosen this as our initial target because it [can be emulated](https://wiki.qemu.org/Documentation/Platforms/ARM#Supported_in_qemu-system-arm) using QEMU
 so you don't need to fiddle with hardware in this section and we can focus on
 the tooling and the development process.
 
 [LM3S6965]: http://www.ti.com/product/LM3S6965
 
-## A non standard Rust program
+## Creating a non standard Rust program
 
-We'll use the [`cortex-m-quickstart`] project template so go generate a new
+We'll use the [`cortex-m-quickstart`] project template to generate a new
 project from it.
 
 [`cortex-m-quickstart`]: https://github.com/rust-embedded/cortex-m-quickstart
@@ -73,7 +73,7 @@ $ mv cortex-m-quickstart-master app
 $ cd app
 ```
 
-OR you can browse to [`cortex-m-quickstart`], click the green "Clone or
+Or you can browse to [`cortex-m-quickstart`], click the green "Clone or
 download" button and then click "Download ZIP".
 
 Then fill in the placeholders in the `Cargo.toml` file as done in the second
@@ -133,7 +133,7 @@ that'd be `#[entry]`.
 [`cortex-m-rt`]: https://crates.io/crates/cortex-m-rt
 
 `fn main() -> !`. Our program will be the *only* process running on the target
-hardware so we don't want it to end! We use a divergent function (the `-> !`
+hardware so we don't want it to end! We use a [divergent function](https://doc.rust-lang.org/rust-by-example/fn/diverging.html) (the `-> !`
 bit in the function signature) to ensure at compile time that'll be the case.
 
 ### Cross compiling
