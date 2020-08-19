@@ -25,7 +25,7 @@ struct GpioConfig {
     periph: GPIO_CONFIG,
 }
 
-impl Gpio {
+impl GpioConfig {
     pub fn set_enable(&mut self, is_enabled: bool) {
         self.periph.modify(|_r, w| {
             w.enable().set_bit(is_enabled)
@@ -239,7 +239,7 @@ let pin_state = pulled_low.bit_is_set();
  * Example 3: Pulled Low input to Output, set high
  */
 let output_pin = pulled_low.into_enabled_output();
-output_pin.set_bit(false);
+output_pin.set_bit(true);
 
 // Can't do this, output pins don't have this interface!
 // output_pin.into_input_pull_down();

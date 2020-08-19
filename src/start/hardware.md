@@ -78,11 +78,14 @@ MEMORY
   RAM : ORIGIN = 0x20000000, LENGTH = 40K
 }
 ```
+> **NOTE**: If you for some reason changed the `memory.x` file after you had made
+> the first build of a specific build target, then do `cargo clean` before
+> `cargo build`, because `cargo build` may not track updates of `memory.x`.
 
 Make sure the `debug::exit()` call is commented out or removed, it is used
 only for running in QEMU.
 
-``` rust
+```rust,ignore
 #[entry]
 fn main() -> ! {
     hprintln!("Hello, world!").unwrap();
@@ -135,7 +138,7 @@ $ cat openocd.cfg
 # interfaces. At any time only one interface should be commented out.
 
 # Revision C (newer revision)
-source [find interface/stlink-v2-1.cfg]
+source [find interface/stlink.cfg]
 
 # Revision A and B (older revisions)
 # source [find interface/stlink-v2.cfg]
@@ -219,6 +222,11 @@ Breakpoint 1, main () at examples/hello.rs:15
 15          let mut stdout = hio::hstdout().unwrap();
 ```
 
+> **NOTE** If GDB blocks the terminal instead of hitting the breakpoint after
+> you issue the `continue` command above, you might want to double check that
+> the memory region information in the `memory.x` file is correctly set up
+> for your device (both the starts *and* lengths). 
+
 Advancing the program with `next` should produce the same results as before.
 
 ``` console
@@ -279,14 +287,14 @@ You can now exit GDB using the `quit` command.
 ```
 
 Debugging now requires a few more steps so we have packed all those steps into a
-single GDB script named `openocd.gdb`.
+single GDB script named `openocd.gdb`. The file was created during the `cargo generate` step, and should work without any modifications. Let's have a peak:
 
 ``` console
 $ cat openocd.gdb
 ```
 
 ``` text
-target remote :3333
+target extended-remote :3333
 
 # print demangled symbols
 set print asm-demangle on
@@ -304,7 +312,7 @@ load
 stepi
 ```
 
-Now running `<gdb> -x openocd.gdb $program` will immediately connect GDB to
+Now running `<gdb> -x openocd.gdb target/thumbv7em-none-eabihf/debug/examples/hello` will immediately connect GDB to
 OpenOCD, enable semihosting, load the program and start the process.
 
 Alternatively, you can turn `<gdb> -x openocd.gdb` into a custom runner to make

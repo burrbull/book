@@ -11,13 +11,13 @@
 
 We could make everything a public static, like this
 
-```rust
+```rust,ignore
 static mut THE_SERIAL_PORT: SerialPort = SerialPort;
 
 fn main() {
     let _ = unsafe {
         THE_SERIAL_PORT.read_speed();
-    }
+    };
 }
 ```
 
@@ -44,7 +44,7 @@ static mut PERIPHERALS: Peripherals = Peripherals {
 
 This structure allows us to obtain a single instance of our peripheral. If we try to call `take_serial()` more than once, our code will panic!
 
-```rust
+```rust,ignore
 fn main() {
     let serial_1 = unsafe { PERIPHERALS.take_serial() };
     // This panics!
@@ -60,7 +60,7 @@ This has a small runtime overhead because we must wrap the `SerialPort` structur
 
 Although we created our own `Peripherals` structure above, it is not necessary to do this for your code. the `cortex_m` crate contains a macro called `singleton!()` that will perform this action for you.
 
-```rust
+```rust,ignore
 #[macro_use(singleton)]
 extern crate cortex_m;
 
@@ -73,23 +73,24 @@ fn main() {
 
 [cortex_m docs](https://docs.rs/cortex-m/latest/cortex_m/macro.singleton.html)
 
-Additionally, if you use `cortex-m-rtfm`, the entire process of defining and obtaining these peripherals are abstracted for you, and you are instead handed a `Peripherals` structure that contains a non-`Option<T>` version of all of the items you define.
+Additionally, if you use [`cortex-m-rtic`](https://github.com/rtic-rs/cortex-m-rtic), the entire process of defining and obtaining these peripherals are abstracted for you, and you are instead handed a `Peripherals` structure that contains a non-`Option<T>` version of all of the items you define.
 
 ```rust,ignore
-// cortex-m-rtfm v0.3.x
-app! {
-    resources: {
-        static RX: Rx<USART1>;
-        static TX: Tx<USART1>;
+// cortex-m-rtic v0.5.x
+#[rtic::app(device = lm3s6965, peripherals = true)]
+const APP: () = {
+    #[init]
+    fn init(cx: init::Context) {
+        static mut X: u32 = 0;
+         
+        // Cortex-M peripherals
+        let core: cortex_m::Peripherals = cx.core;
+        
+        // Device specific peripherals
+        let device: lm3s6965::Peripherals = cx.device;
     }
 }
-fn init(p: init::Peripherals) -> init::LateResources {
-    // Note that this is now an owned value, not a reference
-    let usart1: USART1 = p.device.USART1;
-}
 ```
-
-[japaric.io rtfm v3](https://blog.japaric.io/rtfm-v3/)
 
 ## But why?
 
@@ -116,7 +117,7 @@ There are two important factors in play here:
 
 These two factors put together means that it is only possible to access the hardware if we have appropriately satisfied the borrow checker, meaning that at no point do we have multiple mutable references to the same hardware!
 
-```rust
+```rust,ignore
 fn main() {
     // missing reference to `self`! Won't work.
     // SerialPort::read_speed();

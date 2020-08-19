@@ -31,7 +31,7 @@ This behavior is pretty much intended and it's required to provide a feature:
 fn SysTick() {
     static mut COUNT: u32 = 0;
 
-    // `COUNT` has type `&mut u32` and it's safe to use
+    // `COUNT` has transformed to type `&mut u32` and it's safe to use
     *COUNT += 1;
 }
 ```
@@ -47,6 +47,12 @@ use `static mut` variables. How is this possible? This is possible because
 `exception` handlers can *not* be called by software thus reentrancy is not
 possible.
 
+> Note that the `exception` attribute transforms definitions of static variables
+> inside the function by wrapping them into `unsafe` blocks and providing us
+> with new appropriate variables of type `&mut` of the same name.
+> Thus we can derefence the reference via `*` to access the values of the variables without
+> needing to wrap them in an `unsafe` block.
+
 ## A complete example
 
 Here's an example that uses the system timer to raise a `SysTick` exception
@@ -57,12 +63,12 @@ times it has been called in the `COUNT` variable and then prints the value of
 > **NOTE**: You can run this example on any Cortex-M device; you can also run it
 > on QEMU
 
-``` rust
+```rust,ignore
 #![deny(unsafe_code)]
 #![no_main]
 #![no_std]
 
-extern crate panic_halt;
+use panic_halt as _;
 
 use core::fmt::Write;
 
@@ -82,6 +88,7 @@ fn main() -> ! {
     syst.set_clock_source(SystClkSource::Core);
     // this is configured for the LM3S6965 which has a default CPU clock of 12 MHz
     syst.set_reload(12_000_000);
+    syst.clear_current();
     syst.enable_counter();
     syst.enable_interrupt();
 
@@ -185,11 +192,11 @@ memory location.
 > `qemu-system-arm -machine lm3s6965evb` doesn't check memory loads and will
 > happily return `0 `on reads to invalid memory.
 
-``` rust
+```rust,ignore
 #![no_main]
 #![no_std]
 
-extern crate panic_halt;
+use panic_halt as _;
 
 use core::fmt::Write;
 use core::ptr;

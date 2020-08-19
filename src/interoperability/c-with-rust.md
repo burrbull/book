@@ -84,10 +84,10 @@ Rather than manually generating these interfaces, which may be tedious and error
 2. Write a `bindings.h` file, which `#include "..."`'s each of the files you gathered in step one
 3. Feed this `bindings.h` file, along with any compilation flags used to compile
   your code into `bindgen`. Tip: use `Builder.ctypes_prefix("cty")` /
-  `--ctypes-prefix=cty` to make the generated code `#![no_std]` compatible.
-4. `bindgen` will produce the generated Rust code to the output of the terminal window. This file may be piped to a file in your project, such as `bindings.rs`. You may use this file in your Rust project to interact with C/C++ code compiled and linked as an external library
+  `--ctypes-prefix=cty` and `Builder.use_core()` / `--use-core` to make the generated code `#![no_std]` compatible.
+4. `bindgen` will produce the generated Rust code to the output of the terminal window. This file may be piped to a file in your project, such as `bindings.rs`. You may use this file in your Rust project to interact with C/C++ code compiled and linked as an external library. Tip: don't forget to use the [`cty`](https://crates.io/crates/cty) crate if your types in the generated bindings are prefixed with `cty`.
 
-[bindgen]: https://github.com/rust-lang-nursery/rust-bindgen
+[bindgen]: https://github.com/rust-lang/rust-bindgen
 [bindgen user's manual]: https://rust-lang.github.io/rust-bindgen/
 
 ## Building your C/C++ code
@@ -120,7 +120,7 @@ For projects with limited dependencies or complexity, or for projects where it i
 
 In the simplest case of compiling a single C file as a dependency to a static library, an example `build.rs` script using the [`cc` crate] would look like this:
 
-```rust
+```rust,ignore
 extern crate cc;
 
 fn main() {

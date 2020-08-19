@@ -12,11 +12,11 @@ world!":
 
 [`cortex-m-semihosting`]: https://crates.io/crates/cortex-m-semihosting
 
-``` rust
+```rust,ignore
 #![no_main]
 #![no_std]
 
-extern crate panic_halt;
+use panic_halt as _;
 
 use cortex_m_rt::entry;
 use cortex_m_semihosting::hprintln;
@@ -63,11 +63,11 @@ QEMU process. Important: do **not** use `debug::exit` on hardware; this function
 can corrupt your OpenOCD session and you will not be able to debug more programs
 until you restart it.
 
-``` rust
+```rust,ignore
 #![no_main]
 #![no_std]
 
-extern crate panic_halt;
+use panic_halt as _;
 
 use cortex_m_rt::entry;
 use cortex_m_semihosting::debug;
@@ -101,11 +101,11 @@ For convenience, the `panic-semihosting` crate has an "exit" feature that when
 enabled invokes `exit(EXIT_FAILURE)` after logging the panic message to the host
 stderr.
 
-``` rust
+```rust,ignore
 #![no_main]
 #![no_std]
 
-extern crate panic_semihosting; // features = ["exit"]
+use panic_semihosting as _; // features = ["exit"]
 
 use cortex_m_rt::entry;
 use cortex_m_semihosting::debug;
@@ -130,3 +130,16 @@ panicked at 'assertion failed: `(left == right)`
 $ echo $?
 1
 ```
+
+**NOTE**: To enable this feature on `panic-semihosting`, edit your
+`Cargo.toml` dependencies section where `panic-semihosting` is specified with:
+
+``` toml
+panic-semihosting = { version = "VERSION", features = ["exit"] }
+```
+
+where `VERSION` is the version desired. For more information on dependencies
+features check the [`specifying dependencies`] section of the Cargo book.
+
+[`specifying dependencies`]:
+https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html

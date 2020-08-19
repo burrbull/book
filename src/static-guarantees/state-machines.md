@@ -60,7 +60,7 @@ struct GpioConfig {
     periph: GPIO_CONFIG,
 }
 
-impl Gpio {
+impl GpioConfig {
     pub fn set_enable(&mut self, is_enabled: bool) {
         self.periph.modify(|_r, w| {
             w.enable().set_bit(is_enabled)
@@ -68,7 +68,7 @@ impl Gpio {
     }
 
     pub fn set_direction(&mut self, is_output: bool) {
-        self.periph.modify(|r, w| {
+        self.periph.modify(|_r, w| {
             w.direction().set_bit(is_output)
         });
     }

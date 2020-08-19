@@ -70,15 +70,18 @@ unsafe impl GlobalAlloc for BumpPointerAlloc {
         // to use from within interrupts
         interrupt::free(|_| {
             let head = self.head.get();
-
+            let size = layout.size();
             let align = layout.align();
-            let res = *head % align;
-            let start = if res == 0 { *head } else { *head + align - res };
-            if start + align > self.end {
+            let align_mask = !(align - 1);
+
+            // move start up to the next alignment boundary
+            let start = (*head + align - 1) & align_mask;
+
+            if start + size > self.end {
                 // a null pointer signal an Out Of Memory condition
                 ptr::null_mut()
             } else {
-                *head = start + align;
+                *head = start + size;
                 start as *mut u8
             }
         })
@@ -118,7 +121,7 @@ fn on_oom(_layout: Layout) -> ! {
 
 Once all that is in place, the user can finally use the collections in `alloc`.
 
-``` rust
+```rust,ignore
 #[entry]
 fn main() -> ! {
     let mut xs = Vec::new();
@@ -140,7 +143,7 @@ as they are exact same implementation.
 `heapless` requires no setup as its collections don't depend on a global memory
 allocator. Just `use` its collections and proceed to instantiate them:
 
-``` rust
+```rust,ignore
 extern crate heapless; // v0.4.x
 
 use heapless::Vec;
@@ -233,8 +236,8 @@ capacity) than what relocatable collections can achieve.
 
 ### Worst Case Execution Time (WCET)
 
-If are building time sensitive applications or hard real time applications then
-you care, maybe a lot, about the worst case execution time of the different
+If you are building time sensitive applications or hard real time applications
+then you care, maybe a lot, about the worst case execution time of the different
 parts of your program.
 
 The `alloc` collections can reallocate so the WCET of operations that may grow
