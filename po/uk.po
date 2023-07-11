@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: src/SUMMARY.md:12
 msgid "Introduction"
@@ -477,6 +477,8 @@ msgid ""
 "The work on this book is coordinated in [this repository] and is mainly\n"
 "developed by the [resources team]."
 msgstr ""
+"Робота над цією книгою координується в [цьому сховищі][this repository]\n"
+"і в основному розробляється [командою ресурсів][resources team]."
 
 #: src/intro/index.md:105
 msgid ""
@@ -486,18 +488,23 @@ msgid ""
 "and\n"
 "it should be reported in [the issue tracker] of this book."
 msgstr ""
+"Якщо у вас виникли проблеми з дотриманням інструкцій з цієї книги\n"
+"або ви вважаєте, що якийсь розділ книги недостатньо зрозумілий\n"
+"або складний для виконання, то це помилка, і про неї слід повідомити\n"
+"в [трекері випуску][the issue tracker] цієї книги."
 
 #: src/intro/index.md:111
 msgid "Pull requests fixing typos and adding new content are very welcome!"
 msgstr ""
+"Запити на виправлення помилок і додавання нового матеріалу дуже вітаються!"
 
 #: src/intro/index.md:113
 msgid "## Re-using this material"
-msgstr ""
+msgstr "## Повторне використання цього матеріалу"
 
 #: src/intro/index.md:115
 msgid "This book is distributed under the following licenses:"
-msgstr ""
+msgstr "Ця книга розповсюджується за наступними ліцензіями:"
 
 #: src/intro/index.md:117
 msgid ""
@@ -507,10 +514,16 @@ msgid ""
 "* The written prose, pictures and diagrams contained within this book are "
 "licensed under the terms of the Creative Commons [CC-BY-SA v4.0] license."
 msgstr ""
+"* Зразки коду та окремі проекти Cargo, що містяться в цій книзі, ліцензовано "
+"відповідно до умов [MIT License] та [Apache License v2.0]. * Текст, малюнки "
+"та діаграми, що містяться в цій книзі, ліцензовані відповідно до умов "
+"ліцензії Creative Commons [CC-BY-SA v4.0]."
 
 #: src/intro/index.md:124
 msgid "TL;DR: If you want to use our text or images in your work, you need to:"
 msgstr ""
+"TL;DR: Якщо ви маєте намір використовувати наш текст або зображення у своїй "
+"роботі, вам потрібно:"
 
 #: src/intro/index.md:126
 msgid ""
@@ -520,22 +533,27 @@ msgid ""
 "* Indicate if you have changed the material in any way, and make any changes "
 "to our material available under the same licence"
 msgstr ""
+"* Надати відповідне посилання (тобто згадати цю книгу на своєму слайді та "
+"надати посилання на відповідну сторінку) \n"
+"* Надати посилання на ліцензію [CC-BY-SA v4.0]\n"
+"* Вказати, чи змінювали ви матеріал будь-яким чином, і зробити зміни в наші "
+"матеріали доступними за тією ж ліцензією"
 
 #: src/intro/index.md:130
 msgid "Also, please do let us know if you find this book useful!"
-msgstr ""
+msgstr "Також, будь ласка, повідомте нам, якщо ви знайдете цю книгу корисною!"
 
 #: src/intro/hardware.md:1
 msgid "# Meet Your Hardware"
-msgstr ""
+msgstr "# Зустрічайте залізо"
 
 #: src/intro/hardware.md:3
 msgid "Let's get familiar with the hardware we'll be working with."
-msgstr ""
+msgstr "Давайте ознайомимося з обладнанням, з яким ми будемо працювати."
 
 #: src/intro/hardware.md:5
 msgid "## STM32F3DISCOVERY (the \"F3\")"
-msgstr ""
+msgstr "## STM32F3DISCOVERY (скорочено \"F3\")"
 
 #: src/intro/hardware.md:7
 msgid ""
@@ -546,7 +564,7 @@ msgstr ""
 
 #: src/intro/hardware.md:11
 msgid "What does this board contain?"
-msgstr ""
+msgstr "Що міститься на цій платі?"
 
 #: src/intro/hardware.md:13
 msgid ""
@@ -585,6 +603,41 @@ msgid ""
 "an on-board programmer / debugger and is connected to the USB port named "
 "\"USB ST-LINK\"."
 msgstr ""
+"- Мікроконтролер [STM32F303VCT6](https://www.st.com/en/microcontrollers/"
+"stm32f303vc.html). Цей мікроконтролер маєn\n"
+"  - Одноядерний процесор ARM Cortex-M4F з апаратною підтримкою операцій з "
+"плаваючою комою\n"
+"    одинарної точності і максимальною тактовою частотою 72 МГц.\n"
+"\n"
+"  - 256 KiB флеш-пам'яті. (1 KiB = 10**24** байт)\n"
+"\n"
+"  - 48 KiB оперативної пам'яті.\n"
+"\n"
+"  - Різноманітні інтегровані периферійні пристрої, такі як таймери, I2C, SPI "
+"та USART.\n"
+"\n"
+"  - Піни вводу-виводу загального призначення (GPIO) та інші типи пінів, "
+"доступні через дворядні гребінки уздовж бокових стінок плати.\n"
+"  \n"
+"  - Інтерфейс USB, доступний через порт USB з позначкою \"USB USER\".\n"
+"\n"
+"- [Акселерометр](https://en.wikipedia.org/wiki/Accelerometer) у складі "
+"мікросхеми [LSM303DLHC](https://www.st.com/en/mems-and-sensors/lsm303dlhc."
+"html).\n"
+"\n"
+"- [Магнітометр](https://en.wikipedia.org/wiki/Magnetometer) у складі "
+"мікросхеми [LSM303DLHC](https://www.st.com/en/mems-and-sensors/lsm303dlhc."
+"html).\n"
+"\n"
+"- [Гіроскоп](https://en.wikipedia.org/wiki/Gyroscope) у складі мікросхеми "
+"[L3GD20](https://www.pololu.com/file/0J563/L3GD20.pdf).\n"
+"\n"
+"- 8 користувацьких світлодіодів, розташованих у формі компаса.\n"
+"\n"
+"- Другий мікроконтролер: [STM32F103](https://www.st.com/en/microcontrollers/"
+"stm32f103cb.html). Цей мікроконтролер фактично є частиною програматора/"
+"відладчика, розміщеного на платі і підключений до USB-порту з назвою \"USB "
+"ST-LINK\"."
 
 #: src/intro/hardware.md:37
 msgid ""
@@ -592,6 +645,9 @@ msgid ""
 "take a look at the [STMicroelectronics](https://www.st.com/en/evaluation-"
 "tools/stm32f3discovery.html) website."
 msgstr ""
+"Більш детальний перелік функцій та специфікацій плати можна знайти на сайті "
+"[STMicroelectronics] (https://www.st.com/en/evaluation-tools/"
+"stm32f3discovery.html)."
 
 #: src/intro/hardware.md:39
 msgid ""
@@ -601,6 +657,11 @@ msgid ""
 "section in the manual](https://www.st.com/resource/en/datasheet/stm32f303vc."
 "pdf)"
 msgstr ""
+"Застереження: будьте обережні, подаючи на плату зовнішні сигнали. Виводи "
+"мікроконтролера STM32F303VCT6 мають номінальну напругу 3,3 вольта. Для "
+"отримання додаткової інформації зверніться до розділу [6.2 Absolute maximum "
+"ratings section у Reference Manual](https://www.st.com/resource/en/datasheet/"
+"stm32f303vc.pdf)"
 
 #: src/intro/no-std.md:1
 msgid "# A `no_std` Rust Environment"
