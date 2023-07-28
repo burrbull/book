@@ -949,10 +949,12 @@ msgid ""
 "instructions\n"
 "can be found on the next page."
 msgstr ""
+"Текст нижче пояснює, чому ми використовуємо ці інструменти.\n"
+"Інструкції з установки можна знайти на наступній сторінці."
 
 #: src/intro/tooling.md:24
 msgid "## `cargo-generate` OR `git`"
-msgstr ""
+msgstr "`cargo-generate` АБО `git`"
 
 #: src/intro/tooling.md:26
 msgid ""
@@ -966,6 +968,17 @@ msgid ""
 "project name and the\n"
 "characteristics of your target hardware)."
 msgstr ""
+"Bare metal програми - це нестандартні (`no_std`) програми Rust, які "
+"потребують певних\n"
+"коригувань у процесі компонування, щоб отримати правильне розташування "
+"пам'яті програми.\n"
+"Для цього потрібні деякі додаткові файли (наприклад, скрипти "
+"компонувальника) та\n"
+"налаштування (наприклад, прапори компонувальника). Ми упакували їх для вас у "
+"шаблон,\n"
+"так що вам потрібно лише заповнити відсутню інформацію (наприклад, назву "
+"проекту та\n"
+"характеристики вашого цільового обладнання)."
 
 #: src/intro/tooling.md:33
 msgid ""
@@ -973,10 +986,13 @@ msgid ""
 "creating new Cargo projects from templates. You can also download the\n"
 "template using `git`, `curl`, `wget`, or your web browser."
 msgstr ""
+"Наш шаблон сумісний з `cargo-generate`: підкомандою Cargo для\n"
+"створення нових проектів Cargo з шаблонів. Ви також можете завантажити\n"
+"шаблон за допомогою `git`, `curl`, `wget` або вашого веб-браузера."
 
 #: src/intro/tooling.md:37
 msgid "## `cargo-binutils`"
-msgstr ""
+msgstr "## `cargo-binutils`"
 
 #: src/intro/tooling.md:39
 msgid ""
@@ -987,6 +1003,11 @@ msgid ""
 "LLVM versions of `objdump`, `nm` and `size` and are used for inspecting\n"
 "binaries."
 msgstr ""
+"`cargo-binutils` - це набір підкоманд Cargo, які спрощують використання\n"
+"інструментів LLVM, що постачаються з набором інструментів Rust. Ці "
+"інструменти включають\n"
+"LLVM-версії `objdump`, `nm` та `size` і використовуються для перевірки "
+"двійкових файлів."
 
 #: src/intro/tooling.md:44
 msgid ""
@@ -999,10 +1020,17 @@ msgid ""
 "because\n"
 "they both share the same LLVM backend."
 msgstr ""
+"Перевага використання цих інструментів замість GNU binutils полягає у тому, "
+"що (а) встановлення\n"
+"інструментів LLVM - це те саме встановлення однією командою\n"
+"(`rustup component add llvm-tools-preview`) незалежно від вашої ОС і (б) "
+"такі інструменти, як `objdump`, підтримують\n"
+"усі архітектури, які підтримує `rustc` - від ARM до x86_64 - тому що\n"
+"вони обидва мають однаковий бекенд LLVM."
 
 #: src/intro/tooling.md:50
 msgid "## `qemu-system-arm`"
-msgstr ""
+msgstr "## `qemu-system-arm`"
 
 #: src/intro/tooling.md:52
 msgid ""
@@ -1013,10 +1041,16 @@ msgid ""
 "can follow some parts of this book even if you don't have any hardware with "
 "you!"
 msgstr ""
+"QEMU - це емулятор. В даному випадку ми використовуємо варіант, який може "
+"повністю\n"
+"емулювати ARM-системи. Ми використовуємо QEMU для запуску вбудованих програм "
+"на хості.\n"
+"Завдяки цьому ви можете слідувати деяким частинам цієї книги,\n"
+"навіть якщо у вас немає з собою ніякого обладнання!"
 
 #: src/intro/tooling.md:56
 msgid "## GDB"
-msgstr ""
+msgstr "## GDB"
 
 #: src/intro/tooling.md:58
 msgid ""
@@ -1026,6 +1060,11 @@ msgid ""
 "may\n"
 "not even have LEDs to blink on your hardware!"
 msgstr ""
+"Налагоджувач є дуже важливим компонентом вбудованої розробки, оскільки ви не "
+"завжди\n"
+"можете дозволити собі розкіш реєструвати події на консолі хоста. У деяких "
+"випадках\n"
+"у вас може навіть не бути світлодіодів, які блимають на вашому обладнанні!"
 
 #: src/intro/tooling.md:62
 msgid ""
@@ -1035,10 +1074,15 @@ msgid ""
 "to\n"
 "the target hardware, so currently we recommend that you use GDB."
 msgstr ""
+"Загалом, LLDB працює так само добре, як і GDB, коли мова йде про "
+"налагодження, але ми не знайшли\n"
+"в LLDB аналог команди GDB `load`, яка завантажує програму на цільове "
+"обладнання,\n"
+"тому наразі ми рекомендуємо використовувати GDB."
 
 #: src/intro/tooling.md:66 src/intro/install/windows.md:17
 msgid "## OpenOCD"
-msgstr ""
+msgstr "## OpenOCD"
 
 #: src/intro/tooling.md:68
 msgid ""
@@ -1050,6 +1094,14 @@ msgid ""
 "on your laptop/PC and translates between GDB's TCP/IP based remote debug\n"
 "protocol and ST-Link's USB based protocol."
 msgstr ""
+"GDB не може безпосередньо спілкуватися з налагоджувальним обладнанням ST-"
+"Link\n"
+"на вашій платі STM32F3DISCOVERY. Йому потрібен транслятор, і Open On-Chip "
+"Debugger,\n"
+"OpenOCD, є таким транслятором. OpenOCD - це програма, яка працює\n"
+"на вашому ноутбуці/ПК і перекладає між протоколом віддаленого налагодження "
+"GDB на основі TCP/IP\n"
+"і протоколом ST-Link на основі USB."
 
 #: src/intro/tooling.md:74
 msgid ""
@@ -1059,6 +1111,9 @@ msgid ""
 "STM32F3DISCOVERY\n"
 "development board:"
 msgstr ""
+"OpenOCD також виконує іншу важливу роботу в рамках трансляції\n"
+"для налагодження мікроконтролера на базі ARM Cortex-M на вашій платі для "
+"розробки STM32F3DISCOVERY:"
 
 #: src/intro/tooling.md:77
 msgid ""
@@ -1072,16 +1127,27 @@ msgid ""
 "  * etc.\n"
 "* It also knows how to erase and write to the microcontroller's FLASH"
 msgstr ""
+"* Він вміє взаємодіяти з регістрами мапування пам'яті, що використовуються\n"
+"  налагоджувальною периферією ARM CoreSight. Саме ці регістри CoreSight "
+"дозволяють здійснювати:\n"
+"  * Маніпуляції з точками зупинки/спостереження\n"
+"  * Читання і запис регістрів процесора\n"
+"  * Виявлення, коли процесор був зупинений через налагоджувальну подію\n"
+"  * Продовження виконання процесора після виникнення налагоджувальної події\n"
+"  * та інше.\n"
+"* Він також вміє стирати і записувати у FLASH мікроконтролера"
 
 #: src/intro/install.md:1
 msgid "# Installing the tools"
-msgstr ""
+msgstr "# Встановлення інструментів"
 
 #: src/intro/install.md:3
 msgid ""
 "This page contains OS-agnostic installation instructions for a few of the "
 "tools:"
 msgstr ""
+"Ця сторінка містить інструкції для встановлення деяких з утиліт незалежно "
+"віз ОС:"
 
 #: src/intro/install.md:5
 msgid "### Rust Toolchain"
@@ -1092,6 +1158,8 @@ msgid ""
 "Install rustup by following the instructions at [https://rustup.rs](https://"
 "rustup.rs)."
 msgstr ""
+"Встановіть rustup, дотримуючись інструкцій на [https://rustup.rs](https://"
+"rustup.rs)."
 
 #: src/intro/install.md:9
 msgid ""
@@ -1118,6 +1186,14 @@ msgid ""
 "board used for the examples in this book, use the `thumbv7em-none-eabihf` "
 "target."
 msgstr ""
+"З міркувань пропускної здатності та використання диска типова інсталяція "
+"підтримує\n"
+"лише нативну компіляцію. Щоб додати підтримку перехресної компіляції для "
+"архітектури ARM Cortex-M,\n"
+"виберіть одну з наведених нижче цілей компіляції. Для плати "
+"STM32F3DISCOVERY,\n"
+"яка використовується у прикладах у цій книзі, використовуйте ціль `thumbv7em-"
+"none-eabihf`."
 
 #: src/intro/install.md:22
 msgid "Cortex-M0, M0+, and M1 (ARMv6-M architecture):"
@@ -1925,13 +2001,14 @@ msgstr ""
 
 #: src/start/qemu.md:89
 msgid "## Program Overview"
-msgstr ""
+msgstr "## Огляд програми"
 
 #: src/start/qemu.md:91
 msgid ""
 "For convenience here are the most important parts of the source code in `src/"
 "main.rs`:"
 msgstr ""
+"Для зручності наведемо найважливіші частини вихідного коду в `src/main.rs`:"
 
 #: src/start/qemu.md:93
 msgid ""
@@ -1951,6 +2028,21 @@ msgid ""
 "}\n"
 "```"
 msgstr ""
+"```rust,ignore\n"
+"#![no_std]\n"
+"#![no_main]\n"
+"\n"
+"use panic_halt as _;\n"
+"\n"
+"use cortex_m_rt::entry;\n"
+"\n"
+"#[entry]\n"
+"fn main() -> ! {\n"
+"    loop {\n"
+"        // ваш код міститься тут\n"
+"    }\n"
+"}\n"
+"```"
 
 #: src/start/qemu.md:109
 msgid ""
@@ -1958,6 +2050,8 @@ msgid ""
 "a\n"
 "closer look."
 msgstr ""
+"Ця програма дещо відрізняється від стандартної програми Rust,\n"
+"тож давайте розглянемо її детальніше."
 
 #: src/start/qemu.md:112
 msgid ""
@@ -1965,6 +2059,9 @@ msgid ""
 "crate,\n"
 "`std`. Instead it will link to its subset: the `core` crate."
 msgstr ""
+"`#![no_std]` вказує на те, що ця програма *не буде* лінкуватися зі "
+"стандартним крейтом `std`.\n"
+"Натомість вона буде посилатися на його підмножину: крейт `core`."
 
 #: src/start/qemu.md:115
 msgid ""
@@ -1975,6 +2072,11 @@ msgid ""
 "requires\n"
 "nightly."
 msgstr ""
+"`#![no_main]` вказує на те, що ця програма не використовуватиме стандартний "
+"інтерфейс `main`,\n"
+"який використовується у більшості програм Rust. Основною причиною "
+"використання `no_main` є те,\n"
+"що використання інтерфейсу `main` у контексті `no_std` потребує nightly."
 
 #: src/start/qemu.md:120
 msgid ""
@@ -1983,6 +2085,9 @@ msgid ""
 "the\n"
 "[Panicking](panicking.md) chapter of the book."
 msgstr ""
+"`use panic_halt as _;`. Цей крейт надає `panic_handler`, який визначає "
+"поведінку програми у разі паніки.\n"
+"Ми розглянемо це більш детально у розділі [Паніка](panicking.md) цієї книги ."
 
 #: src/start/qemu.md:124
 msgid ""
@@ -1994,6 +2099,12 @@ msgid ""
 "and\n"
 "that'd be `#[entry]`."
 msgstr ""
+"[`#[entry]`][entry] - це атрибут, наданий крейтом [`cortex-m-rt`], який "
+"використовується\n"
+"для позначення точки входу у програму. Оскільки ми не використовуємо "
+"стандартний інтерфейс `main`,\n"
+"нам потрібен інший спосіб позначення точки входу у програму, і це буде "
+"`#[entry]`."
 
 #: src/start/qemu.md:132
 msgid ""
@@ -2003,10 +2114,17 @@ msgid ""
 "doc.rust-lang.org/rust-by-example/fn/diverging.html) (the `-> !`\n"
 "bit in the function signature) to ensure at compile time that'll be the case."
 msgstr ""
+"`fn main() -> !`. Наша програма буде *єдиним* процесом, запущеним на "
+"цільовому\n"
+"обладнанні, тому ми не хочемо, щоб він завершився!\n"
+"Ми використовуємо [розбіжну функцію](https://doc.rust-lang.org/rust-by-"
+"example/fn/diverging.html)\n"
+"(позначка `-> !` у сигнатурі функції), щоб гарантувати, що під час "
+"компіляції це буде саме так."
 
 #: src/start/qemu.md:136
 msgid "## Cross compiling"
-msgstr ""
+msgstr "## Перехресна компіляція"
 
 #: src/start/qemu.md:138
 msgid ""
@@ -2018,6 +2136,12 @@ msgid ""
 "in the\n"
 "template has the answer:"
 msgstr ""
+"Наступним кроком буде *перехресна* компіляція програми для архітектури "
+"Cortex-M3.\n"
+"Це так само просто, як виконати `cargo build --target $TRIPLE`, якщо ви "
+"знаєте, якою\n"
+"має бути ціль компіляції (`$TRIPLE`). На щастя, у файлі `.cargo/config.toml` "
+"у шаблоні є відповідь:"
 
 #: src/start/qemu.md:143
 msgid ""
@@ -2037,6 +2161,14 @@ msgid ""
 "# target = \"thumbv7em-none-eabihf\" # Cortex-M4F and Cortex-M7F (with FPU)\n"
 "```"
 msgstr ""
+"```toml\n"
+"[build]\n"
+"# Виберіть ОДНУ з цих цілей компіляції\n"
+"# target = \"thumbv6m-none-eabi\"    # Cortex-M0 та Cortex-M0+\n"
+"target = \"thumbv7m-none-eabi\"    # Cortex-M3\n"
+"# target = \"thumbv7em-none-eabi\"   # Cortex-M4 та Cortex-M7 (без FPU)\n"
+"# target = \"thumbv7em-none-eabihf\" # Cortex-M4F та Cortex-M7F (з FPU)\n"
+"```"
 
 #: src/start/qemu.md:156
 msgid ""
@@ -2047,6 +2179,13 @@ msgid ""
 "toolchain,\n"
 "if you haven't done it yet:"
 msgstr ""
+"Для перехресної компіляції для архітектури Cortex-M3 ми повинні "
+"використовувати\n"
+"`thumbv7m-none-eabi`. Ця ціль не встановлюється автоматично під час "
+"встановлення\n"
+"набору інструментів Rust, зараз саме час додати цю ціль до набору "
+"інструментів,\n"
+"якщо ви цього ще не зробили:"
 
 #: src/start/qemu.md:163
 msgid ""
@@ -2079,6 +2218,9 @@ msgid ""
 "app`. We\n"
 "can inspect it using `cargo-binutils`."
 msgstr ""
+"Тепер у нас є \"чужий\" двійковий ELF-файл у `target/thumbv7m-none-eabi/"
+"debug/app`.\n"
+"Ми можемо перевірити його за допомогою `cargo-binutils`."
 
 #: src/start/qemu.md:176
 msgid ""
@@ -2086,6 +2228,8 @@ msgid ""
 "ARM\n"
 "binary."
 msgstr ""
+"За допомогою `cargo-readobj` ми можемо надрукувати заголовки ELF,\n"
+"щоб переконатися, що це двійковий файл ARM."
 
 #: src/start/qemu.md:179
 msgid ""
@@ -2096,13 +2240,16 @@ msgstr ""
 
 #: src/start/qemu.md:183
 msgid "Note that:"
-msgstr ""
+msgstr "Зауважте, що:"
 
 #: src/start/qemu.md:184
 msgid ""
 "* `--bin app` is sugar for inspect the binary at `target/$TRIPLE/debug/app`\n"
 "* `--bin app` will also (re)compile the binary, if necessary"
 msgstr ""
+"* `--bin app` - це цукор для перевірки двійкового коду в `target/$TRIPLE/"
+"debug/app`\n"
+"* `--bin app` також (пере)компілює двійковий код, якщо це необхідно"
 
 #: src/start/qemu.md:188
 msgid ""
@@ -2144,7 +2291,7 @@ msgstr ""
 
 #: src/start/qemu.md:217
 msgid "we use `--release` to inspect the optimized version"
-msgstr "ми додамо `--release` для перевірки оптимізованої версії"
+msgstr "ми додали `--release` для перевірки оптимізованої версії"
 
 #: src/start/qemu.md:219
 msgid ""
@@ -2189,6 +2336,19 @@ msgid ""
 "> - `.ARM.attributes` and the `.debug_*` sections contain metadata and will\n"
 ">   *not* be loaded onto the target when flashing the binary."
 msgstr ""
+"> Пам'ятка про секції лінкера ELF\n"
+">\n"
+"> - `.text` містить інструкції програми\n"
+"> - `.rodata` містить константні значення, такі як рядки\n"
+"> - `.data` містить статично виділені змінні, початкові значення яких "
+"*не*нульові\n"
+"> - `.bss` також містить статично виділені змінні, початкові значення яких "
+"нульові\n"
+"> - `.vector_table` - це *не*стандартна секція, яку ми використовуємо для "
+"зберігання\n"
+">   вектор-таблиці переривань\n"
+"> - `.ARM.attributes` та секції `.debug_*` містять метадані і\n"
+">   *не* будуть завантажені на ціль при прошиванні двійкового файлу."
 
 #: src/start/qemu.md:254
 msgid ""
@@ -2200,10 +2360,17 @@ msgid ""
 "really\n"
 "is."
 msgstr ""
+"**ВАЖЛИВО**: ELF-файли містять метадані, такі як налагоджувальна "
+"інформація,\n"
+"тому їхній *розмір на диску* *не точно* відображає місце, яке займатиме "
+"програма\n"
+"під час прошивання на пристрої. *Завжди* використовуйте `cargo-size` для\n"
+"перевірки справжнього розміру двійкового файлу."
 
 #: src/start/qemu.md:259
 msgid "`cargo-objdump` can be used to disassemble the binary."
 msgstr ""
+"`cargo-objdump` можна використовувати для дизасемблювання двійкового файлу."
 
 #: src/start/qemu.md:261
 msgid ""
@@ -2228,6 +2395,10 @@ msgid ""
 "instructions\n"
 "> to keep the snippet small."
 msgstr ""
+"> **ПРИМІТКА** цей вивід може відрізнятися у вашій системі. Нові версії "
+"rustc, LLVM\n"
+"> та бібліотек можуть створювати інші збірки. Ми видалили деякі інструкції\n"
+"> щоб зменшити розмір фрагмента."
 
 #: src/start/qemu.md:272
 msgid ""
@@ -2273,7 +2444,7 @@ msgstr ""
 
 #: src/start/qemu.md:311
 msgid "## Running"
-msgstr ""
+msgstr "## Запуск"
 
 #: src/start/qemu.md:313
 msgid ""
@@ -2281,10 +2452,12 @@ msgid ""
 "the\n"
 "`hello` example which actually does something."
 msgstr ""
+"Далі, давайте подивимося, як запустити вбудовану програму на QEMU!\n"
+"Цього разу ми використаємо приклад `hello`, який дійсно щось робить."
 
 #: src/start/qemu.md:316
 msgid "For convenience here's the source code of `examples/hello.rs`:"
-msgstr ""
+msgstr "Для зручності ось вихідний код `examples/hello.rs`:"
 
 #: src/start/qemu.md:318
 msgid ""
@@ -2311,6 +2484,28 @@ msgid ""
 "}\n"
 "```"
 msgstr ""
+"```rust,ignore\n"
+"//! Друкує \"Hello, world!\" у хост-консолі за допомогою semihosting\n"
+"\n"
+"#![no_main]\n"
+"#![no_std]\n"
+"\n"
+"use panic_halt as _;\n"
+"\n"
+"use cortex_m_rt::entry;\n"
+"use cortex_m_semihosting::{debug, hprintln};\n"
+"\n"
+"#[entry]\n"
+"fn main() -> ! {\n"
+"    hprintln!(\"Hello, world!\").unwrap();\n"
+"\n"
+"    // завершує QEMU\n"
+"    // ПРИМІТКА не запускайте на обладнанні; це може пошкодити стан OpenOCD\n"
+"    debug::exit(debug::EXIT_SUCCESS);\n"
+"\n"
+"    loop {}\n"
+"}\n"
+"```"
 
 #: src/start/qemu.md:341
 msgid ""
@@ -2319,10 +2514,14 @@ msgid ""
 "using\n"
 "QEMU this Just Works."
 msgstr ""
+"Ця програма використовує так званий semihosting для друку тексту на хост-"
+"консоль.\n"
+"При використанні реального обладнання це вимагає сеансу налагодження,\n"
+"але при використанні QEMU це Просто Працює."
 
 #: src/start/qemu.md:345
 msgid "Let's start by compiling the example:"
-msgstr ""
+msgstr "Почнемо з компіляції прикладу:"
 
 #: src/start/qemu.md:347
 msgid ""
@@ -2336,10 +2535,12 @@ msgid ""
 "The output binary will be located at\n"
 "`target/thumbv7m-none-eabi/debug/examples/hello`."
 msgstr ""
+"Вихідний двійковий файл буде розташовано в\n"
+"`target/thumbv7m-none-eabi/debug/examples/hello`."
 
 #: src/start/qemu.md:354
 msgid "To run this binary on QEMU run the following command:"
-msgstr ""
+msgstr "Щоб запустити цей двійковий файл у QEMU, виконайте наступну команду:"
 
 #: src/start/qemu.md:356
 msgid ""
@@ -2366,6 +2567,9 @@ msgid ""
 "text. On\n"
 "*nix you can check that with the following command:"
 msgstr ""
+"Команда має успішно завершити роботу (код завершення = 0) після друку "
+"тексту.\n"
+"На *nix ви можете перевірити це за допомогою наступної команди:"
 
 #: src/start/qemu.md:372
 msgid ""
@@ -2383,7 +2587,7 @@ msgstr ""
 
 #: src/start/qemu.md:380
 msgid "Let's break down that QEMU command:"
-msgstr ""
+msgstr "Давайте розберемо цю команду QEMU:"
 
 #: src/start/qemu.md:382
 msgid ""
@@ -2415,6 +2619,31 @@ msgid ""
 "emulated\n"
 "  machine."
 msgstr ""
+"- `qemu-system-arm`. Це емулятор QEMU. Існує декілька варіантів двійкових "
+"файлів QEMU;\n"
+"  цей виконує повну *системну* емуляцію машин *ARM*, звідси і назва.\n"
+"\n"
+"- `-cpu cortex-m3`. Це вказує QEMU емулювати процесор Cortex-M3. Вказівка "
+"моделі процесора\n"
+"  дозволяє нам виявити деякі помилки компіляції: наприклад, запуск "
+"програми,\n"
+"  скомпільованої для Cortex-M4F, який має апаратний FPU, призведе до помилки "
+"QEMU під час її виконання.\n"
+"\n"
+"- `-machine lm3s6965evb`. Це вказує QEMU емулювати LM3S6965EVB, оціночну "
+"плату,\n"
+"  яка містить мікроконтролер LM3S6965.\n"
+"\n"
+"- `-nographic`. Вказує QEMU не запускати графічний інтерфейс.\n"
+"\n"
+"- `-semihosting-config (..)`. Наказує QEMU увімкнути semihosting. "
+"Semihosting\n"
+"  дозволяє емульованому пристрою, серед іншого, використовувати stdout, "
+"stderr та stdin хоста\n"
+"  і створювати файли на хості.\n"
+"\n"
+"- `-kernel $file`. Це вказує QEMU, який двійковий файл завантажити і "
+"запустити на емульованій машині."
 
 #: src/start/qemu.md:403
 msgid ""
@@ -2424,6 +2653,10 @@ msgid ""
 "that invokes\n"
 "QEMU; let's uncomment it:"
 msgstr ""
+"Набирати цю довжелезну команду QEMU - це занадто багато роботи!\n"
+"Ми можемо налаштувати власний виконувач, щоб спростити процес.\n"
+"Файл `.cargo/config.toml` має закоментований рядок, який викликає QEMU;\n"
+"давайте розкоментуємо його:"
 
 #: src/start/qemu.md:407
 msgid ""
@@ -2441,6 +2674,12 @@ msgid ""
 "semihosting-config enable=on,target=native -kernel\"\n"
 "```"
 msgstr ""
+"```toml\n"
+"[target.thumbv7m-none-eabi]\n"
+"# розкоментуйте це, щоб `cargo run` виконувала програми на QEMU\n"
+"runner = \"qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -"
+"semihosting-config enable=on,target=native -kernel\"\n"
+"```"
 
 #: src/start/qemu.md:417
 msgid ""
@@ -2449,6 +2688,9 @@ msgid ""
 "it\n"
 "on QEMU:"
 msgstr ""
+"Цей виконувач застосовується лише до цілі `thumbv7m-none-eabi`, яка є нашою\n"
+"ціллю компіляції за замовчуванням. Тепер `cargo run` скомпілює програму і "
+"запустить її на QEMU:"
 
 #: src/start/qemu.md:421
 msgid ""
@@ -2471,11 +2713,13 @@ msgstr ""
 
 #: src/start/qemu.md:432 src/start/hardware.md:113
 msgid "## Debugging"
-msgstr ""
+msgstr "## Налагодження"
 
 #: src/start/qemu.md:434
 msgid "Debugging is critical to embedded development. Let's see how it's done."
 msgstr ""
+"Налагодження має вирішальне значення для вбудованої розробки. Давайте "
+"подивимося, як це робиться."
 
 #: src/start/qemu.md:436
 msgid ""
@@ -2484,6 +2728,9 @@ msgid ""
 "want to debug won't be running on the machine that's running the debugger\n"
 "program (GDB or LLDB)."
 msgstr ""
+"Налагодження вбудованого пристрою передбачає *віддалене* налагодження,\n"
+"оскільки програма, яку ми хочемо налагодити, не буде запущена на машині,\n"
+"на якій запущена програма-відладчик (GDB або LLDB)."
 
 #: src/start/qemu.md:440
 msgid ""
@@ -2493,14 +2740,19 @@ msgid ""
 "that's\n"
 "also running the embedded program."
 msgstr ""
+"Віддалене налагодження включає в себе клієнт і сервер. У випадку з QEMU "
+"клієнтом\n"
+"буде процес GDB (або LLDB), а сервером - процес QEMU, який також виконує "
+"вбудовану програму."
 
 #: src/start/qemu.md:444
 msgid "In this section we'll use the `hello` example we already compiled."
 msgstr ""
+"У цьому розділі ми використаємо приклад `hello`, який ми вже скомпілювали."
 
 #: src/start/qemu.md:446
 msgid "The first debugging step is to launch QEMU in debugging mode:"
-msgstr ""
+msgstr "Першим кроком налагодження є запуск QEMU у режимі налагодження:"
 
 #: src/start/qemu.md:448
 msgid ""
@@ -2522,6 +2774,8 @@ msgid ""
 "terminal. We\n"
 "have passed two extra flags this time:"
 msgstr ""
+"Ця команда нічого не виведе на консоль і заблокує термінал.\n"
+"Цього разу ми передали два додаткові прапорці:"
 
 #: src/start/qemu.md:462
 msgid ""
@@ -2533,6 +2787,12 @@ msgid ""
 "launch\n"
 "  the debugger!"
 msgstr ""
+"- `-gdb tcp::3333`. Це вказує QEMU чекати на з'єднання GDB на порту TCP "
+"3333.\n"
+"\n"
+"- `-S`. Наказує QEMU заморозити машину одразу після запуску. Без цього\n"
+"  програма дійшла би до кінця main до того, як ми змогли б запустити "
+"відладчик!"
 
 #: src/start/qemu.md:469
 msgid ""
@@ -2540,6 +2800,8 @@ msgid ""
 "of\n"
 "the example:"
 msgstr ""
+"Далі ми запускаємо GDB в іншому терміналі і кажемо йому завантажити "
+"налагоджувальні символи з прикладу:"
 
 #: src/start/qemu.md:472
 msgid ""
@@ -2555,6 +2817,9 @@ msgid ""
 "on which one you installed in the installation chapter. This could also be\n"
 "`arm-none-eabi-gdb` or just `gdb`."
 msgstr ""
+"**ПРИМІТКА**: вам може знадобитися інша версія gdb замість `gdb-multiarch`,\n"
+"залежно від того, яку саме ви встановили у розділі \"Встановлення\".\n"
+"Це також може бути `arm-none-eabi-gdb` або просто `gdb`."
 
 #: src/start/qemu.md:480
 msgid ""
@@ -2562,6 +2827,8 @@ msgid ""
 "connection\n"
 "on TCP port 3333."
 msgstr ""
+"Потім в оболонці GDB ми підключаємося до QEMU, який очікує з'єднання на TCP-"
+"порті 3333."
 
 #: src/start/qemu.md:483
 msgid ""
