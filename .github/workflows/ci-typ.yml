@@ -1,4 +1,4 @@
-name: CI
+name: Typst CI
 
 on:
   push: # Run CI for all branches except GitHub merge queue tmp branches
@@ -22,28 +22,38 @@ jobs:
 
       - name: Cache Cargo installed binaries
         uses: actions/cache@v4
-        id: cache-cargo
+        id: cache-cargo-typst
         with:
           path: ~/cargo-bin
           key: cache-cargo
-      - name: Install mdbook
+      - name: Install Typst
         if: steps.cache-cargo.outputs.cache-hit != 'true'
         uses: actions-rs/install@v0.1
         with:
-          crate: mdbook
+          crate: typst-cli
           version: latest
-      - name: Copy mdbook to cache directory
+      - name: Copy typst to cache directory
         if: steps.cache-cargo.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/cargo-bin
-          cp ~/.cargo/bin/mdbook ~/cargo-bin
+          cp ~/.cargo/bin/typst ~/cargo-bin
       - name: Put new cargo binary directory into path
         run: echo "~/cargo-bin" >> $GITHUB_PATH
 
-      - name: Build book
-        run: mdbook build
-      - name: Test book
-        run: mdbook test
+      - name: Build original (English) book
+        run: |
+          typst compile typ/book.typ --input lang=en --input target=html book --features bundle,html -f bundle
+          typst compile typ/book.typ --input lang=en --input target=pdf book/book_en.pdf
+
+      - name: Build translated book
+        run: |
+          typst compile typ/book.typ --input lang=zh --input target=html book --features bundle,html -f bundle
+          typst compile typ/book.typ --input lang=zh --input target=pdf book/book_zh.pdf
+          typst compile typ/book.typ --input lang=de --input target=html book --features bundle,html -f bundle
+          typst compile typ/book.typ --input lang=de --input target=pdf book/book_de.pdf
+          typst compile typ/book.typ --input lang=uk --input target=html book --features bundle,html -f bundle
+          typst compile typ/book.typ --input lang=uk --input target=pdf book/book_uk.pdf
+ 
       - name: Check links
         run: linkchecker book
 
