@@ -378,12 +378,17 @@
   #outline(depth: 3)
   #let part = "main"
   #for (path, source, _) in sa {
+    let offset = path.split("/").len() - 1
+    if path.ends-with("/index") {
+      offset = offset - 1
+    }
     if part == "main" and path.starts-with("appendix/") {
       path = "appendix"
       counter(heading).update(0)
-      set heading(numbering: "A.1.")
+      set heading(numbering: "A.1.", offset: offset+1)
       source
     } else {
+      set heading(offset: offset+1)
       source
     }
   }

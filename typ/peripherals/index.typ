@@ -4,7 +4,6 @@
   else if lang == "de" [Peripheriegeräte]
   else { todo })
 <peripherals>
-#set heading(offset: whole)
 
 = #(if lang == "en" [What are Peripherals?]
   else if lang == "de" [Was sind Peripheriegeräte?]

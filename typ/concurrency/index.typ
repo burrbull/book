@@ -4,7 +4,6 @@
   else if lang == "de" [Nebenläufigkeit]
   else { todo })
 <concurrency>
-#set heading(offset: whole)
 
 #if lang == "en" [
   Concurrency happens whenever different parts of your program might

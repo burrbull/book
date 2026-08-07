@@ -5,7 +5,6 @@
   else if lang == "de" [Ein bisschen Rust zu Ihrem C]
   else { todo })
 <rust-with-c>
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Using Rust code inside a C or C++ project mostly consists of two parts.

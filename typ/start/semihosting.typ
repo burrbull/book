@@ -4,7 +4,6 @@
   if lang == "en" [Semihosting]
   else if lang == "de" [Semihosting]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Semihosting is a mechanism that lets embedded devices do I/O on the host

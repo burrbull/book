@@ -5,7 +5,6 @@
   else if lang == "de" [Vorhersehbarkeit]
   else { todo })
 <hal-predictability>
-#set heading(offset: whole*3)
 
 = #(if lang == "en" [Constructors are used instead of extension traits]
   else if lang == "de" [Anstelle von Extension Traits werden Konstruktoren verwendet]

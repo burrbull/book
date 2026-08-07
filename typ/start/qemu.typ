@@ -3,7 +3,6 @@
 #h1(offset: whole,
   [QEMU])
 <getting-started-qemu>
-#set heading(offset: whole*2)
 
 // TODO: check
 #if lang == "de" [

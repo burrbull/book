@@ -2,7 +2,6 @@
 
 #h1(offset: whole*2,
   [Windows])
-#set heading(offset: whole*3)
 
 = `arm-none-eabi-gdb`
 

@@ -3,7 +3,6 @@
 #h1(if lang == "en" [Collections]
   else if lang == "de" [Sammlungen (Collections)]
   else { todo })
-#set heading(offset: whole)
 
 #let ln_vec = link("https://doc.rust-lang.org/std/vec/struct.Vec.html")[`Vec`]
 #let ln_string = link("https://doc.rust-lang.org/std/string/struct.String.html")[`String`]

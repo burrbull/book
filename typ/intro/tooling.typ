@@ -5,7 +5,6 @@
   else if lang == "de" [Werkzeuge]
   else if lang == "zh" [工具]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Dealing with microcontrollers involves using several different tools as

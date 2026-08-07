@@ -5,7 +5,6 @@
   else if lang == "de" [Benennung]
   else { todo })
 <hal-naming>
-#set heading(offset: whole*3)
 
 = #(if lang == "en" [The crate is named appropriately]
   else if lang == "de" [Das Crate trägt einen passenden Namen]

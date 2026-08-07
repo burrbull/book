@@ -4,7 +4,6 @@
   if lang == "en" [Design Contracts]
   else if lang == "de" [Design-Verträge]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   In our last chapter, we wrote an interface that _didn't_ enforce

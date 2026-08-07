@@ -5,7 +5,6 @@
   else if lang == "de" [In Panik geraten]
   else { todo })
 <getting-started-panicking>
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Panicking is a core part of the Rust language. Built-in operations like

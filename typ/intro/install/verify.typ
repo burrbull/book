@@ -5,7 +5,6 @@
   else if lang == "de" [Die Installation überprüfen]
   else { todo })
 <verify-installation>
-#set heading(offset: whole*3)
 
 #if lang == "en" [
   In this section we check that some of the required tools / drivers have

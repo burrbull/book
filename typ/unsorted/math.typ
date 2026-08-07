@@ -4,7 +4,6 @@
   if lang == "en" [Performing math functionality with `#[no_std]`]
   else if lang == "de" [Mathematische Funktionen mit `#[no_std]` nutzen]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   If you want to perform math related functionality like calculating the

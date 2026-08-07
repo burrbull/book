@@ -4,7 +4,6 @@
   if lang == "en" [Optimizations: the speed size tradeoff]
   else if lang == "de" [Optimierungen: Der Kompromiss zwischen Geschwindigkeit und Größe]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Everyone wants their program to be super fast and super small but it's

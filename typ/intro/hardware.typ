@@ -6,7 +6,6 @@
   else if lang == "uk" [Зустрічайте залізо]
   else if lang == "zh" [熟悉你的硬件]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Let's get familiar with the hardware we'll be working with.

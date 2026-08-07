@@ -3,7 +3,6 @@
 #h1(if lang == "en" [Tips for embedded C developers]
   else if lang == "de" [Tipps für Embedded-C-Entwickler]
   else { todo })
-#set heading(offset: whole)
 
 #if lang == "en" [
   This chapter collects a variety of tips that might be useful to

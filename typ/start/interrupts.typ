@@ -3,7 +3,6 @@
 #h1(offset: whole,
   if lang in ("en", "de") [Interrupts]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Interrupts differ from exceptions in a variety of ways but their

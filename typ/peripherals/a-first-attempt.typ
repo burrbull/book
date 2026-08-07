@@ -4,7 +4,6 @@
   if lang == "en" [A First Attempt]
   else if lang == "de" [Ein erster Versuch in Rust]
   else { todo })
-#set heading(offset: whole*2)
 
 = #(if lang == "en" [The Registers]
   else if lang == "de" [Die Register]

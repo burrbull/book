@@ -4,7 +4,6 @@
   if lang == "en" [Zero Cost Abstractions]
   else if lang == "de" [Abstraktionen ohne Kosten]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Type states are also an excellent example of Zero Cost Abstractions -
