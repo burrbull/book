@@ -3,6 +3,7 @@
 #h1(offset: whole*2,
   if lang == "en" [Verify Installation]
   else if lang == "de" [Die Installation überprüfen]
+  else if lang == "zh" [安装验证]
   else { todo })
 <verify-installation>
 
@@ -12,6 +13,8 @@
 ] else if lang == "de" [
   In diesem Abschnitt überprüfen wir, ob einige der erforderlichen
   Werkzeuge bzw. Treiber korrekt installiert und konfiguriert wurden.
+] else if lang == "zh" [
+  在这个章节中我们将检查工具和驱动是否已经被正确地安装和配置了。
 ] else { todo }
 
 #if lang == "en" [
@@ -23,6 +26,8 @@
   Discovery-Board. Das Discovery-Board verfügt über zwei USB-Anschlüsse;
   verwenden Sie den mit „USB ST-LINK" beschrifteten Anschluss, der sich
   mittig an der Platinenkante befindet.
+] else if lang == "zh" [
+  使用一个micro USB线缆将你的笔记本/个人电脑连接到discovery开发板上。discovery开发板有两个USB连接器；使用标记着"USB ST-LINK"的那个，它位于开发板边缘的中间位置。
 ] else { todo }
 
 #if lang == "en" [
@@ -30,14 +35,17 @@
   the ST-LINK header is highlighted.
 ] else if lang == "de" [
   Überprüfen Sie außerdem, ob die ST-LINK-Stiftleiste bestückt ist. Siehe
-  dazu die Abbildung unten; die ST-LINK-Stiftleiste ist dort
-  hervorgehoben.
+  dazu die Abbildung unten; die ST-LINK-Stiftleiste ist dort hervorgehoben.
+] else if lang == "zh" [
+  也要检查下ST-LINK的短路帽是否被安装了。看下面的图；ST-LINK短路帽用红色圈起来了。
 ] else { todo }
 
 #if lang == "en" [
   Now run the following command:
 ] else if lang == "de" [
   Führen Sie nun den folgenden Befehl aus:
+] else if lang == "zh" [
+  现在运行下面的命令:
 ] else { todo }
 
 ```console
@@ -56,6 +64,10 @@ openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
   bevorzugende) Datei `interface/stlink.cfg`; stattdessen müssen Sie
   möglicherweise `interface/stlink-v2.cfg` oder
   `interface/stlink-v2-1.cfg` verwenden.
+] else if lang == "zh" [
+  *注意*: 旧版的openocd, 包括从2017发布的0.10.0,
+  不包含新的(且更适合的)`interface/stlink.cfg`文件；
+  你需要使用`interface/stlink-v2.cfg` 或者 `interface/stlink-v2-1.cfg`。
 ] else { todo }
 ]
 
@@ -65,6 +77,8 @@ openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
 ] else if lang == "de" [
   Sie sollten die folgende Ausgabe erhalten und das Programm sollte die
   Konsole blockieren:
+] else if lang == "zh" [
+  你应该看到了下面的输出，且程序应该阻塞住了控制台:
 ] else { todo }
 
 ```text
@@ -95,6 +109,8 @@ Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
   Zeile bezüglich Breakpoints und Watchpoints sollten Sie sehen. Wenn dies
   der Fall ist, beenden Sie den OpenOCD-Prozess und fahren Sie mit dem
   #link(<getting-started>)[nächsten Abschnitt] fort.
+] else if lang == "zh" [
+  内容可能并不是一模一样，但是在最后一行，你应该看到了breakpoints和watchpoints，如果你看到了，那就终止OpenOCD进程然后进入#link(<getting-started>)[下个章节]
 ] else { todo }
 
 #if lang == "en" [
@@ -103,6 +119,8 @@ Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 ] else if lang == "de" [
   Falls du die Zeile „breakpoints" nicht erhalten hast, versuche einen der
   folgenden Befehle.
+] else if lang == "zh" [
+  如果你没看到"breakpoints"这行，尝试下下列命令中的某一个命令。
 ] else { todo }
 
 ```console
@@ -124,6 +142,8 @@ openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
   Problem dar, aber merken Sie sich diesen Umstand, da Sie die
   Konfiguration später etwas anders vornehmen müssen. Sie können zum
   #link(<getting-started>)[nächsten Abschnitt] übergehen.
+] else if lang == "zh" [
+  如果这些命令的某条起作用了，那意味着你使用的discovery开发板是一个旧的版本。那也不成问题，但是你要记住这件事，因为随后你的配置可能有点不同。你可以移到#link(<getting-started>)[下个章节]了。
 ] else { todo }
 
 #if lang == "en" [
@@ -136,6 +156,8 @@ openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
   Sie, sie mit Root-Rechten auszuführen (z. B. `sudo openocd ..`). Sollten
   die Befehle mit Root-Rechten funktionieren, überprüfen Sie, ob die
   #link(<linux-udev-rules>)[udev-Regeln] korrekt eingerichtet wurden.
+] else if lang == "zh" [
+  如果这些命令在普通用户模式下都没用，尝试下使用root模式运行它们(e.g.~`sudo openocd ..`)。如果命令在root模式下起作用，需要检查下#link(<linux-udev-rules>)[udev rules]是否被正确地设置了。
 ] else { todo }
 
 #let url_issues = "https://github.com/rust-embedded/book/issues"
@@ -148,4 +170,6 @@ openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
   eröffnen Sie bitte
   #link(url_issues)[eine Problemmeldung],
   und wir helfen Ihnen weiter!
+] else if lang == "zh" [
+  如果这些都试了，OpenOCD还不工作，请打开一个#link(url_issues)[issue]，我们将帮助你！
 ] else { todo }
