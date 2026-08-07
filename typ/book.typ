@@ -3,7 +3,7 @@
 
 #let sources = (
   "intro/index": (
-    content: (include "intro/index.typ"),
+    content: include "intro/index.typ",
     title: if lang == "en" [Introduction]
       else if lang == "de" [Einleitung]
       else if lang == "uk" [Вступ]
@@ -11,18 +11,18 @@
       else { todo },
     sub: (
       "intro/hardware": (
-        content: (include "intro/hardware.typ"),
+        content: include "intro/hardware.typ",
         title: if lang in ("en", "de") [Hardware]
           else if lang == "uk" [Залізо]
           else if lang == "zh" [硬件]
           else { todo }
       ),
       "intro/no-std": (
-        content: (include "intro/no-std.typ"),
+        content: include "intro/no-std.typ",
         title: `no_std`
       ),
       "intro/tooling": (
-        content: (include "intro/tooling.typ"),
+        content: include "intro/tooling.typ",
         title: if lang == "en" [Tooling]
           else if lang == "de" [Werkzeuge]
           else if lang == "uk" [Інструменти]
@@ -30,26 +30,26 @@
           else { todo }
       ),
       "intro/install": (
-        content: (include "intro/install.typ"),
+        content: include "intro/install.typ",
         title: if lang in ("en", "de") [Installation]
           else if lang == "uk" [Встановлення]
           else if lang == "zh" [安装]
           else { todo },
         sub: (
           "intro/install/linux": (
-            content: (include "intro/install/linux.typ"),
+            content: include "intro/install/linux.typ",
             title: [Linux]
           ),
           "intro/install/macos": (
-            content: (include "intro/install/macos.typ"),
+            content: include "intro/install/macos.typ",
             title: [MacOS]
           ),
           "intro/install/windows": (
-            content: (include "intro/install/windows.typ"),
+            content: include "intro/install/windows.typ",
             title: [Windows]
           ),
           "intro/install/verify": (
-            content: (include "intro/install/verify.typ"),
+            content: include "intro/install/verify.typ",
             title: if lang == "en" [Verify Installation]
               else if lang == "de" [Die Installation überprüfen]
               else if lang == "uk" [Перевірка встановлення]
@@ -62,7 +62,7 @@
   ),
   "start/index":
   (
-    content: (include "start/index.typ"),
+    content: include "start/index.typ",
     title: if lang == "en" [Getting started]
       else if lang == "de" [Erste Schritte]
       else if lang == "uk" [Початок роботи]
@@ -70,18 +70,18 @@
       else { todo },
     sub: (
       "start/qemu": (
-        content: (include "start/qemu.typ"),
+        content: include "start/qemu.typ",
         title: [QEMU]
       ),
       "start/hardware": (
-        content: (include "start/hardware.typ"),
+        content: include "start/hardware.typ",
         title: if lang in ("en", "de") [Hardware]
           else if lang == "uk" [Залізо]
           else if lang == "zh" [硬件]
           else { todo }
       ),
       "start/registers": (
-        content: (include "start/registers.typ"),
+        content: include "start/registers.typ",
         title: if lang == "en" [Memory-mapped Registers]
           else if lang == "de" [Im Speicher abgebildete Register]
           else if lang == "uk" [Відображені в пам'яті регістри]
@@ -89,13 +89,13 @@
           else { todo }
       ),
       "start/semihosting": (
-        content: (include "start/semihosting.typ"),
+        content: include "start/semihosting.typ",
         title: if lang in ("en", "de", "uk") [Semihosting]
           else if lang == "zh" [半主机模式]
           else { todo }
       ),
       "start/panicking": (
-        content: (include "start/panicking.typ"),
+        content: include "start/panicking.typ",
         title: if lang == "en" [Panicking]
           else if lang == "de" [In Panik geraten]
           else if lang == "uk" [Паніка]
@@ -103,14 +103,14 @@
           else { todo }
       ),
       "start/exceptions": (
-        content: (include "start/exceptions.typ"),
+        content: include "start/exceptions.typ",
         title: if lang in ("en", "de") [Exceptions]
           else if lang == "uk" [Виключення]
           else if lang == "zh" [异常]
           else { todo }
       ),
       "start/interrupts": (
-        content: (include "start/interrupts.typ"),
+        content: include "start/interrupts.typ",
         title: if lang in ("en", "de") [Interrupts]
           else if lang == "uk" [Переривання]
           else if lang == "zh" [中断]
@@ -119,7 +119,7 @@
     )
   ),
   "peripherals/index": (
-    content: (include "peripherals/index.typ"),
+    content: include "peripherals/index.typ",
     title: if lang == "en" [Peripherals]
       else if lang == "de" [Peripheriegeräte]
       else if lang == "uk" [Периферійні пристрої]
@@ -127,7 +127,7 @@
       else { todo },
     sub: (
       "peripherals/a-first-attempt": (
-        content: (include "peripherals/a-first-attempt.typ"),
+        content: include "peripherals/a-first-attempt.typ",
         title: if lang == "en" [A first attempt in Rust]
           else if lang == "de" [Ein erster Versuch in Rust]
           else if lang == "uk" [Перша спроба на Rust]
@@ -135,7 +135,7 @@
           else { todo }
       ),
       "peripherals/borrowck": (
-        content: (include "peripherals/borrowck.typ"),
+        content: include "peripherals/borrowck.typ",
         title: if lang == "en" [The Borrow Checker]
           else if lang == "de" [Der Borrow-Prüfer]
           else if lang == "uk" [Перевірка запозичень]
@@ -143,7 +143,7 @@
           else { todo }
       ),
       "peripherals/singletons": (
-        content: (include "peripherals/singletons.typ"),
+        content: include "peripherals/singletons.typ",
         title: if lang in ("en", "de") [Singletons]
           else if lang == "uk" [Одинаки]
           else if lang == "zh" [单例]
@@ -152,7 +152,7 @@
     )
   ),
   "static-guarantees/index": (
-    content: (include "static-guarantees/index.typ"),
+    content: include "static-guarantees/index.typ",
     title: if lang == "en" [Static Guarantees]
       else if lang == "de" [Statische Garantien]
       else if lang == "uk" [Статичні гарантії]
@@ -160,7 +160,7 @@
       else { todo },
     sub: (
       "static-guarantees/typestate-programming": (
-        content: (include "static-guarantees/typestate-programming.typ"),
+        content: include "static-guarantees/typestate-programming.typ",
         title: if lang == "en" [Typestate Programming]
           else if lang == "de" [Typgestützte Programmierung]
           else if lang == "uk" [Програмування типів-станів]
@@ -168,7 +168,7 @@
           else { todo }
       ),
       "static-guarantees/state-machines": (
-        content: (include "static-guarantees/state-machines.typ"),
+        content: include "static-guarantees/state-machines.typ",
         title: if lang == "en" [Peripherals as State Machines]
           else if lang == "de" [Peripheriegeräte als Zustandsmaschinen]
           else if lang == "uk" [Периферія як кінцеві автомати]
@@ -176,7 +176,7 @@
           else { todo }
       ),
       "static-guarantees/design-contracts": (
-        content: (include "static-guarantees/design-contracts.typ"),
+        content: include "static-guarantees/design-contracts.typ",
         title: if lang == "en" [Design Contracts]
           else if lang == "de" [Designverträge]
           else if lang == "uk" [Угоди щодо дизайну]
@@ -184,7 +184,7 @@
           else { todo }
       ),
       "static-guarantees/zero-cost-abstractions": (
-        content: (include "static-guarantees/zero-cost-abstractions.typ"),
+        content: include "static-guarantees/zero-cost-abstractions.typ",
         title: if lang == "en" [Zero Cost Abstractions]
           else if lang == "de" [Abstraktionen ohne Kosten]
           else if lang == "uk" [Безкоштовні абстракції]
@@ -194,7 +194,7 @@
     )
   ),
   "portability/index": (
-    content: (include "portability/index.typ"),
+    content: include "portability/index.typ",
     title: if lang == "en" [Portability]
       else if lang == "de" [Portabilität]
       else if lang == "uk" [Переносимість]
@@ -202,7 +202,7 @@
       else { todo }
   ),
   "concurrency/index": (
-    content: (include "concurrency/index.typ"),
+    content: include "concurrency/index.typ",
     title: if lang == "en" [Concurrency]
       else if lang == "de" [Nebenläufigkeit]
       else if lang == "uk" [Паралелізм]
@@ -210,7 +210,7 @@
       else { todo }
   ),
   "collections/index": (
-    content: (include "collections/index.typ"),
+    content: include "collections/index.typ",
     title: if lang == "en" [Collections]
       else if lang == "de" [Sammlungen]
       else if lang == "uk" [Колекції]
@@ -218,7 +218,7 @@
       else { todo }
   ),
   "design-patterns/index": (
-    content: (include "design-patterns/index.typ"),
+    content: include "design-patterns/index.typ",
     title: if lang == "en" [Design Patterns]
       else if lang == "de" [Desginmuster]
       else if lang == "uk" [Шаблони проектування]
@@ -226,13 +226,13 @@
       else { todo },
     sub: (
       "design-patterns/hal/index": (
-        content: (include "design-patterns/hal/index.typ"),
+        content: include "design-patterns/hal/index.typ",
         title: if lang in ("en", "zh", "de") [HALs]
           else if lang == "uk" [HALи]
           else { todo },
         sub: (
           "design-patterns/hal/checklist": (
-            content: (include "design-patterns/hal/checklist.typ"),
+            content: include "design-patterns/hal/checklist.typ",
             title: if lang == "en" [Checklist]
               else if lang == "de" [Checkliste]
               else if lang == "uk" [Контрольний список]
@@ -240,7 +240,7 @@
               else { todo }
           ),
           "design-patterns/hal/naming": (
-            content: (include "design-patterns/hal/naming.typ"),
+            content: include "design-patterns/hal/naming.typ",
             title: if lang == "en" [Naming]
               else if lang == "de" [Benennung]
               else if lang == "uk" [Найменування]
@@ -248,7 +248,7 @@
               else { todo }
           ),
           "design-patterns/hal/interoperability": (
-            content: (include "design-patterns/hal/interoperability.typ"),
+            content: include "design-patterns/hal/interoperability.typ",
             title: if lang == "en" [Interoperability]
               else if lang == "de" [Interoperabilität]
               else if lang == "uk" [Сумісність]
@@ -256,7 +256,7 @@
               else { todo }
           ),
           "design-patterns/hal/predictability": (
-            content: (include "design-patterns/hal/predictability.typ"),
+            content: include "design-patterns/hal/predictability.typ",
             title: if lang == "en" [Predictability]
               else if lang == "de" [Vorhersehbarkeit]
               else if lang == "uk" [Передбачуваність]
@@ -264,7 +264,7 @@
               else { todo }
           ),
           "design-patterns/hal/gpio": (
-            content: (include "design-patterns/hal/gpio.typ"),
+            content: include "design-patterns/hal/gpio.typ",
             title: [GPIO]
           ),
         )
@@ -272,7 +272,7 @@
     )
   ),
   "c-tips/index": (
-    content: (include "c-tips/index.typ"),
+    content: include "c-tips/index.typ",
     title: if lang == "en" [Tips for embedded C developers]
       else if lang == "de" [Tipps für Entwickler im Bereich Embedded-C]
       else if lang == "uk" [Поради для розробників мовою C]
@@ -280,7 +280,7 @@
       else { todo }
   ),
   "interoperability/index": (
-    content: (include "interoperability/index.typ"),
+    content: include "interoperability/index.typ",
     title: if lang == "en" [Interoperability]
       else if lang == "de" [Interoperabilität]
       else if lang == "uk" [Сумісність]
@@ -288,7 +288,7 @@
       else { todo },
     sub: (
       "interoperability/c-with-rust": (
-        content: (include "interoperability/c-with-rust.typ"),
+        content: include "interoperability/c-with-rust.typ",
         title: if lang == "en" [A little C with your Rust]
           else if lang == "de" [Ein bisschen C zu Ihrem Rust]
           else if lang == "uk" [Трошки C в вашому Rust]
@@ -296,7 +296,7 @@
           else { todo }
       ),
       "interoperability/rust-with-c": (
-        content: (include "interoperability/rust-with-c.typ"),
+        content: include "interoperability/rust-with-c.typ",
         title: if lang == "en" [A little Rust with your C]
           else if lang == "de" [Ein bisschen Rust zu Ihrem C]
           else if lang == "uk" [Трошки Rust в вашому C]
@@ -306,7 +306,7 @@
     )
   ),
   "unsorted/index": (
-    content: (include "unsorted/index.typ"),
+    content: include "unsorted/index.typ",
     title: if lang == "en" [Unsorted topics]
       else if lang == "de" [Unsortierte Themen]
       else if lang == "uk" [Невідсортовані теми]
@@ -314,7 +314,7 @@
       else { todo },
     sub: (
       "unsorted/speed-vs-size": (
-        content: (include "unsorted/speed-vs-size.typ"),
+        content: include "unsorted/speed-vs-size.typ",
         title: if lang == "en" [Optimizations: The speed size tradeoff]
           else if lang == "de" [Optimierungen: Der Kompromiss zwischen Geschwindigkeit und Größe]
           else if lang == "uk" [Оптимізація: компроміс між швидкістю та розміром]
@@ -322,7 +322,7 @@
           else { todo }
       ),
       "unsorted/math": (
-        content: (include "unsorted/math.typ"),
+        content: include "unsorted/math.typ",
         title: if lang == "en" [Performing Math Functionality]
           else if lang == "de" [Ausführung mathematischer Funktionen]
           else if lang == "uk" [Виконання математики]
@@ -332,7 +332,7 @@
     )
   ),
   "appendix/glossary": (
-    content: (include "appendix/glossary.typ"),
+    content: include "appendix/glossary.typ",
     title: if lang == "en" [Appendix A: Glossary]
       else if lang == "de" [Anhang A: Glossar]
       else if lang == "uk" [Додаток А: Глосарій]
