@@ -5,7 +5,6 @@
   else if lang == "de" [Checkliste HAL-Design-Muster]
   else { todo })
 <hal-checklist>
-#set heading(offset: whole*3)
 
 #if lang == "en" [
   *Naming* (_crate aligns with Rust naming conventions_)

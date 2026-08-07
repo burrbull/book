@@ -4,7 +4,6 @@
   else if lang == "de" [Erste Schritte]
   else { todo })
 <getting-started>
-#set heading(offset: whole)
 
 #let ln_f3 = link("http://www.st.com/en/evaluation-tools/stm32f3discovery.html")[STM32F3DISCOVERY]
 #if lang == "en" [

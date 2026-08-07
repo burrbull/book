@@ -4,7 +4,6 @@
   if lang == "en" [Installing the tools]
   else if lang == "zh" [安装工具]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   This page contains OS-agnostic installation instructions for a few of

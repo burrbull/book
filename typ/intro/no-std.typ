@@ -5,7 +5,6 @@
   else if lang == "de" [Eine `no_std`-Rust-Umgebung]
   else if lang == "zh" [一个 `no_std` Rust环境]
   else { todo })
-#set heading(offset: whole*2)
 
 #let ln_st72325 = link("https://www.st.com/resource/en/datasheet/st72325j6.pdf")[ST72325xx]
 #let ln_rpi = link("https://en.wikipedia.org/wiki/Raspberry_Pi#Specifications")[Modell B 3+]

@@ -4,7 +4,6 @@
   if lang == "en" [Typestate Programming]
   else if lang == "de" [Typgestützte Programmierung]
   else { todo })
-#set heading(offset: whole*2)
 
 #let url_ts = "https://en.wikipedia.org/wiki/Typestate_analysis"
 #let url_builders = "https://doc.rust-lang.org/1.0.0/style/ownership/builders.html"

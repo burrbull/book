@@ -4,7 +4,6 @@
   if lang == "en" [Peripherals as State Machines]
   else if lang == "de" [Peripheriegeräte als Zustandsautomaten]
   else { todo })
-#set heading(offset: whole*2)
 
 #let url_pin = "https://en.wikipedia.org/wiki/General-purpose_input/output"
 #if lang == "en" [

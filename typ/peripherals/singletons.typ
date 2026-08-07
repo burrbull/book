@@ -3,7 +3,6 @@
 #h1(offset: whole,
   if lang in ("en", "de") [Singletons]
   else { todo })
-#set heading(offset: whole*2)
 
 #quote(block: true)[
 #if lang == "en" [

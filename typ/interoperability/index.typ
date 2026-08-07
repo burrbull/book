@@ -3,7 +3,6 @@
 #h1(if lang == "en" [Interoperability]
   else if lang == "de" [Interoperabilität]
   else { todo })
-#set heading(offset: whole)
 
 #let ln_ffi = link("https://doc.rust-lang.org/std/ffi/index.html")[`std::ffi`]
 #if lang == "en" [

@@ -5,7 +5,6 @@
   else if lang == "de" [Im Speicher abgebildete Register]
   else { todo })
 <memory-mapped-registers>
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Embedded systems can only get so far by executing normal Rust code and

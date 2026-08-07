@@ -4,7 +4,6 @@
   else if lang == "de" [Portabilität]
   else { todo })
 <portability>
-#set heading(offset: whole)
 
 #if lang == "en" [
   In embedded environments portability is a very important topic: Every

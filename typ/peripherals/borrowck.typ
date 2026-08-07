@@ -4,7 +4,6 @@
   if lang == "en" [Mutable Global State]
   else if lang == "de" [Veränderbarer globaler Zustand]
   else { todo })
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Unfortunately, hardware is basically nothing but mutable global state,

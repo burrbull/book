@@ -5,7 +5,6 @@
   else if lang == "de" [Interoperabilität]
   else { todo })
 <hal-interoperability>
-#set heading(offset: whole*3)
 
 = #(if lang == "en" [Wrapper types provide a destructor method]
   else if lang == "de" [Wrapper-Typen stellen eine Destruktor-Methode bereit]

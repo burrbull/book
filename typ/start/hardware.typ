@@ -4,7 +4,6 @@
   if lang in ("en", "de") [Hardware]
   else { todo })
 <getting-started-hardware>
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   By now you should be somewhat familiar with the tooling and the

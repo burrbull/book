@@ -2,7 +2,6 @@
 
 #h1(offset: whole*2,
   [Linux])
-#set heading(offset: whole*3)
 
 #if lang == "en" [
   Here are the installation commands for a few Linux distributions.

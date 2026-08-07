@@ -4,7 +4,6 @@
   if lang == "en" [HAL Design Patterns]
   else if lang == "de" [HAL-Design-Muster]
   else { todo })
-#set heading(offset: whole*2)
 
 #let url_quide = "https://rust-lang.github.io/api-guidelines/"
 #if lang == "en" [

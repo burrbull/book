@@ -5,7 +5,6 @@
   else if lang == "de" [Ausnahmen (Exceptions)]
   else { todo })
 <getting-started-exceptions>
-#set heading(offset: whole*2)
 
 #if lang == "en" [
   Exceptions, and interrupts, are a hardware mechanism by which the

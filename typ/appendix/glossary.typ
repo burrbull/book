@@ -3,7 +3,6 @@
 #h1(if lang == "en" [Appendix A: Glossary]
   else if lang == "de" [Anhang A: Glossar]
   else { todo })
-#set heading(offset: whole)
 
 #if lang == "en" [
   The embedded ecosystem is full of different protocols, hardware

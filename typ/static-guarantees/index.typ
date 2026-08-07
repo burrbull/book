@@ -3,7 +3,6 @@
 #h1(if lang == "en" [Static Guarantees]
   else if lang == "de" [Statische Garantien]
   else { todo })
-#set heading(offset: whole)
 
 #let ln_send = link("https://doc.rust-lang.org/core/marker/trait.Send.html")[`Send`]
 #let ln_sync = link("https://doc.rust-lang.org/core/marker/trait.Sync.html")[`Sync`]

@@ -2,7 +2,6 @@
 
 #h1(offset: whole*2,
   [macOS])
-#set heading(offset: whole*3)
 
 #let brew_ln = link("http://brew.sh/")[Homebrew]
 #let ports_ln = link("https://www.macports.org/")[MacPorts]

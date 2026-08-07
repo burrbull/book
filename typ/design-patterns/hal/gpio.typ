@@ -5,7 +5,6 @@
   else if lang == "de" [Empfehlungen für GPIO-Schnittstellen]
   else { todo })
 <hal-gpio>
-#set heading(offset: whole*3)
 
 = #(if lang == "en" [Pin types are zero-sized by default]
   else if lang == "de" [Pin-Typen haben standardmäßig die Größe Null]
