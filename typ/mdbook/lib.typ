@@ -15,6 +15,24 @@
     }
 }
 
+#let elem-to-string(content) = {
+  if content == none {
+    ""
+  } else if content.has("children") {
+    content.children.map(elem-to-string).join("")
+  } else if content.has("tag") {
+    let attrs = ""
+    if content.has("attrs") {
+      for (k, v) in content.attrs {
+        attrs = attrs+" "+k+"=\""+v+"\""
+      }
+    }
+    "<"+content.tag+attrs+">"+elem-to-string(content.body)+"</"+content.tag+">"
+  } else {
+    to-string(content)
+  }
+}
+
 #let html_head_common(pth) = [
   #html.link(rel: "stylesheet", href: pth+"css/variables-8adf115d.css")
   #html.link(rel: "stylesheet", href: pth+"css/general-e96d0476.css")
@@ -46,9 +64,6 @@
 
   // Provide site root and default themes to javascript
   #builtin-script("provide-themes", root_pth: root_pth)
-
-  // Start loading toc.js asap
-  #html.script(src: root_pth+"toc-7ac66f26.js")
 ]
 
 #let help_container() = [
@@ -183,7 +198,44 @@
     #html.div(class: "sidebar-resize-indicator")
   ]
 ]
-#let toc(sources, out, lang, default_lang) = document(out)[
+#let toc_tree(sources, prefix: "") = html.ol(class: "chapter")[
+  #let num = (0,)
+  #for (path, src) in sources.pairs() {
+    let d = 0
+    num = num.slice(0, d+1)
+    num.at(d) = num.at(d) + 1
+    html.li(class: ("chapter-item", "expanded"))[#html.span(class: "chapter-link-wrapper")[
+      #html.a(href: prefix+path+".html", target: "_parent", [#html.strong(aria-hidden: true)[#num.map(i => [#i.]).join[]] #src.at("title")])
+    ]]
+    if "sub" in src {
+      html.ol(class: "section")[
+        #num.push(0)
+        #for (path, src) in src.at("sub").pairs() {
+          let d = 1
+          num = num.slice(0, d+1)
+          num.at(d) = num.at(d) + 1
+          html.li(class: ("chapter-item", "expanded"))[#html.span(class: "chapter-link-wrapper")[
+            #html.a(href: prefix+path+".html", target: "_parent", [#html.strong(aria-hidden: true)[#num.map(i => [#i.]).join[]] #src.at("title")])
+          ]]
+          if "sub" in src {
+            html.ol(class: "section")[
+              #num.push(0)
+              #for (path, src) in src.at("sub").pairs() {
+                let d = 2
+                num = num.slice(0, d+1)
+                num.at(d) = num.at(d) + 1
+                html.li(class: ("chapter-item", "expanded"))[#html.span(class: "chapter-link-wrapper")[
+                  #html.a(href: prefix+path+".html", target: "_parent", [#html.strong(aria-hidden: true)[#num.map(i => [#i.]).join[]] #src.at("title")])
+                ]]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
+#let toc(tree, out, lang, default_lang) = document(out)[
   #html.html(lang: lang, class: "light", dir: ltr)[
     #html.head[
       #html.meta(charset: "utf-8")
@@ -198,43 +250,7 @@
       #html.title()
     ]
     #html.body(class: "sidebar-iframe-inner")[
-      #html.ol(class: "chapter")[
-        #let num = (0,)
-        #for (path, src) in sources.pairs() {
-          let d = 0
-          num = num.slice(0, d+1)
-          num.at(d) = num.at(d) + 1
-          html.li(class: ("chapter-item", "expanded"))[#html.span(class: "chapter-link-wrapper")[
-            #html.a(href: path+".html", target: "_parent", [#html.strong(aria-hidden: true)[#num.map(i => [#i.]).join[]] #src.at("title")])
-          ]]
-          if "sub" in src {
-            html.ol(class: "section")[
-              #num.push(0)
-              #for (path, src) in src.at("sub").pairs() {
-                let d = 1
-                num = num.slice(0, d+1)
-                num.at(d) = num.at(d) + 1
-                html.li(class: ("chapter-item", "expanded"))[#html.span(class: "chapter-link-wrapper")[
-                  #html.a(href: path+".html", target: "_parent", [#html.strong(aria-hidden: true)[#num.map(i => [#i.]).join[]] #src.at("title")])
-                ]]
-                if "sub" in src {
-                  html.ol(class: "section")[
-                    #num.push(0)
-                    #for (path, src) in src.at("sub").pairs() {
-                      let d = 2
-                      num = num.slice(0, d+1)
-                      num.at(d) = num.at(d) + 1
-                      html.li(class: ("chapter-item", "expanded"))[#html.span(class: "chapter-link-wrapper")[
-                        #html.a(href: path+".html", target: "_parent", [#html.strong(aria-hidden: true)[#num.map(i => [#i.]).join[]] #src.at("title")])
-                      ]]
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        }
-      ]
+      #tree
     ]
   ]
 ]
@@ -270,6 +286,8 @@
       "../"
     }+pth
     #html_head(title, root_pth)
+    // Start loading toc.js asap
+    #html.script(src: pth+"toc-7ac66f26_"+lang+".js")
     #html.body[
       #help_container()
       #html.div(id: "mdbook-body-container")[
@@ -324,7 +342,6 @@
   "mark-09e88c2c.min.js",
   "searcher-09f2665d.js",
   "searchindex-8ec871e3.js",
-  "toc-7ac66f26.js",
   "tomorrow-night-4c0ae647.css",
 )
 
@@ -342,7 +359,10 @@
     }
   }
   let prefix = if lang != default_lang { lang+"/" } else { "" }
-  toc(sources, prefix+"toc.html", lang, default_lang)
+
+  asset(prefix+"toc-7ac66f26_"+lang+".js", read("assets/"+"toc-7ac66f26.js_part1")+elem-to-string(toc_tree(sources, prefix: prefix))+read("assets/"+"toc-7ac66f26.js_part2"))
+
+  toc(toc_tree(sources), prefix+"toc.html", lang, default_lang)
   for (i, (path, source, title)) in sa.enumerate() {
     let (prev_path, _, _) = if i > 0 { sa.at(i - 1) } else { (none, none, none) }
     let (next_path, _, _) = sa.at(i + 1, default: (none, none, none))

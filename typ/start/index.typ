@@ -2,6 +2,7 @@
 
 #h1(if lang == "en" [Getting Started]
   else if lang == "de" [Erste Schritte]
+  else if lang == "zh" [开始]
   else { todo })
 <getting-started>
 
@@ -23,4 +24,6 @@
   Abschnitt, in dem Hardware erforderlich ist, ist natürlich der Abschnitt
   #link(<getting-started-hardware>)[Hardware], wo wir OpenOCD verwenden, um ein
   #ln_f3 zu programmieren.
+] else if lang == "zh" [
+  在这部分里，你将会经历编写，编译，烧录和调试嵌入式程序。大多数的例子都不需要特定的硬件就可以试试，因为我们将要向你展示一个开源硬件仿真器，QEMU的基本使用。唯一需要硬件的部分，那就是，#link(<getting-started-hardware>)[硬件]那一章，我们会使用OpenOCD去编程一个#ln_f3。
 ] else { todo }

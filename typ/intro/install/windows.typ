@@ -18,6 +18,10 @@
   Abschluss des Installationsvorgangs die Option „Add path to environment
   variable". Überprüfen Sie anschließend, ob die Werkzeuge in Ihrem
   `%PATH%` enthalten sind:
+] else if lang == "zh" [
+  ARM提供了用于Windows的`.exe`安装程序。从#link(url_arm_gnu)[这里]获取,
+  然后按照说明操作。 在完成安装之前，勾选/选择"Add path to environment
+  variable"选项。 然后验证环境变量是否添加到 `%PATH%`中:
 ] else { todo }
 
 ```text
@@ -46,12 +50,17 @@ GNU gdb (GNU Tools for Arm Embedded Processors 7-2018-q2-update) 8.1.0.20180315-
   Ihre Umgebungsvariable `%PATH%`, indem Sie den Pfad hinzufügen, unter
   dem die Binärdateien installiert wurden (z. B. #bin_path,
   falls Sie die einfache Installation verwendet haben).
+] else if lang == "zh" [
+  OpenOCD 官方没有提供Windows的二进制版本，
+  若你没有心情去折腾编译，#link(url_openocd)[这里]有xPack提供的一个二进制发布.。按照说明进行安装。然后更新你的`%PATH%` 环境变量，将安装目录包括进去。 (#bin_path, 如果使用简易安装)
 ] else { todo }
 
 #if lang == "en" [
   Verify that OpenOCD is in your `%PATH%` with:
 ] else if lang == "de" [
   Überprüfen Sie mit folgendem Befehl, ob OpenOCD in Ihrem `%PATH%` enthalten ist:
+] else if lang == "zh" [
+  使用以下命令验证OpenOCD是否在你的`%PATH%`环境变量中 :
 ] else { todo }
 
 ```text
@@ -67,6 +76,8 @@ Open On-Chip Debugger 0.10.0
   Grab QEMU from #link(url_qemu)[the official website].
 ] else if lang == "de" [
   Lade QEMU von #link(url_qemu)[der offiziellen Website] herunter.
+] else if lang == "zh" [
+  从#link(url_qemu)[官网]获取QEMU。
 ] else { todo }
 
 = ST-LINK USB driver
@@ -81,10 +92,16 @@ Open On-Chip Debugger 0.10.0
   installieren, da OpenOCD sonst nicht funktioniert. Befolgen Sie die
   Anweisungen des Installationsprogramms und stellen Sie sicher, dass Sie
   die richtige Version des Treibers (32-Bit oder 64-Bit) installieren.
+] else if lang == "zh" [
+  你还需要安装这个
+  #link(url_stlink)[USB驱动]
+  否则OpenOCD将无法工作。按照安装程序的说明，确保你安装了正确版本（32位或64位）的驱动程序。
 ] else { todo }
 
 #if lang == "en" [
   That's all! Go to the #link(<verify-installation>)[next section].
 ] else if lang == "de" [
   Das war's! Gehen Sie zum #link(<verify-installation>)[nächsten Abschnitt].
+] else if lang == "zh" [
+  以上是全部内容！转到 #link(<verify-installation>)[下个章节]。
 ] else { todo }

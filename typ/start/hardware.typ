@@ -2,6 +2,7 @@
 
 #h1(offset: whole,
   if lang in ("en", "de") [Hardware]
+  else if lang == "zh" [硬件]
   else { todo })
 <getting-started-hardware>
 
@@ -12,12 +13,14 @@
 ] else if lang == "de" [
   Mittlerweile sollten Sie mit den Werkzeugen und dem Entwicklungsprozess
   einigermaßen vertraut sein. In diesem Abschnitt wechseln wir zur echten
-  Hardware; der Prozess bleibt im Großen und Ganzen gleich. Tauchen wir
-  ein.
+  Hardware; der Prozess bleibt im Großen und Ganzen gleich. Tauchen wir ein.
+] else if lang == "zh" [
+  现在你应该有点熟悉工具和开发过程了。在这部分我们将切换到真正的硬件上；步骤非常相似。让我们深入下去。
 ] else { todo }
 
 = #(if lang == "en" [Know your hardware]
   else if lang == "de" [Kennen Sie Ihre Hardware]
+  else if lang == "zh" [认识你的硬件]
   else { todo })
 
 #if lang == "en" [
@@ -40,6 +43,12 @@
     Flash und 32 KiB RAM.
   - Wo werden Flash-Speicher und RAM im Adressraum abgebildet? zB RAM ist
     befindet sich üblicherweise an der Adresse `0x2000_0000`.
+] else if lang == "zh" [
+  在我们开始之前，你需要了解下你的目标设备的一些特性，因为你将用它们来配置项目:
+  - ARM 内核。比如 Cortex-M3 。
+  - ARM 内核包括一个FPU吗?Cortex-M4#[*F*]和Cortex-M7#[*F*]有。
+  - 目标设备有多少Flash和RAM？比如 256KiB的Flash和32KiB的RAM。
+  - Flash和RAM映射在地址空间的什么位置?比如 RAM通常位于 `0x2000_0000` 地址处。
 ] else { todo }
 
 #if lang == "en" [
@@ -48,6 +57,8 @@
 ] else if lang == "de" [
   Diese Informationen finden Sie im Datenblatt oder im Referenzhandbuch
   Ihres/Ihrer Microcontrollers/Microcontrollerplatine.
+] else if lang == "zh" [
+  你可以在你的设备的数据手册和参考手册上找到这些信息。
 ] else { todo }
 
 #if lang == "en" [
@@ -66,20 +77,26 @@
   - 256 KiB Flash befinden sich an der Adresse 0x0800_0000.
   - 440 KiB RAM an der Adresse 0x2000_0000. (Es gibt noch eine weitere
     RAM-Region, aber der Einfachheit halber ignorieren wir das).
+] else if lang == "zh" [
+  这部分，要使用我们的参考硬件，STM32F3DISCOVERY。这个板子包含一个STM32F303VCT6微控制器。这个微控制器拥有:
+  - 一个Cortex-M4F核心，它包含一个单精度FPU。
+  - 位于 0x0800_0000 地址的256KiB的Flash。
+  - 位于 0x2000_0000 地址的40KiB的RAM。(这里还有其它的RAM区域，但是为了方便起见，我们将忽略它)。
 ] else { todo }
 
 = #(if lang == "en" [Configuring]
   else if lang == "de" [Konfigurieren]
+  else if lang == "zh" [配置]
   else { todo })
 
 #if lang == "en" [
   We'll start from scratch with a fresh template instance. Refer to the
-  #link( <getting-started-qemu>)[previous section on QEMU] for a refresher on how to do
-  this without `cargo-generate`.
+  #link( <getting-started-qemu>)[previous section on QEMU] for a refresher on how to do this without `cargo-generate`.
 ] else if lang == "de" [
   Wir beginnen bei Null mit einer neuen Vorlageninstanz. Zur Auffrischung
-  siehe #link(<getting-started-qemu>)[vorheriger Abschnitt zu QEMU], wie man das ohne
-  `cargo-generate` macht.
+  siehe #link(<getting-started-qemu>)[vorheriger Abschnitt zu QEMU], wie man das ohne `cargo-generate` macht.
+] else if lang == "zh" [
+  我们将使用一个新的模板实例从零开始。对于新手，请参考#link(<getting-started-qemu>)[先前的QEMU]章节，了解如何在没有`cargo-generate`的情况下完成配置。
 ] else { todo }
 
 ```text
@@ -96,13 +113,15 @@ $ cd app
 ] else if lang == "de" [
   Schritt Nummer eins besteht darin, ein Standardkompilierungsziel in
   `.cargo/config.toml` festzulegen.
+] else if lang == "zh" [
+  第一步是在`.cargo/config.toml`中设置一个默认编译目标。
 ] else { todo }
 
 ```console
 tail -n5 .cargo/config.toml
 ```
 
-#if lang == "en" [
+#if lang in ("en", "zh") [
   ```toml
   # Pick ONE of these compilation targets
   # target = "thumbv6m-none-eabi"    # Cortex-M0 and Cortex-M0+
@@ -124,6 +143,8 @@ tail -n5 .cargo/config.toml
   We'll use `thumbv7em-none-eabihf` as that covers the Cortex-M4F core.
 ] else if lang == "de" [
   Wir verwenden `thumbv7em-none-eabihf`, da es den Cortex-M4F-Kern abdeckt.
+] else if lang == "zh" [
+  我们将使用 `thumbv7em-none-eabihf`，因为它包括了Cortex-M4F内核． 
 ] else { todo }
 
 #quote(block: true)[
@@ -137,6 +158,10 @@ tail -n5 .cargo/config.toml
   Kapitel erinnern, müssen wir alle Ziele installieren, dies ist ein
   neues Ziel. Vergessen Sie also nicht, die Installationsprozess
   `rustup target add thumbv7em-none-eabihf` für dieses Ziel auszuführen.
+] else if lang == "zh" [
+  *注意*：你可能还记得先前的章节，我们必须要安装所有的目标平台，这个平台是一个新的．
+  所以，不要忘了为这个平台运行安装步骤
+  `rustup target add thumbv7em-none-eabihf` ．
 ] else { todo }
 ]
 
@@ -144,6 +169,8 @@ tail -n5 .cargo/config.toml
   The second step is to enter the memory region information into the `memory.x` file.
 ] else if lang == "de" [
   Der zweite Schritt besteht darin, die Speicherbereichsinformationen in die Datei `memory.x` einzugeben
+] else if lang == "zh" [
+  第二步是将存储区域信息(memory region information)输入`memory.x`。
 ] else { todo }
 
 ```text
@@ -168,6 +195,8 @@ MEMORY
   geändert haben, nachdem Sie den ersten Build für ein bestimmtes
   Build-Ziel erstellt haben, dann führen Sie `cargo clean` vor
   `cargo build` aus, da `cargo build` keine Änderungen von `memory.x` verfolgt.
+] else if lang == "zh" [
+  *注意*：如果你因为某些理由，在对某个编译目标首次编译后，改变了`memory.x`文件，需要在`cargo build`之前执行`cargo clean`。因为`cargo build`可能不会跟踪`memory.x`的更新。
 ] else { todo }
 ]
 
@@ -177,6 +206,8 @@ MEMORY
 ] else if lang == "de" [
   Wir beginnen noch einmal mit dem Hallo-Beispiel, aber zuerst müssen wir
   eine kleine Änderung vornehmen.
+] else if lang == "zh" [
+  我们将再次使用hello示例作为开始，但是首先我们必须做一个小改变。
 ] else { todo }
 
 #if lang == "en" [
@@ -185,6 +216,8 @@ MEMORY
 ] else if lang == "de" [
   Stellen Sie in `examples/hello.rs`sicher, daß `debug::exit()` auskommentiert
   oder entfernt wurde. Es wird nur zum Ausführen in QEMU verwendet.
+] else if lang == "zh" [
+  在`examples/hello.rs`中，确保`debug::exit()`调用被注释掉了或者移除掉了。它只能用于在QEMU中运行的情况。
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -201,6 +234,9 @@ fn main() -> ! {
     // HINWEIS: Fuehren Sie dies nicht auf der Hardware aus; es kann den 
     //          OpenOCD-Zustand beschaedigen.
     // debug::exit(debug::EXIT_SUCCESS);"
+      } else if lang == "zh" {
+        "退出 QEMU
+    // 注意 不要在硬件上运行这个；它会打破OpenOCD的状态"
       } else { todos } + "
 
     loop {}
@@ -218,6 +254,9 @@ fn main() -> ! {
   `cortex-m-rt`-Crate übernimmt die gesamte für den Betrieb des Chips
   erforderliche „Magie", da erfreulicherweise so gut wie alle
   Cortex-M-CPUs auf die gleiche Weise booten.
+] else if lang == "zh" [
+  你可以像你之前做的一样，使用`cargo build`检查编译程序，使用`cargo-binutils`观察二进制项。`cortex-m-rt`库可以处理所有让芯片运行起来所需的魔法，几乎所有的Cortex-M
+  CPUs都按同样的方式启动。
 ] else { todo }
 
 ```console
@@ -226,6 +265,7 @@ cargo build --example hello
 
 = #(if lang == "en" [Debugging]
   else if lang == "de" [Fehlerbehebung (Debugging)]
+  else if lang == "zh" [调试]
   else { todo })
 
 #let url_dn = "https://github.com/rust-embedded/debugonomicon"
@@ -242,6 +282,8 @@ cargo build --example hello
   STM32F3DISCOVERY laufenden Programms erforderlich sind. Dies soll als
   Referenz dienen; für gerätespezifische Informationen zum Debugging
   konsultieren Sie bitte #link(url_dn)[das Debugonomicon].
+] else if lang == "zh" [
+  调试会看起来有点不一样。事实上，取决于不同的目标设备，第一步可能看起来不一样。在这个章节里，我们将展示，调试一个在STM32F3DISCOVERY上运行的程序，所需要的步骤。这作为一个参考。关于调试有关的设备特定的信息，可以看#link(url_dn)[the Debugonomicon]。
 ] else { todo }
 
 #if lang == "en" [
@@ -250,6 +292,8 @@ cargo build --example hello
 ] else if lang == "de" [
   Wie zuvor führen wir Remote-Debugging durch, wobei der Client ein
   GDB-Prozess ist. Diesmal ist der Server jedoch OpenOCD.
+] else if lang == "zh" [
+  像之前一样，我们将进行远程调试，客户端将是一个GDB进程。不同的是，OpenOCD将是服务器。
 ] else { todo }
 
 #if lang == "en" [
@@ -261,6 +305,8 @@ cargo build --example hello
   "#link(<verify-installation>)[Die Installation überprüfen]"
   beschrieben, das Discovery Board mit Ihrem Laptop/PC und prüfen Sie, ob
   der ST-LINK-Header ausgefüllt ist.
+] else if lang == "zh" [
+  像是在#link(<verify-installation>)[安装验证]中做的那样，把你的笔记本/个人电脑和discovery开发板连接起来，检查ST-LINK的短路帽是否被安装了。
 ] else { todo }
 
 #if lang == "en" [
@@ -274,13 +320,17 @@ cargo build --example hello
   im Stammverzeichnis der Vorlage aus; `openocd` greift dabei auf die
   Datei `openocd.cfg` zu, in der festgelegt ist, welche Schnittstellen-
   und Zieldateien verwendet werden sollen.
+] else if lang == "zh" [
+  在一个终端上运行 `openocd` 连接到你的开发板上的 ST-LINK
+  。从模板的根目录运行这个命令；`openocd` 将会选择 `openocd.cfg`
+  文件，它指出了所使用的接口文件(interface file)和目标文件(target file)。
 ] else { todo }
 
 ```console
 cat openocd.cfg
 ```
 
-#if lang == "en" [
+#if lang in ("en", "zh") [
   ```text
   # Sample OpenOCD configuration for the STM32F3DISCOVERY development board
 
@@ -325,6 +375,11 @@ cat openocd.cfg
   feststellen, dass Sie eine ältere Revision des Discovery-Boards
   besitzen, sollten Sie an dieser Stelle die Datei `openocd.cfg` so
   anpassen, dass `interface/stlink-v2.cfg` verwendet wird.
+] else if lang == "zh" [
+  *注意*
+  如果你在#link(<verify-installation>)[安装验证]章节中，发现你的discovery开发板是一个更旧的版本，那么你应该修改你的
+  `openocd.cfg` 文件，注释掉 `interface/stlink.cfg`，让它去使用
+  `interface/stlink-v2.cfg` 。
 ] else { todo }
 ]
 
@@ -368,12 +423,17 @@ gdb-multiarch -q target/thumbv7em-none-eabihf/debug/examples/hello
   anstelle von `gdb-multiarch` eine andere Version von gdb, je nachdem,
   welche Version Sie im Installationskapitel installiert haben. Dies
   könnte beispielsweise `arm-none-eabi-gdb` oder einfach `gdb` sein.
+] else if lang == "zh" [
+  *注意*:
+  像之前一样，你可能需要另一个版本的gdb而不是`gdb-multiarch`，取决于你在之前的章节安装了什么工具。这也可能使用的是`arm-none-eabi-gdb`或者只是`gdb`
 ] else { todo }
 
 #if lang == "en" [
   Next connect GDB to OpenOCD, which is waiting for a TCP connection on port 3333.
 ] else if lang == "de" [
   Verbinden Sie nun GDB mit OpenOCD, das auf eine TCP-Verbindung an Port 3333 wartet.
+] else if lang == "zh" [
+  接下来把GDB连接到OpenOCD，它正在等待一个在端口3333上的TCP链接。
 ] else { todo }
 
 ```console
@@ -388,6 +448,8 @@ Remote debugging using :3333
 ] else if lang == "de" [
   Fahren Sie nun damit fort, das Programm mithilfe des Befehls `load` auf
   den Mikrocontroller zu _flashen_ (zu laden).
+] else if lang == "zh" [
+  接下来使用`load`命令，继续 _flash_(加载) 程序到微控制器上。
 ] else { todo }
 
 ```console
@@ -408,6 +470,9 @@ Transfer rate: 13 KB/sec, 2489 bytes/write.
   müssen wir OpenOCD anweisen, Semihosting zu aktivieren, bevor wir einen
   entsprechenden Aufruf tätigen. Befehle können mithilfe des Befehls
   `monitor` an OpenOCD gesendet werden.
+] else if lang == "zh" [
+  程序现在被加载了。这个程序使用半主机模式，因此在我们调用半主机模式之前，我们必须告诉OpenOCD使能半主机。你可以使用
+  `monitor` 命令，发送命令给OpenOCD 。
 ] else { todo }
 
 ```console
@@ -421,6 +486,8 @@ semihosting is enabled
 ] else if lang == "de" [
   Sie können sich alle OpenOCD-Befehle anzeigen lassen, indem Sie den
   Befehl `monitor help` aufrufen.
+] else if lang == "zh" [
+  通过调用 `monitor help` 命令，你能看到所有的OpenOCD命令。
 ] else { todo }
 ]
 
@@ -430,6 +497,9 @@ semihosting is enabled
 ] else if lang == "de" [
   Wie zuvor können wir mithilfe eines Breakpoints und des Befehls
   `continue` direkt zu `main` springen.
+] else if lang == "zh" [
+  像我们之前一样，使用一个断点和 `continue` 命令我们可以跳过所有的步骤到
+  `main` 。
 ] else { todo }
 
 ```console
@@ -456,6 +526,10 @@ Breakpoint 1, hello::__cortex_m_rt_main_trampoline () at examples/hello.rs:11
   `continue` eingegeben haben, sollten Sie überprüfen, ob die Angaben zum
   Speicherbereich in der Datei `memory.x` für Ihr Gerät korrekt
   konfiguriert sind (sowohl die Startadressen _als auch_ die Längen).
+] else if lang == "zh" [
+  *注意*
+  如果在你使用了上面的`continue`命令后，GDB阻塞住了终端而不是停在了断点处，你可能需要检查下`memory.x`文件中的存储分区的信息，对于你的设备来说是否被正确的设置了起始位置*和*大小
+。
 ] else { todo }
 ]
 
@@ -463,6 +537,8 @@ Breakpoint 1, hello::__cortex_m_rt_main_trampoline () at examples/hello.rs:11
   Step into the main function with `step`.
 ] else if lang == "de" [
   Springen Sie mit `step` in die main-Funktion.
+] else if lang == "zh" [
+  使用`step`步进main函数里。
 ] else { todo }
 
 ```console
@@ -478,6 +554,9 @@ hello::__cortex_m_rt_main () at examples/hello.rs:13
 ] else if lang == "de" [
   Nachdem Sie das Programm mit `next` weitergeführt haben, sollten Sie
   unter anderem „Hello, world!" auf der OpenOCD-Konsole ausgegeben sehen.
+] else if lang == "zh" [
+  在使用了`next`让函数继续执行之后，你应该看到 "Hello, world!"
+  被打印到了OpenOCD控制台上。
 ] else { todo }
 
 ```console
@@ -499,12 +578,16 @@ Info : halted: PC: 0x080004bc
 ] else if lang == "de" [
   Die Meldung wird nur einmal angezeigt, kurz bevor das Programm in die in
   Zeile 19 definierte Endlosschleife eintritt: `loop {}`
+] else if lang == "zh" [
+  消息只打印一次，然后进入定义在19行的无限循环中: `loop {}`
 ] else { todo }
 
 #if lang == "en" [
   You can now exit GDB using the `quit` command.
 ] else if lang == "de" [
   Sie können GDB nun mit dem Befehl `quit` beenden.
+] else if lang == "zh" [
+  使用 `quit` 命令，你现在可以退出 GDB 了。
 ] else { todo }
 
 ```console
@@ -526,6 +609,10 @@ Quit anyway? (y or n)
   all diese Schritte in einem einzigen GDB-Skript namens `openocd.gdb`
   zusammengefasst. Die Datei wurde während des Schritts `cargo generate`
   erstellt und sollte ohne Änderungen funktionieren. Werfen wir einen Blick darauf:
+] else if lang == "zh" [
+  现在调试比之前多了点步骤，因此我们要把所有步骤打包进一个名为
+  `openocd.gdb` 的GDB脚本中。这个文件在 `cargo generate`
+  步骤中被生成，因此不需要任何修改了。让我们看一下:
 ] else { todo }
 
 ```console
@@ -560,6 +647,10 @@ stepi
   `<gdb> -x openocd.gdb target/thumbv7em-none-eabihf/debug/examples/hello`
   ausführen, verbindet sich GDB sofort mit OpenOCD, aktiviert Semihosting,
   lädt das Programm und startet den Prozess.
+] else if lang == "zh" [
+  现在运行
+  `<gdb> -x openocd.gdb target/thumbv7em-none-eabihf/debug/examples/hello`
+  将会立即把GDB和OpenOCD连接起来，使能半主机，加载程序和启动进程。
 ] else { todo }
 
 #if lang == "en" [
@@ -571,13 +662,17 @@ stepi
   Runner einrichten, sodass `cargo run` das Programm baut _und_ eine
   GDB-Sitzung startet. Dieser Runner ist bereits in der Datei
   `.cargo/config.toml` enthalten, jedoch auskommentiert.
+] else if lang == "zh" [
+  另外，你能将 `<gdb> -x openocd.gdb` 放进一个自定义的 runner 中，使
+  `cargo run` 能编译程序并启动一个GDB会话。这个 runner 在
+  `.cargo/config.toml` 中，但是它被注释掉了。
 ] else { todo }
 
 ```console
 head -n10 .cargo/config.toml
 ```
 
-#if lang == "en" [
+#if lang in ("en", "zh") [
   ```toml
   [target.thumbv7m-none-eabi]
   # uncomment this to make `cargo run` execute programs on QEMU

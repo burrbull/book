@@ -177,14 +177,14 @@ enum Port {
 ] else { todo }
 - `pub fn into_input<N: InputState>(self, input: N) -> Pin<N>`
 - `pub fn into_output<N: OutputState>(self, output: N) -> Pin<N>`
-- ```ignore
+- ```rust
   pub fn with_input_state<N: InputState, R>(
       &mut self,
       input: N,
       f: impl FnOnce(&mut PA1<N>) -> R,
   ) -> R
   ```
-- ```ignore
+- ```rust
   pub fn with_output_state<N: OutputState, R>(
       &mut self,
       output: N,
