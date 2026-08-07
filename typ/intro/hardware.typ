@@ -76,7 +76,8 @@
     - GPIO-Pins (General Purpose Input/Output) und andere Pin-Typen, die
       über die beiden Stiftleistenreihen an den Seiten der Platine
       zugänglich sind.
-    - Eine Mini-USB-Schnittstelle, die über den mit „USB USER"
+    - Einen #link(wiki_accelerometer)[Beschleunigungsmesser] als Teil des #link(url_lsm303)[LSM303DLHC]-Chips.
+    - Ein #link(wiki_magnetometer)[Magnetfeldstärkenmessgerät] als Teil des #link(url_lsm303)[LSM303DLHC]-Chips.
       gekennzeichneten USB-Anschluss zugänglich ist.
   - Ein #link(wiki_accelerometer)[Beschleunigungssensor] als Teil des #link(url_lsm303)[LSM303DLHC]-Chips. #todoupd("de")
   - Ein #link(wiki_gyroscope)[Gyroskop] als Teil des

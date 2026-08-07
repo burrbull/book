@@ -274,6 +274,7 @@ opt-level = \"z\"
 ] else { todo }
 
 = #(if lang == "en" [Optimize for size]
+  else if lang == "de" [Nach Größe optimieren]
   else { todo })
 
 #if lang == "en" [

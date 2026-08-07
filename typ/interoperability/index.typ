@@ -114,6 +114,7 @@ fn foo(num: u32) {
 ] else { todo }
 
 == #(if lang == "en" [Interoperability with RTOSs]
+  else if lang == "de" [Interoperabilität mit RTOS]
   else { todo })
 
 #if lang == "en" [

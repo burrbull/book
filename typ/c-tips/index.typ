@@ -841,7 +841,9 @@ fn main() {
   der Rust-Referenz.
 ] else { todo }
 
-== Other Resources
+== #(if lang == "en" [Other Resources]
+  else if lang == "de" [Weitere Ressourcen]
+  else { todo })
 
 #let url_faq = "https://docs.rust-embedded.org/faq.html"
 #let url_for_c = "http://blahg.josefsipek.net/?p=580"
