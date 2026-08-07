@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [Optimizations: the speed size tradeoff]
   else if lang == "de" [Optimierungen: Der Kompromiss zwischen Geschwindigkeit und Größe]
+  else if lang == "zh" [优化: 速度与大小之间的博弈]
   else { todo })
 
 #if lang == "en" [
@@ -16,10 +17,13 @@
   Dieser Abschnitt behandelt die verschiedenen Optimierungsstufen von
   `rustc` und deren Auswirkungen auf die Ausführungszeit sowie die Größe
   der Binärdatei eines Programms.
+] else if lang == "zh" [
+  每个人都想要程序变得即快又小，但是同时满足这两个条件是不可能的。这部分讨论`rustc`提供的不同的优化等级，和它们是如何影响执行时间和一个程序的二进制项的大小。
 ] else { todo }
 
 = #(if lang == "en" [No optimizations]
   else if lang == "de" [Keine Optimierungen]
+  else if lang == "zh" [无优化]
   else { todo })
 
 #if lang == "en" [
@@ -33,6 +37,9 @@
   dieses Profil für das Debugging optimiert ist, werden
   Debug-Informationen aktiviert, jedoch _keinerlei_ Optimierungen
   vorgenommen; es wird also `-C opt-level=0` verwendet.
+] else if lang == "zh" [
+  这是默认的。当你调用`cargo build`时，你使用的是development(又叫`dev`)配置。这个配置优化的目的是为了调试，因此它使能了调试信息且_关闭_了所有优化，i.e.~它使用
+  `-C opt-level = 0` 。
 ] else { todo }
 
 #if lang == "en" [
@@ -47,6 +54,9 @@
   Release-Profil zu aktivieren -- standardmäßig sind sie dort deaktiviert.
   Dies ermöglicht Ihnen die Verwendung von Breakpoints beim Debuggen von
   Release-Builds.
+] else if lang == "zh" [
+  至少对于裸机开发来说，调试信息不会占用Flash/ROM中的空间，意味着在这种情况下，调试信息是零开销的，因此实际上我们推荐你在release配置中使能调试信息
+  -- 默认它被关闭了。那会让你调试release版本的固件时可以使用断点。
 ] else { todo }
 
 #raw(block: true, lang: "toml",
@@ -55,6 +65,8 @@
     "symbols are nice and they don't increase the size on Flash"
   } else if lang == "de" {
     "Symbole sind praktisch und vergroessern die Dateigroesse im Flash nicht"
+  } else if lang == "zh" {
+    "调试符号很好且它们不会增加Flash上的大小"
   } else { todos } + "
 debug = true
 ")
@@ -72,6 +84,8 @@ debug = true
   Funktionsargumente in GDB per `print` ausgeben. Bei optimiertem Code
   führt der Versuch, Variablen auszugeben, hingegen zur Meldung
   `$0 = <value optimized out>`.
+] else if lang == "zh" [
+  无优化对于调试来说是最好的选择，因为单步调试代码感觉像是你正在逐条语句地执行程序，且你能在GDB中`print`栈变量和函数参数。当代码被优化了，尝试打印变量会导致`$0 = <value optimized out>`被打印出来。
 ] else { todo }
 
 #if lang == "en" [
@@ -87,6 +101,9 @@ debug = true
   Flash-Speicher belegen können -- Speicherplatz, über den das Zielgerät
   womöglich gar nicht verfügt. Die Folge: Die nicht optimierte Binärdatei
   passt nicht auf das Gerät!
+] else if lang == "zh" [
+  `dev`配置最大的缺点就是最终的二进制项将会变得巨大且缓慢。大小通常是一个更大的问题，因为未优化的二进制项会占据大量KiB的Flash，你的目标设备可能没这么多Flash
+  -- 结果: 你未优化的二进制项无法烧录进你的设备中！
 ] else { todo }
 
 #if lang == "en" [
@@ -94,10 +111,13 @@ debug = true
 ] else if lang == "de" [
   Gibt es eine Möglichkeit, kleinere und dennoch für das Debugging
   geeignete Binärdateien zu erhalten? Ja, es gibt einen Trick.
+] else if lang == "zh" [
+  我们可以有更小的，调试友好的二进制项吗?是的，这里有一个技巧。
 ] else { todo }
 
 == #(if lang == "en" [Optimizing dependencies]
   else if lang == "de" [Optimierung der Abhängigkeiten]
+  else if lang == "zh" [优化依赖]
   else { todo })
 
 #let url_overrides = "https://doc.rust-lang.org/cargo/reference/profiles.html#overrides"
@@ -112,6 +132,9 @@ debug = true
   überschreiben können. So lassen sich alle Abhängigkeiten hinsichtlich
   ihrer Größe optimieren, während die oberste Crate unoptimiert und
   debuggfreundlich bleibt.
+] else if lang == "zh" [
+  这里有个名为#link(url_overrides)[`profile-overrides`]的Cargo
+  feature，其可以让你覆盖依赖项的优化等级。你能使用这个feature去优化所有依赖的大小，而保持顶层的crate没有被优化以致调试起来友好。
 ] else { todo }
 
 #if lang == "en" [
@@ -127,12 +150,17 @@ debug = true
   einer generischen Struktur erstellen und feststellen, dass diese Code
   mit großem Speicherbedarf einbindet, kann es sein, dass eine Erhöhung
   des Optimierungsgrads der relevanten Abhängigkeiten keine Wirkung zeigt.
+] else if lang == "zh" [
+  需要知道，泛型代码有时是在它被实例化的库中被优化的，而不是它被定义的地方．如果你在你的应用中生成了一个泛型结构体的实例，
+  并且发现它让代码体积变得更大，那可能是因为相关的依赖的优化等级的增加没有造成影响．
 ] else { todo }
 
 #if lang == "en" [
   Here's an example:
 ] else if lang == "de" [
   Hier ist ein Beispiel:
+] else if lang == "zh" [
+  这是一个示例:
 ] else { todo }
 
 ```toml
@@ -149,6 +177,8 @@ opt-level = "z" # +
   Without the override:
 ] else if lang == "de" [
   Ohne die Überschreibung:
+] else if lang == "zh" [
+  没有覆盖:
 ] else { todo }
 
 ```text
@@ -166,6 +196,8 @@ section               size        addr
   With the override:
 ] else if lang == "de" [
   Mit der Überschreibung
+] else if lang == "zh" [
+  有覆盖:
 ] else { todo }
 
 ```text
@@ -196,6 +228,10 @@ section               size        addr
   sein, eine Abhängigkeit zu debuggen, lässt sich die Funktion
   `profile-overrides` nutzen, um diese spezifische Abhängigkeit von der
   Optimierung auszunehmen. Siehe dazu das folgende Beispiel:
+] else if lang == "zh" [
+  在Flash的使用上减少了6KiB，而不会损害顶层crate的可调试性。如果你步进一个依赖项，然后你将开始再次看到那些`<value optimized out>`信息，但是通常的情况下你只想调试顶层的crate而不是依赖项。如果你
+  _需要_ 调试一个依赖项，那么你可以使用`profile-overrides`
+  feature去防止一个特定的依赖项被优化。看下面的例子:
 ] else { todo }
 
 #raw(block: true, lang: "toml",
@@ -205,6 +241,8 @@ section               size        addr
     "don't optimize the `cortex-m-rt` crate"
   } else if lang == "de" {
     "Optimiere das `cortex-m-rt`-Crate nicht"
+  } else if lang == "zh" {
+    "不要优化`cortex-m-rt` crate"
   } else { todos } + "
 [profile.dev.package.cortex-m-rt] # +
 opt-level = 0 # +
@@ -213,9 +251,11 @@ opt-level = 0 # +
     "but do optimize all the other dependencies"
   } else if lang == "de" {
     "optimieren Sie jedoch alle anderen Abhaengigkeiten"
+  } else if lang == "zh" {
+    "但是优化所有其它依赖项"
   } else { todos } + "
 [profile.dev.package.\"*\"]
-codegen-units = 1 # " + if lang in ("en", "de") {
+codegen-units = 1 # " + if lang in ("en", "de", "zh") {
                     "better optimizations"
                   } else { todos } + "
 opt-level = \"z\"
@@ -225,10 +265,13 @@ opt-level = \"z\"
   Now the top crate and `cortex-m-rt` are debugger friendly!
 ] else if lang == "de" [
   Jetzt sind das Top-Level-Crate und `cortex-m-rt` debuggerfreundlich!
+] else if lang == "zh" [
+  现在顶层的crate和`cortex-m-rt`对调试器很友好！
 ] else { todo }
 
 = #(if lang == "en" [Optimize for speed]
   else if lang == "de" [Auf Geschwindigkeit optimieren]
+  else if lang == "zh" [优化速度]
   else { todo })
 
 #if lang == "en" [
@@ -240,6 +283,10 @@ opt-level = \"z\"
   Geschwindigkeitsoptimierung: `opt-level = 1`, `2` und `3`. Beim
   Ausführen von `cargo build --release` wird das Release-Profil verwendet,
   das standardmäßig auf `opt-level = 3` eingestellt ist.
+] else if lang == "zh" [
+  自2018-09-18开始 `rustc` 支持三个 "优化速度" 的等级: `opt-level = 1`,
+  `2` 和 `3` 。当你运行 `cargo build --release`
+  时，你正在使用的是release配置，其默认是 `opt-level = 3` 。
 ] else { todo }
 
 #if lang == "en" [
@@ -260,6 +307,11 @@ opt-level = \"z\"
   Bytes für eine Schleife zum Nullsetzen eines Arrays), kann aber unter
   geeigneten Bedingungen (etwa bei einer ausreichend hohen Anzahl von
   Iterationen) die Ausführungszeit halbieren.
+] else if lang == "zh" [
+  `opt-level = 2` 和 `3`
+  都以二进制项大小为代价优化速度，但是等级`3`比等级`2`做了更多的向量化和内联。特别是，你将看到在`opt-level`等于或者大于`2`时LLVM将展开循环。循环展开在
+  Flash / ROM 方面的成本相当高(e.g.~from 26 bytes to 194 for a zero this
+  array loop)但是如果条件合适(迭代次数足够大)，也可以将执行时间减半。
 ] else { todo }
 
 #if lang == "en" [
@@ -271,10 +323,13 @@ opt-level = \"z\"
   `opt-level = 2` und `3` zu deaktivieren; wenn Sie sich diesen
   Speicheraufwand also nicht leisten können, sollten Sie Ihr Programm
   stattdessen auf eine geringe Größe hin optimieren.
+] else if lang == "zh" [
+  现在还没有办法在`opt-level = 2`和`3`的情况下关闭循环展开，因此如果你不能接受它的开销，你应该选择优化你的程序的大小。
 ] else { todo }
 
 = #(if lang == "en" [Optimize for size]
   else if lang == "de" [Nach Größe optimieren]
+  else if lang == "zh" [优化大小]
   else { todo })
 
 #if lang == "en" [
@@ -288,6 +343,10 @@ opt-level = \"z\"
   wurden von Clang/LLVM übernommen und sind nicht besonders
   aussagekräftig; allerdings soll das `"z"` signalisieren, dass damit
   kleinere Binärdateien erzeugt werden als mit `"s"`.
+] else if lang == "zh" [
+  自2018-09-18开始`rustc`支持两个"优化大小"的等级: `opt-level = "s"` 和
+  `"z"` 。这些名字传承自 clang / LLVM
+  且不具有描述性，但是`"z"`意味着它产生的二进制文件比`"s"`更小。
 ] else { todo }
 
 #if lang == "en" [
@@ -297,11 +356,13 @@ opt-level = \"z\"
   Wenn Ihre Release-Binärdateien hinsichtlich der Größe optimiert werden
   sollen, ändern Sie die Einstellung `profile.release.opt-level` in der
   Datei `Cargo.toml` wie unten dargestellt.
+] else if lang == "zh" [
+  如果你想要发布一个优化了大小的二进制项，那么改变下面展示的`Cargo.toml`中的`profile.release.opt-level`配置。
 ] else { todo }
 
 #raw(block: true, lang: "toml",
 "[profile.release]
-# " + if lang == "en" { "or \"z\"" }
+# " + if lang in ("en", "zh") { "or \"z\"" }
   else if lang == "de" { "oder \"z\"" }
   else { todos } + "
 opt-level = \"s\"
@@ -326,6 +387,9 @@ opt-level = \"s\"
   Ein niedriger Inline-Schwellenwert kann daher dazu führen, dass LLVM
   Optimierungsmöglichkeiten verpasst (etwa das Entfernen von nicht
   erreichbaren Programmzweigen oder das Inlinen von Closure-Aufrufen).
+] else if lang == "zh" [
+  这两个优化等级极大地减小了LLVM的内联阈值，一个用来决定是否内联或者不内联一个函数的度量。Rust其中一个概念是零成本抽象；这些抽象趋向于去使用许多新类型和小函数去保持不变量(e.g.~像是`deref`，`as_ref`这样借用内部值的函数)因此一个低内联阈值会使LLVM失去优化的机会(e.g.~去掉死分支(dead
+  branches)，内联对闭包的调用)。
 ] else { todo }
 
 #if lang == "en" [
@@ -340,6 +404,8 @@ recommended way to change the inline threshold is to append the
   Größe der Binärdatei auswirkt. Die empfohlene Methode zur Änderung
   dieses Schwellenwerts besteht darin, das Flag `-C inline-threshold` zu
   den übrigen `rustflags` in der Datei `.cargo/config.toml` hinzuzufügen.
+] else if lang == "zh" [
+  当优化大小时，你可能想要尝试增加内联阈值去观察是否会对你的二进制项的大小有影响。推荐的改变内联阈值的方法是在`.cargo/config.toml`中往其它rustflags后插入`-C inline-threshold`
 ] else { todo }
 
 #raw(block: true, lang: "toml",
@@ -348,6 +414,8 @@ recommended way to change the inline threshold is to append the
     "this assumes that you are using the cortex-m-quickstart template"
   } else if lang == "de" {
     "Dies setzt voraus, dass Sie die cortex-m-quickstart-Vorlage verwenden"
+  } else if lang == "zh" {
+    "这里假设你正在使用cortex-m-quickstart模板"
   } else { todos } + "
 [target.'cfg(all(target_arch = \"arm\", target_os = \"none\"))']
 rustflags = [
@@ -371,6 +439,12 @@ rustflags = [
   - `opt-level = 2` verwendet 225
   - `opt-level = "s"` verwendet 75
   - `opt-level = "z"` verwendet 25
+] else if lang == "zh" [
+  用什么值?#link(url_opt_lvls)[从1.29.0开始，这些是不同优化级别使用的内联阈值]:
+  - `opt-level = 3` 使用 275
+  - `opt-level = 2` 使用 225
+  - `opt-level = "s"` 使用 75
+  - `opt-level = "z"` 使用 25
 ] else { todo }
 
 #if lang == "en" [
@@ -378,4 +452,6 @@ rustflags = [
 ] else if lang == "de" [
   Du solltest `225` und `275` ausprobieren, wenn du auf die Größe
   optimierst.
+] else if lang == "zh" [
+  当优化大小时，你应该尝试`225`和`275` 。
 ] else { todo }

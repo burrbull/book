@@ -2,6 +2,7 @@
 
 #h1(if lang == "en" [Appendix A: Glossary]
   else if lang == "de" [Anhang A: Glossar]
+  else if lang == "zh" [附录A: 词汇表]
   else { todo })
 
 #if lang == "en" [
@@ -13,8 +14,9 @@
   Das Embedded-Ökosystem ist geprägt von einer Vielzahl unterschiedlicher
   Protokolle, Hardwarekomponenten und herstellerspezifischer Elemente, für
   die jeweils eigene Begriffe und Abkürzungen verwendet werden. Dieses
-  Glossar soll diese auflisten und Hinweise zum besseren Verständnis
-  geben.
+  Glossar soll diese auflisten und Hinweise zum besseren Verständnis geben.
+] else if lang == "zh" [
+  嵌入式生态系统中充满了不同的协议，硬件组件，还有许多与生产商相关的东西，它们都使用自己的缩写和项目名。这个词汇表尝试列出它们以便更好理解它们。
 ] else { todo }
 
 *BSP*
@@ -34,6 +36,10 @@
   #link(<memory-mapped-registers>)[Seite zu den im Speicher abgebildeten Registern]
   oder für einen umfassenderen Überblick sehen Sie sich
   #link(url_bspvideo)[dieses Video] an.
+] else if lang == "zh" [
+  板级支持的Crate(Board Support
+  Crate)提供为某个特定板子配置的高级接口。它通常依赖一个#link(<glossary-hal>)[HAL]
+  crate 。在#link(<memory-mapped-registers>)[存储映射的寄存器那页]有更多细节的描述或者看#link(url_bspvideo)[这个视频]来获取一个更广泛的概述。
 ] else { todo }
 
 *FPU*
@@ -44,6 +50,8 @@
 ] else if lang == "de" [
   Gleitkommaeinheit. Ein „Mathematikprozessor", der ausschließlich
   Operationen mit Gleitkommazahlen ausführt.
+] else if lang == "zh" [
+  浮点单元(Floating-Point Unit)。一个只运行在浮点数上的'数学处理器'。
 ] else { todo }
 
 *HAL* <glossary-hal>
@@ -67,6 +75,11 @@
   Eine ausführlichere Beschreibung finden Sie auf der
   #link(<memory-mapped-registers>)[Seite zu den im Speicher abgebildeten Registern]
   oder für einen umfassenderen Überblick in #link(url_hal_video)[diesem Video].
+] else if lang == "zh" [
+  硬件抽象层(Hardware Abstraction Layer)
+  crate为微控制器的功能和外设提供一个开发者友好的接口。它通常在#link(<glossary-pac>)[Peripheral Access Crate (PAC)]之上被实现。它可能也会实现来自#ln_hal
+  crate的traits
+  。在#link(<memory-mapped-registers>)[存储映射的寄存器那页]上有更多的细节或者看#link(url_hal_video)[这个视频]获取一个更广泛的概述。
 ] else { todo }
 
 *I2C*
@@ -81,6 +94,9 @@
   um ein Protokoll für die Hardware-Kommunikation innerhalb eines
   einzelnen integrierten Schaltkreises. Weitere Informationen finden Sie
   #link(wiki_i2c)[hier].
+] else if lang == "zh" [
+  有时又被称为 `I²C` 或者 Intere-IC
+  。它是一种用于在单个集成电路中进行硬件通信的协议。看#link(wiki_i2c)[这里]来获取更多细节。
 ] else { todo }
 
 *PAC* <glossary-pac>
@@ -108,6 +124,9 @@
   #link(<memory-mapped-registers>)[Seite zu den im Speicher abgebildeten Registern]
   oder für einen umfassenderen Überblick in
   #link(url_pacvideo)[diesem Video].
+] else if lang == "zh" [
+  一个外设访问 Crate (Peripheral Access
+  Crate)提供了对一个微控制器的外设的访问。它是一个底层的crates且通常从提供的#link(<glossary-svd>)[SVD]被直接生成，经常使用#ln_svd2rust。#link(<glossary-hal>)[硬件抽象层]应该依赖这个crate。在#link(<memory-mapped-registers>)[存储映射的寄存器那页]有更细节的描述或者看#link(url_pacvideo)[这个视频]获取一个更广泛的概述。
 ] else { todo }
 
 *SPI*
@@ -119,6 +138,8 @@
 ] else if lang == "de" [
   Serial Peripheral Interface.
   Weitere Informationen finden Sie #link(wiki_spi)[hier].
+] else if lang == "zh" [
+  串行外设接口。看#link(wiki_spi)[这里]获取更多信息。
 ] else { todo }
 
 *SVD* <glossary-svd>
@@ -133,6 +154,9 @@
   Programmierersicht eines Mikrocontrollers zu beschreiben. Weitere
   Informationen hierzu finden Sie auf
   #link(url_svd)[der ARM CMSIS-Dokumentationsseite].
+] else if lang == "zh" [
+  系统视图描述文件(System View
+  Description)是一个XML文件格式，以程序员视角来描述一个微控制器设备。你能在#link(url_svd)[the ARM CMSIS documentation site]上获取更多信息。
 ] else { todo }
 
 *UART*
@@ -144,6 +168,8 @@
 ] else if lang == "de" [
   Universeller asynchroner Empfänger-Sender.
   Weitere Informationen finden Sie #link(wiki_uart)[hier].
+] else if lang == "zh" [
+  通用异步收发器。看#link(wiki_uart)[这里]获取更多信息。
 ] else { todo }
 
 *USART*
@@ -155,4 +181,6 @@
 ] else if lang == "de" [
   Universeller synchroner und asynchroner Empfänger-Sender.
   Weitere Informationen finden Sie #link(wiki_usart)[hier].
+] else if lang == "zh" [
+  通用同步异步收发器。看#link(wiki_usart)[这里]获取更多信息。
 ] else { todo }

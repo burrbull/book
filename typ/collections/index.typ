@@ -2,6 +2,7 @@
 
 #h1(if lang == "en" [Collections]
   else if lang == "de" [Sammlungen (Collections)]
+  else if lang == "zh" [集合]
   else { todo })
 
 #let ln_vec = link("https://doc.rust-lang.org/std/vec/struct.Vec.html")[`Vec`]
@@ -20,6 +21,10 @@
   #ln_vec, #ln_string, #ln_map usw.
   Alle in `std` implementierten Collections nutzen einen globalen
   dynamischen Speicherverwalter (den sogenannten Heap).
+] else if lang == "zh" [
+  最后，还希望在程序里使用动态数据结构(也称为集合)。`std`
+  提供了一组常见的集合:
+  #ln_vec，#ln_string，#ln_map，等等。所有这些在`std`中被实现的集合都使用一个全局动态分配器(也称为堆)。
 ] else { todo }
 
 #if lang == "en" [
@@ -30,6 +35,9 @@
   Da `core` definitionsgemäß frei von Speicherzuweisungen ist, stehen
   diese Implementierungen dort nicht zur Verfügung; sie sind jedoch im
   `alloc`-Crate zu finden, das mit dem Compiler ausgeliefert wird.
+] else if lang == "zh" [
+  因为`core`的定义中是没有内存分配的，所以这些实现在`core`中是没有的，但是我们可以在编译器附带的`alloc`
+  crate中找到。
 ] else { todo }
 
 #let ln_heapless = link("https://crates.io/crates/heapless")[`heapless`]
@@ -42,6 +50,9 @@
   Implementierung nicht Ihre einzige Option. Sie können auch Sammlungen
   mit _fester Kapazität_ verwenden; eine solche Implementierung
   findet sich im #ln_heapless;-Crate.
+] else if lang == "zh" [
+  如果需要集合，一个基于堆分配的实现不是唯一的选择。也可以使用 _fixed capacity_ 集合; 其实现可以在
+  #ln_heapless crate中被找到。
 ] else { todo }
 
 #if lang == "en" [
@@ -49,10 +60,13 @@
 ] else if lang == "de" [
   In diesem Abschnitt werden wir diese beiden Implementierungen
   untersuchen und vergleichen.
+] else if lang == "zh" [
+  在这部分，我们将研究和比较这两个实现。
 ] else { todo }
 
 == #(if lang == "en" [Using `alloc`]
   else if lang == "de" [Verwendung von `alloc`]
+  else if lang == "zh" [使用 `alloc`]
   else { todo })
 
 #if lang == "en" [
@@ -63,6 +77,9 @@
   Die `alloc`-Crate ist in der Standard-Rust-Distribution enthalten. Um
   das Crate zu importieren, können Sie es direkt per `use` einbinden,
   _ohne_ es als Abhängigkeit in Ihrer `Cargo.toml`-Datei zu deklarieren.
+] else if lang == "zh" [
+  `alloc` crate与标准的Rust发行版在一起。你可以直接 `use`
+  导入这个crate，而不需要在`Cargo.toml`文件中把它声明为一个依赖。
 ] else { todo }
 
 ```rust
@@ -84,6 +101,9 @@ use alloc::vec::Vec;
   Attribut `global_allocator` verwenden, um den globalen Allocator zu
   deklarieren, den Ihr Programm einsetzen soll. Der gewählte Allocator
   muss zwingend das Trait #ln_alloc implementieren.
+] else if lang == "zh" [
+  为了能使用集合，首先需要使用`global_allocator`属性去声明程序将使用的全局分配器。它要求选择的分配器实现了#link("https://doc.rust-lang.org/core/alloc/trait.GlobalAlloc.html")[`GlobalAlloc`]
+  trait 。
 ] else { todo }
 
 #if lang == "en" [
@@ -97,6 +117,10 @@ use alloc::vec::Vec;
   Bump-Pointer-Allokator und verwenden diesen als globalen Allokator. Wir
   empfehlen Ihnen jedoch _dringend_, in Ihrem Programm stattdessen
   einen praxiserprobten Allokator von crates.io zu verwenden.
+] else if lang == "zh" [
+  为了完整性和尽可能保持本节的自包含性，我们将实现一个简单线性指针分配器且用它作为全局分配器。然而，我们
+  _强烈地_
+  建议你在你的程序中使用一个来自crates.io的久经战斗测试的分配器而不是这个分配器。
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -104,6 +128,8 @@ use alloc::vec::Vec;
     "Bump pointer allocator implementation"
   } else if lang == "de" {
     "Implementierung eines Bump-Pointer-Allocators"
+  } else if lang == "zh" {
+    "线性指针分配器实现"
   } else { todos } + "
 
 use core::alloc::{GlobalAlloc, Layout};
@@ -116,6 +142,8 @@ use cortex_m::interrupt;
     "Bump pointer allocator for *single* core systems"
   } else if lang == "de" {
     "Bump-Pointer-Allocator fuer Systeme mit *einem* Rechenkern"
+  } else if lang == "zh" {
+    "用于单核系统的线性指针分配器"
   } else { todos } + "
 struct BumpPointerAlloc {
     head: UnsafeCell<usize>,
@@ -132,6 +160,8 @@ unsafe impl GlobalAlloc for BumpPointerAlloc {
           } else if lang == "de" {
             "`interrupt::free` ist ein kritischer Abschnitt, der die sichere 
         // Verwendung unseres Allocators aus Interrupts heraus ermoeglicht."
+          } else if lang == "zh" {
+            "`interrupt::free`是一个临界区，临界区让我们的分配器在中断中用起来安全"
           } else { todos } + "
         interrupt::free(|_| {
             let head = self.head.get();
@@ -143,6 +173,8 @@ unsafe impl GlobalAlloc for BumpPointerAlloc {
                 "move start up to the next alignment boundary"
               } else if lang == "de" {
                 "Verschiebe den Startpunkt zur naechsten Ausrichtungsgrenze."
+              } else if lang == "zh" {
+                "将start移至下一个对齐边界。"
               } else { todos } + "
             let start = (*head + align - 1) & align_mask;
 
@@ -151,6 +183,8 @@ unsafe impl GlobalAlloc for BumpPointerAlloc {
                     "a null pointer signal an Out Of Memory condition"
                   } else if lang == "de" {
                     "ein Nullzeiger signalisiert einen „Out of Memory“-Zustand"
+                  } else if lang == "zh" {
+                    "一个空指针通知内存不足"
                   } else { todos } + "
                 ptr::null_mut()
             } else {
@@ -165,6 +199,8 @@ unsafe impl GlobalAlloc for BumpPointerAlloc {
             "this allocator never deallocates memory"
           } else if lang == "de" {
             "Dieser Allokator gibt niemals Speicher frei."
+          } else if lang == "zh" {
+            "这个分配器从不释放内存"
           } else { todos } + "
     }
 }
@@ -178,6 +214,10 @@ unsafe impl GlobalAlloc for BumpPointerAlloc {
 // HINWEIS: Der Benutzer muss sicherstellen, dass der Speicherbereich 
 // `[0x2000_0100, 0x2000_0200]` nicht von anderen Teilen des Programms 
 // verwendet wird."
+  } else if lang == "zh" {
+    "全局内存分配器的声明
+// 注意 用户必须确保`[0x2000_0100, 0x2000_0200]`内存区域
+// 没有被程序的其它部分使用"
   } else { todos } + "
 #[global_allocator]
 static HEAP: BumpPointerAlloc = BumpPointerAlloc {
@@ -195,6 +235,8 @@ static HEAP: BumpPointerAlloc = BumpPointerAlloc {
   festlegen, wie mit „Out of Memory" (OOM)-Fehlern umgegangen wird;
   hierfür wird das _instabile_ Attribut `alloc_error_handler`
   verwendet.
+] else if lang == "zh" [
+  除了选择一个全局分配器，用户也必须要定义如何使用_不稳定的_`alloc_error_handler`属性来处理内存溢出错误。
 ] else { todo }
 
 ```rust
@@ -215,6 +257,8 @@ fn on_oom(_layout: Layout) -> ! {
 ] else if lang == "de" [
   Sobald alles vorhanden ist, kann der Benutzer endlich die Sammlungen in
   „alloc" verwenden.
+] else if lang == "zh" [
+  一旦一切都完成了，用户最后就可以在`alloc`中使用集合。
 ] else { todo }
 
 ```rust
@@ -238,10 +282,14 @@ fn main() -> ! {
   Wenn Sie die Sammlungen aus dem `std`-Crate bereits verwendet haben,
   werden Ihnen diese vertraut vorkommen, da es sich um exakt dieselbe
   Implementierung handelt.
+] else if lang == "zh" [
+  如果你已经使用了`std`
+  crate中的集合，那么这些对你来说将非常熟悉，因为他们的实现一样。
 ] else { todo }
 
 == #(if lang == "en" [Using `heapless`]
   else if lang == "de" [Verwendung von `heapless`]
+  else if lang == "zh" [使用 `heapless`]
   else { todo })
 
 #if lang == "en" [
@@ -251,6 +299,8 @@ fn main() -> ! {
   `heapless` erfordert keine Einrichtung, da seine Datenstrukturen nicht
   von einem globalen Speicher-Allocator abhängen. Binde die
   Datenstrukturen einfach per `use` ein und instanziiere sie:
+] else if lang == "zh" [
+  `heapless`无需设置，因为它的集合不依赖一个全局内存分配器。只是`use`它的集合然后实例化它们:
 ] else { todo }
 
 ```rust
@@ -273,6 +323,8 @@ fn main() -> ! {
 ] else if lang == "de" [
   Sie werden zwei Unterschiede zwischen diesen Sammlungen und denen in
   `alloc` feststellen.
+] else if lang == "zh" [
+  你会注意到这些集合与`alloc`中的集合有两个不一样的地方。
 ] else { todo }
 
 #let ln_typenum = link("https://crates.io/crates/typenum")[`typenum`]
@@ -291,6 +343,9 @@ fn main() -> ! {
   Elementen hat, d.~h. der Vektor kann maximal 8 Elemente aufnehmen. Dies
   wird durch das `u8` (siehe #ln_typenum) in der Typsignatur
   angezeigt.
+] else if lang == "zh" [
+  第一，你必须预先声明集合的容量。`heapless`集合从来不会发生重分配且具有固定的容量;这个容量是集合的类型签名的一部分。在这个例子里，我们已经声明了`xs`的容量为8个元素，也就是说，这个vector最多只能有八个元素。这是通过类型签名中的`U8`
+  (看#ln_typenum)来指定的。
 ] else { todo }
 
 #if lang == "en" [
@@ -309,6 +364,8 @@ fn main() -> ! {
   erfolgreich war oder nicht. Im Gegensatz dazu passen
   `alloc`-Datenstrukturen ihre Kapazität durch eine erneute
   Speicherzuweisung auf dem Heap an.
+] else if lang == "zh" [
+  第二，`push`方法和另外一些方法返回的是一个`Result`。因为`heapless`集合有一个固定的容量，所以所有插入的操作都可能会失败。通过返回一个`Result`，API反应了这个问题，指出操作是否成功还是失败。相反，`alloc`集合自己将会在堆上重新分配去增加它的容量。
 ] else { todo }
 
 #if lang == "en" [
@@ -323,10 +380,13 @@ fn main() -> ! {
   `let x = heapless::Vec::new();` die Datenstruktur auf dem Stack anlegt;
   es ist jedoch auch möglich, sie in einer `static`-Variablen oder sogar
   auf dem Heap (`Box<Vec<_, _>>`) zu speichern.
+] else if lang == "zh" [
+  自v0.4.x版本起，所有的`heapless`集合将所有的元素内联地存储起来了。这意味着像是`let x = heapless::Vec::new()`这样的一个操作将会在栈上分配集合，但是它也能够在一个`static`变量上分配集合，或者甚至在堆上(`Box<Vec<_, _>>`)。
 ] else { todo }
 
 == #(if lang == "en" [Trade-offs]
   else if lang == "de" [Abwägungen]
+  else if lang == "zh" [取舍]
   else { todo })
 
 #if lang == "en" [
@@ -336,10 +396,13 @@ fn main() -> ! {
   Berücksichtigen Sie diese Punkte, wenn Sie zwischen auf dem Heap
   alloziierten, verschiebbaren Sammlungen und Sammlungen mit fester
   Kapazität wählen.
+] else if lang == "zh" [
+  当在堆分配的可重定位的集合和固定容量的集合间进行选择的时候，记住这些内容。
 ] else { todo }
 
 === #(if lang == "en" [Out Of Memory and error handling]
   else if lang == "de" [„Out of Memory" und Fehlerbehandlung]
+  else if lang == "zh" [内存溢出和错误处理]
   else { todo })
 
 #if lang == "en" [
@@ -359,6 +422,10 @@ fn main() -> ! {
   `alloc`-Collections bieten `try_reserve`-Methoden an, mit denen sich
   potenzielle OOM-Situationen beim Vergrößern der Collection überprüfen
   lassen; man muss diese Methoden jedoch aktiv einsetzen.
+] else if lang == "zh" [
+  使用堆分配，内存溢出总是有可能出现的且会发生在任何一个集合需要增长的地方:
+  比如，所有的 `alloc::Vec.push` 调用会潜在地产生一个OOM(Out of
+  Memory)条件。因此一些操作可能会_隐式地_失败。一些`alloc`集合暴露了`try_reserve`方法，可以当增加集合时让你检查潜在的OOM条件，但是你需要主动地使用它们。
 ] else { todo }
 
 #if lang == "en" [
@@ -374,6 +441,8 @@ fn main() -> ! {
   die Kapazität einer Collection erschöpft ist. Das bedeutet, man muss
   _alle_ `Result`-Werte behandeln, die von Methoden wie `Vec.push`
   zurückgegeben werden.
+] else if lang == "zh" [
+  如果你只使用`heapless`集合，而不使用内存分配器，那么一个OOM条件不可能出现。反而，你必须逐个处理容量不足的集合。也就是必须处理_所有_的`Result`，`Result`由像是`Vec.push`这样的方法返回的。
 ] else { todo }
 
 #if lang == "en" [
@@ -391,10 +460,13 @@ fn main() -> ! {
   kann beispielsweise selbst `vec.reserve(1)` ein OOM auslösen, wenn der
   Allocator nahezu erschöpft ist, weil eine andere Collection Speicher
   verloren hat (Speicherlecks sind auch in „Safe Rust" möglich).
+] else if lang == "zh" [
+  与在所有由`heapless::Vec.push`返回的`Result`上调用`unwrap`相比，OOM错误更难调试，因为错误被发现的位置可能与导致问题的位置_不_一致。比如，甚至如果分配器接近消耗完`vec.reserve(1)`都能触发一个OOM，因为一些其它的集合正在泄露内存(内存泄露在安全的Rust是会发生的)。
 ] else { todo }
 
 === #(if lang == "en" [Memory usage]
   else if lang == "de" [Speichernutzung]
+  else if lang == "zh" [内存使用]
   else { todo })
 
 #if lang == "en" [
@@ -418,6 +490,9 @@ fn main() -> ! {
   reduziert wird. Zudem muss der Allocator unter Umständen mit
   Speicherfragmentierung umgehen, was den _scheinbaren_
   Speicherverbrauch erhöhen kann.
+] else if lang == "zh" [
+  推理堆分配集合的内存使用是很难的因为长期使用的集合的大小会在运行时改变。一些操作可能隐式地重分配集合，增加了它的内存使用，一些集合暴露的方法，像是`shrink_to_fit`，会潜在地减少集合使用的内存 --
+  最终，它由分配器去决定是否确定减小内存的分配或者不。另外，分配器可能不得不处理内存碎片，它会_明显_增加内存的使用。
 ] else { todo }
 
 #if lang == "en" [
@@ -430,6 +505,8 @@ fn main() -> ! {
   legt die meisten davon in `static`-Variablen ab und legt eine maximale
   Größe für den Aufruf-Stack (Call Stack) fest, so erkennt der Linker,
   wenn mehr Speicher beansprucht wird, als physisch verfügbar ist.
+] else if lang == "zh" [
+  另一方面，如果你只使用固定容量的集合，请把大多数的数据保存在`static`变量中，并为调用栈设置一个最大尺寸，随后如果你尝试使用大于可用的物理内存的内存大小时，链接器会发现它。
 ] else { todo }
 
 #let ln_z_emit = link("https://doc.rust-lang.org/beta/unstable-book/compiler-flags/emit-stack-sizes.html")[`-Z emit-stack-sizes`]
@@ -444,6 +521,8 @@ fn main() -> ! {
   Kapazität durch das Flag #ln_z_emit
   erfasst; das bedeutet, dass Werkzeuge zur Analyse der Stack-Nutzung
   (wie #ln_stack_sizes) diese in ihre Auswertung einbeziehen.
+] else if lang == "zh" [
+  另外，在栈上分配的固定容量的集合可以通过#ln_z_emit;标识来报告，其意味着用来分析栈使用的工具(像是#ln_stack_sizes)将会把在栈上分配的集合包含进它们的分析中。
 ] else { todo }
 
 #if lang == "en" [
@@ -455,10 +534,13 @@ fn main() -> ! {
   werden, was zu niedrigeren Auslastungsgraden (dem Verhältnis zwischen
   der Größe der Sammlung und ihrer Kapazität) führen kann, als sie bei
   Sammlungen mit veränderbarer Kapazität möglich sind.
+] else if lang == "zh" [
+  然而，固定容量的集合_不_能被减少，与可重定位集合所能达到的负载系数(集合的大小和它的容量之间的比值)相比，它能产生更低的负载系数。
 ] else { todo }
 
 === #(if lang == "en" [Worst Case Execution Time (WCET)]
   else if lang == "de" [Maximale Ausführungszeit (WCET)]
+  else if lang == "zh" [最坏执行时间 (WCET)]
   else { todo })
 
 #if lang == "en" [
@@ -469,6 +551,8 @@ fn main() -> ! {
   Wenn Sie zeitkritische oder Echtzeitanwendungen entwickeln, ist Ihnen
   die Worst-Case-Ausführungszeit (WCET) der verschiedenen Programmteile
   wahrscheinlich sehr wichtig.
+] else if lang == "zh" [
+  如果你正在搭建时间敏感型应用或者硬实时应用，那么你可能更关心你程序的不同部分的最坏执行时间。
 ] else { todo }
 
 #if lang == "en" [
@@ -485,6 +569,8 @@ fn main() -> ! {
   Collection ab. Daher ist es schwierig, die WCET beispielsweise der
   Operation `alloc::Vec.push` zu bestimmen, da sie sowohl vom verwendeten
   Allokator als auch von dessen Laufzeitkapazität abhängt.
+] else if lang == "zh" [
+  `alloc`集合能重分配，所以操作的WCET可能会增加，集合也将包括它用来重分配集合所需的时间，它取决于集合的_运行时_容量。这使得它更难去决定操作，比如`alloc::Vec.push`，的WCET，因为它依赖被使用的分配器和它的运行时容量。
 ] else { todo }
 
 #if lang == "en" [
@@ -495,10 +581,13 @@ fn main() -> ! {
   Collections mit fester Kapazität hingegen allokieren nie Speicher neu,
   sodass alle Operationen eine vorhersehbare Ausführungszeit haben.
   Beispielsweise wird `heapless::Vec.push` in konstanter Zeit ausgeführt.
+] else if lang == "zh" [
+  另一方面固定容量的集合不会重分配，因此所有的操作有个可预期的执行时间。比如，`heapless::Vec.push`以固定时间执行。
 ] else { todo }
 
 === #(if lang == "en" [Ease of use]
   else if lang == "de" [Benutzerfreundlichkeit]
+  else if lang == "zh" [易用性]
   else { todo })
 
 #if lang == "en" [
@@ -509,6 +598,8 @@ fn main() -> ! {
   Für `alloc` muss ein globaler Allocator eingerichtet werden, für
   `heapless` hingegen nicht. Allerdings erfordert `heapless`, dass man bei
   der Instanziierung jeder Collection deren Kapazität festlegt.
+] else if lang == "zh" [
+  `alloc`要求配置一个全局分配器而`heapless`不需要。然而，`heapless`要求你去选择你要实例化的每一个集合的容量。
 ] else { todo }
 
 #if lang == "en" [
@@ -522,4 +613,8 @@ fn main() -> ! {
   unterscheidet sich jedoch aufgrund der expliziten Fehlerbehandlung --
   manche Entwickler empfinden diese explizite Fehlerbehandlung womöglich
   als übertrieben oder zu umständlich.
+] else if lang == "zh" [
+  `alloc` API几乎为每一个Rust开发者所熟知。`heapless` API尝试模仿`alloc`
+  API，但是因为`heapless`的显式错误处理，它们不可能会一模一样 --
+  一些开发者可能会觉得显式的错误处理过多或太麻烦。
 ] else { todo }

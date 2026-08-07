@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [HAL Design Patterns]
   else if lang == "de" [HAL-Design-Muster]
+  else if lang == "zh" [HAL设计模式]
   else { todo })
 
 #let url_quide = "https://rust-lang.github.io/api-guidelines/"
@@ -27,5 +28,14 @@
   - #link(<hal-naming>)[Benennung]
   - #link(<hal-interoperability>)[Interoperabilität]
   - #link(<hal-predictability>)[Vorhersehbarkeit]
+  - #link(<hal-gpio>)[GPIO]
+] else if lang == "zh" [
+  这是一组关于使用Rust为微控制器写硬件抽象层的常见的和推荐的模式。当为微控制器编写HALs时，除了现有的
+  #link(url_quide)[Rust API 指南]
+  外，也可以使用这些模式。
+  #link(<hal-checklist>)[检查清单]
+  - #link(<hal-interoperability>)[命名]
+  - #link(<hal-predictability>)[互用性]
+  - #link(<hal-predictability>)[可预见性]
   - #link(<hal-gpio>)[GPIO]
 ] else { todo }

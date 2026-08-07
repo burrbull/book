@@ -60,8 +60,7 @@
       ),
     ),
   ),
-  "start/index":
-  (
+  "start/index": (
     content: include "start/index.typ",
     title: if lang == "en" [Getting started]
       else if lang == "de" [Erste Schritte]
