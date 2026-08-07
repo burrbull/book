@@ -3,11 +3,13 @@
 #h1(offset: whole*2,
   if lang == "en" [Naming]
   else if lang == "de" [Benennung]
+  else if lang == "zh" [命名]
   else { todo })
 <hal-naming>
 
 = #(if lang == "en" [The crate is named appropriately]
   else if lang == "de" [Das Crate trägt einen passenden Namen]
+  else if lang == "zh" [crate要被恰当地命名]
   else { todo }) (C-CRATE-NAME)
 <c-crate-name>
 
@@ -21,4 +23,6 @@
   die sie unterstützen sollen. Ihr Name sollte auf `-hal` enden, um sie
   von Registerzugriffs-Crates zu unterscheiden. Der Name sollte keine
   Unterstriche enthalten (stattdessen sind Bindestriche zu verwenden).
+] else if lang == "zh" [
+  HAL crates应该在目标支持的芯片或者芯片系列之后被命名。它们的名字应该以`-hal`结尾，为了将它们与PAC区分开来。名字不应该包含下划线(请改用破折号)。
 ] else { todo }

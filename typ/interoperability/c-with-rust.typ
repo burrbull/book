@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [A little C with your Rust]
   else if lang == "de" [Ein bisschen C zu Ihrem Rust]
+  else if lang == "zh" [使用C的Rust]
   else { todo })
 <c-with-rust>
 
@@ -15,6 +16,10 @@
   wesentliche Aspekte:
   - Einkapselung der bereitgestellten C-API für die Verwendung mit Rust
   - Erstellen Ihres C- oder C++-Codes zur Integration mit dem Rust-Code
+] else if lang == "zh" [
+  要在一个Rust项目中使用C或者C++，主要有两个步骤:
+  - 用Rust封装要暴露出来使用的C API
+  - 编译要和Rust代码集成在一起的C或者C++代码
 ] else { todo }
 
 #if lang == "en" [
@@ -24,10 +29,13 @@
   Da C++ über keine stabile ABI verfügt, auf die der Rust-Compiler
   abzielen könnte, wird empfohlen, bei der Kombination von Rust mit C oder
   C++ die `C`-ABI zu verwenden.
+] else if lang == "zh" [
+  因为对于Rust编译器来说，C++没有一个稳定的ABI，当要将Rust和C或者C++结合时，建议优先选择`C`。
 ] else { todo }
 
 = #(if lang == "en" [Defining the interface]
   else if lang == "de" [Definition der Schnittstelle]
+  else if lang == "zh" [定义接口]
   else { todo })
 
 #if lang == "en" [
@@ -43,6 +51,8 @@
   Header-Datei (`.h` oder `.hpp`) einbinden, die diese Daten definiert. In
   Rust ist es erforderlich, diese Definitionen entweder manuell nach Rust
   zu übertragen oder ein Werkzeug zu ihrer Generierung zu verwenden.
+] else if lang == "zh" [
+  在Rust消费C或者C++代码之前，必须定义(在Rust中定义)，在要被链接的代码中存在什么数据类型和函数签名。在C或者C++中，你要包含一个头文件(`.h`或者`.hpp`)，其定义了这个数据。而在Rust中，必须手动地将这些定义翻译成Rust，或者使用一个工具去生成这些定义。
 ] else { todo }
 
 #if lang == "en" [
@@ -51,10 +61,13 @@
 ] else if lang == "de" [
   Zunächst behandeln wir die manuelle Übertragung dieser Definitionen von
   C/C++ nach Rust.
+] else if lang == "zh" [
+  首先，我们将介绍如何将这些定义从C/C++手动地转换为Rust。
 ] else { todo }
 
 == #(if lang == "en" [Wrapping C functions and Datatypes]
   else if lang == "de" [Einbinden von C-Funktionen und -Datentypen]
+  else if lang == "zh" [封装C函数和数据类型]
   else { todo })
 
 #if lang == "en" [
@@ -64,8 +77,9 @@
 ] else if lang == "de" [
   Typischerweise stellen in C oder C++ geschriebene Bibliotheken eine
   Header-Datei bereit, die alle in öffentlichen Schnittstellen verwendeten
-  Typen und Funktionen definiert. Eine Beispieldatei könnte wie folgt
-  aussehen:
+  Typen und Funktionen definiert. Eine Beispieldatei könnte wie folgt aussehen:
+] else if lang == "zh" [
+  通常，用C或者C++写的库会提供一个头文件，头文件定义了所有的类型和用于公共接口的函数。如下是一个示例文件:
 ] else { todo }
 
 ```c
@@ -82,6 +96,8 @@ void cool_function(int i, char c, CoolStruct* cs);
   When translated to Rust, this interface would look as such:
 ] else if lang == "de" [
   Nach Rust übertragen, sähe diese Schnittstelle folgendermaßen aus:
+] else if lang == "zh" [
+  当翻译成Rust时，这个接口将看起来像是:
 ] else { todo }
 
 ```rust
@@ -107,6 +123,8 @@ extern "C" {
 ] else if lang == "de" [
   Schauen wir uns diese Definition Schritt für Schritt an, um die
   einzelnen Bestandteile zu erläutern.
+] else if lang == "zh" [
+  让我们一次看一个语句，来解释每个部分。
 ] else { todo }
 
 ```rust
@@ -125,6 +143,8 @@ pub struct CoolStruct { ... }
   Kompatibilität mit C-Code zu gewährleisten, verwenden wir das Attribut
   `#[repr(C)]`; dieses weist den Rust-Compiler an, für die Anordnung der
   Daten innerhalb der Struktur stets dieselben Regeln wie C anzuwenden.
+] else if lang == "zh" [
+  默认，Rust不会保证包含在`struct`中的数据的大小，填充，或者顺序。为了保证与C代码兼容，我们使用`#[repr(C)]`属性，它指示Rust编译器总是使用和C一样的规则去组织一个结构体中的数据。
 ] else { todo }
 
 
@@ -141,6 +161,8 @@ pub y: cty::c_int,
   Aufgrund der Flexibilität, wie C oder C++ ein „int" oder „char"
   definiert, wird empfohlen, in „cty" definierte primitive Datentypen zu
   verwenden, die Typen von C auf Typen in Rust abbilden.
+] else if lang == "zh" [
+  由于C或者C++定义一个`int`或者`char`的方式很灵活，所以建议使用在`cty`中定义的基础类型，它将类型从C映射到Rust中的类型。
 ] else { todo }
 
 ```rust
@@ -160,6 +182,9 @@ extern "C" { pub fn cool_function( ... ); }
   an anderer Stelle bereitgestellt oder aus einer statischen Bibliothek in
   die endgültige Bibliothek bzw. das fertige Binärprogramm eingebunden
   werden.
+] else if lang == "zh" [
+  这个语句定义了一个使用C
+  ABI的函数的签名，叫做`cool_function`。因为只定义了签名而没有定义函数的主体，所以这个函数的定义将需要在其它地方定义，或者从一个静态库链接进最终的库或者一个二进制文件中。
 ] else { todo }
 
 ```rust
@@ -177,6 +202,8 @@ extern "C" { pub fn cool_function( ... ); }
   der Funktionsargumente mithilfe von C-kompatiblen Definitionen. Der
   Übersichtlichkeit halber behalten wir zudem die ursprünglichen
   Argumentnamen bei.
+] else if lang == "zh" [
+  与我们上面的数据类型一样，我们使用C兼容的定义去定义函数参数的数据类型。为了清晰可见，我们还保留了相同的参数名。
 ] else { todo }
 
 #if lang == "en" [
@@ -194,13 +221,19 @@ extern "C" { pub fn cool_function( ... ); }
   tatsächlich um einen `null`-Zeiger handeln kann, ist bei der Interaktion
   mit C- oder C++-Code besondere Sorgfalt geboten, um die für Rust
   typischen Garantien zu wahren.
+] else if lang == "zh" [
+  这里我们有了一个新类型，`*mut CoolStruct` 。因为C没有Rust中像
+  `&mut CoolStruct`
+  这样的引用，替代的是一个裸指针。所以解引用这个指针是`unsafe`的，因为这个指针实际上可能是一个`null`指针，因此当与C或者C++代码交互时必须要小心对待那些Rust做出的安全保证。
 ] else { todo }
 
 == #(if lang == "en" [Automatically generating the interface]
   else if lang == "de" [Automatische Generierung der Schnittstelle]
+  else if lang == "zh" [自动产生接口]
   else { todo })
 
 #let url_bindgen = "https://github.com/rust-lang/rust-bindgen"
+#let url_bindgen_manual = "https://rust-lang.github.io/rust-bindgen/"
 #let ln_cty = link("https://crates.io/crates/cty")[`cty`]
 #if lang == "en" [
   Rather than manually generating these interfaces, which may be tedious
@@ -208,7 +241,7 @@ extern "C" { pub fn cool_function( ... ); }
   #link(url_bindgen)[bindgen] which will
   perform these conversions automatically. For instructions of the usage
   of #link(url_bindgen)[bindgen], please
-  refer to the #link(url_bindgen)[bindgen user's manual],
+  refer to the #link(url_bindgen_manual)[bindgen user's manual],
   however the typical process consists of the following:
   + Gather all C or C++ headers defining interfaces or datatypes you would
     like to use with Rust.
@@ -231,7 +264,7 @@ extern "C" { pub fn cool_function( ... ); }
   #link(url_bindgen)[bindgen], das diese
   Konvertierungen automatisch durchführt. Hinweise zur Verwendung von
   #link(url_bindgen)[bindgen] finden Sie im
-  #link(url_bindgen)[bindgen-Benutzerhandbuch]\;
+  #link(url_bindgen_manual)[bindgen-Benutzerhandbuch]\;
   der typische Ablauf sieht jedoch folgendermaßen aus:
   + Sammeln Sie alle C- oder C++-Header, die Schnittstellen oder
     Datentypen definieren, die Sie mit Rust verwenden möchten.
@@ -251,10 +284,21 @@ extern "C" { pub fn cool_function( ... ); }
     nicht, das #ln_cty;-Crate zu
     verwenden, falls die Typen in den generierten Bindings das Präfix
     `cty` aufweisen.
+] else if lang == "zh" [
+  有一个叫做#link(url_bindgen)[bindgen]的工具，它可以自动执行这些转换，而不用手动生成这些接口，手动进行这样的操作非常繁琐且容易出错。关于#link(url_bindgen)[bindgen]的使用指令，可以参考#link(url_bindgen_manual)[bindgen user's manual]，常用的步骤大致如下:
+  + 收集所有定义了你可能在Rust中会用到的数据类型或者接口的C或者C++头文件。
+  + 写一个`bindings.h`文件，其`#include "..."`每一个你在步骤一中收集的文件。
+  + 将这个`bindings.h`文件和任何用来编译你代码的编译标识发给`bindgen`。贴士:
+    使用`Builder.ctypes_prefix("cty")` / `--ctypes-prefix=cty` 和
+    `Builder.use_core()` / `--use-core` 去使生成的代码兼容`#![no_std]`
+  + `bindgen`将会在终端窗口输出生成的Rust代码。这个文件可能会被通过管道发送给你项目中的一个文件，比如`bindings.rs`
+    。你可能要在你的Rust项目中使用这个文件来与被编译和链接成一个外部库的C/C++代码交互。贴士:
+    如果你的类型在生成的绑定中被前缀了`cty`，不要忘记使用#ln_cty crate 。
 ] else { todo }
 
 = #(if lang == "en" [Building your C/C++ code]
   else if lang == "de" [Erstellen Ihres C/C++-Codes]
+  else if lang == "zh" [编译你的 C/C++ 代码]
   else { todo })
 
 #if lang == "en" [
@@ -265,6 +309,8 @@ extern "C" { pub fn cool_function( ... ); }
   Da der Rust-Compiler nicht direkt weiß, wie man C- oder C++-Code (oder
   Code einer anderen Sprache mit C-Schnittstelle) kompiliert, muss der
   Nicht-Rust-Code vorab kompiliert werden.
+] else if lang == "zh" [
+  因为Rust编译器并不直接知道如何编译C或者C++代码(或者从其它语言来的代码，其提供了一个C接口)，所以必须要静态编译你的非Rust代码。
 ] else { todo }
 
 #if lang == "en" [
@@ -274,8 +320,10 @@ extern "C" { pub fn cool_function( ... ); }
 ] else if lang == "de" [
   Bei Embedded-Projekten bedeutet dies meist, dass der C/C++-Code zu einem
   statischen Archiv (z. B. `cool-library.a`) kompiliert wird, welches dann
-  im abschließenden Link-Schritt mit dem Rust-Code zusammengeführt werden
-  kann.
+  im abschließenden Link-Schritt mit dem Rust-Code zusammengeführt werden kann.
+] else if lang == "zh" [
+  对于嵌入式项目，这通常意味着把C/C++代码编译成一个静态库文档(比如
+  `cool-library.a`)，然后其能在最后链接阶段与你的Rust代码组合起来。
 ] else { todo }
 
 #if lang == "en" [
@@ -289,6 +337,8 @@ extern "C" { pub fn cool_function( ... ); }
   die bereitgestellte Header-Datei für die Schnittstelle wie oben
   beschrieben umzuwandeln und das statische Archiv beim Kompilieren bzw.
   Linken einzubinden.
+] else if lang == "zh" [
+  如果你要使用的库已经作为一个静态库文档被发布，那就没必要重新编译你的代码。只需按照上面所述转换提供的接口头文件，且在编译/链接时包含静态库文档。
 ] else { todo }
 
 #if lang == "en" [
@@ -304,10 +354,16 @@ extern "C" { pub fn cool_function( ... ); }
   Portierung der erforderlichen Kompilierungsschritte auf das sogenannte
   `cc`-Crate erfolgen. Für beide Vorgehensweisen ist die Verwendung eines
   `build.rs`-Skripts erforderlich.
+] else if lang == "zh" [
+  如果你的代码作为一个源项目(source
+  project)存在，将你的C/C++代码编译成一个静态库将是必须的，要么通过使用你现存的编译系统(比如
+  `make`，`CMake`，等等)，要么通过使用一个被叫做`cc`
+  crate的工具移植必要的编译步骤。关于这两个，都必须使用一个`build.rs`脚本。
 ] else { todo }
 
 == #(if lang == "en" [Rust `build.rs` build scripts]
   else if lang == "de" [Rust-`build.rs`-Build-Skripte]
+  else if lang == "zh" [Rust的 `build.rs` 编译脚本]
   else { todo })
 
 #if lang == "en" [
@@ -319,6 +375,9 @@ extern "C" { pub fn cool_function( ... ); }
   dem Kompilierrechner ausgeführt wird -- und zwar _nachdem_ die
   Abhängigkeiten Ihres Projekts erstellt wurden, aber _bevor_ Ihr
   Projekt selbst kompiliert wird.
+] else if lang == "zh" [
+  一个 `build.rs`
+  脚本是一个用Rust语法编写的文件，它被运行在你的编译机器上，发生在你项目的依赖项被编译*之后*，但是在你的项目被编译*之前* 。
 ] else { todo }
 
 #let url_build_scripts = "https://doc.rust-lang.org/cargo/reference/build-scripts.html"
@@ -334,10 +393,15 @@ extern "C" { pub fn cool_function( ... ); }
   mittels #link(url_bindgen)[bindgen]),
   zum Aufruf externer Build-Systeme wie `Make` oder zur direkten
   Kompilierung von C/C++-Code unter Verwendung des `cc`-Crates.
+] else if lang == "zh" [
+  可能能在#link("https://doc.rust-lang.org/cargo/reference/build-scripts.html")[这里]发现完整的参考。`build.rs`
+  脚本能用来生成代码(比如通过#link("https://github.com/rust-lang/rust-bindgen")[bindgen])，调用外部编译系统，比如`Make`，或者直接通过使用`cc`
+  crate来直接编译C/C++ 。
 ] else { todo }
 
 == #(if lang == "en" [Triggering external build systems]
   else if lang == "de" [Auslösen externer Build-Systeme]
+  else if lang == "zh" [使用外部编译系统]
   else { todo })
 
 #let ln_command = link("https://doc.rust-lang.org/std/process/struct.Command.html")[`std::process::Command`]
@@ -356,6 +420,9 @@ extern "C" { pub fn cool_function( ... ); }
   festen Befehl aus (wie etwa `make library`) und kopieren anschließend
   die erzeugte statische Bibliothek an den entsprechenden Ort im
   `target`-Build-Verzeichnis.
+] else if lang == "zh" [
+  对于有复杂的外部项或者编译系统的项目，使用#ln_command;通过遍历相对路径来向其它编译系统"输出"，调用一个固定的命令(比如
+  `make library`)，然后拷贝最终的静态库到`target`编译文件夹中恰当的位置，可能是最简单的方法。
 ] else { todo }
 
 #if lang == "en" [
@@ -368,10 +435,14 @@ extern "C" { pub fn cool_function( ... ); }
   ausschließlich auf dem Rechner ausgeführt, der die Crate kompiliert. Das
   bedeutet, dass Sie beliebige Rust-Crates verwenden können, die auf Ihrem
   Kompilier-Host lauffähig sind.
+] else if lang == "zh" [
+  虽然你的crate目标可能是一个`no_std`嵌入式平台，但你的`build.rs`只运行在负责编译你的crate的机器上。这意味着你能使用任何Rust
+  crates，其将运行在你的编译主机上。
 ] else { todo }
 
 == #(if lang == "en" [Building C/C++ code with the `cc` crate]
   else if lang == "de" [Kompilieren von C/C++-Code mit dem `cc`-Crate]
+  else if lang == "zh" [使用`cc` crate构建C/C++代码]
   else { todo })
 
 #let url_cc = "https://github.com/alexcrichton/cc-rs"
@@ -391,6 +462,8 @@ extern "C" { pub fn cool_function( ... ); }
   #link(url_cc)[`cc`-Crate] zu verwenden;
   dieses bietet eine idiomatische Rust-Schnittstelle zu dem vom Host
   bereitgestellten Compiler.
+] else if lang == "zh" [
+  对于具有有限的依赖项或者复杂度的项目，或者对于那些难以修改编译系统去生成一个静态库(而不是一个二进制文件或者可执行文件)的项目，使用#url_cc;可能更容易，它提供了一个符合Rust语法的接口，这个接口是关于主机提供的编译器的。
 ] else { todo }
 
 #if lang == "en" [
@@ -400,9 +473,9 @@ extern "C" { pub fn cool_function( ... ); }
 ] else if lang == "de" [
   Im einfachsten Fall, bei dem eine einzelne C-Datei als Abhängigkeit für
   eine statische Bibliothek kompiliert wird, sähe ein Beispiel für ein
-  `build.rs`-Skript, das das
-  #link(url_cc)[`cc`-Crate] verwendet,
-  folgendermaßen aus:
+  `build.rs`-Skript, das das #link(url_cc)[`cc`-Crate] verwendet, folgendermaßen aus:
+] else if lang == "zh" [
+  在把一个C文件编译成一个静态库的依赖项的最简单的场景下，可以使用#link(url_cc)[`cc` crate]，示例`build.rs`脚本看起来像这样:
 ] else { todo }
 
 ```rust
@@ -422,4 +495,6 @@ fn main() {
   `cargo build` kompiliert und führt sie dann vor dem eigentlichen
   Build-Vorgang des Pakets aus. Dabei wird ein statisches Archiv namens
   `libfoo.a` erstellt und im Verzeichnis `target` abgelegt.
+] else if lang == "zh" [
+  要把`build.rs`放在包的根目录下．然后`cargo build`会在构建包之前编译和执行它．一个静态的名为`libfoo.a`的归档文件会生成并被放在`target`文件夹中．
 ] else { todo }

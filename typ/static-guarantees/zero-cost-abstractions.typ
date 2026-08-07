@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [Zero Cost Abstractions]
   else if lang == "de" [Abstraktionen ohne Kosten]
+  else if lang == "zh" [零成本抽象]
   else { todo })
 
 #if lang == "en" [
@@ -19,6 +20,9 @@
   eigentlichen Daten, sondern dienen als Markierungen. Da sie keine Daten
   enthalten, besitzen sie zur Laufzeit keine tatsächliche Repräsentation
   im Speicher:
+] else if lang == "zh" [
+  类型状态是一个零成本抽象的杰出案例 -
+  把某些行为移到编译时执行或者分析的能力。这些类型状态不包含真实的数据，只用来作为标记。因为它们不包含数据，在运行时它们在内存中不存在实际的表示。
 ] else { todo }
 
 ```rust
@@ -32,6 +36,7 @@ let _ = size_of::<GpioConfig<Enabled, Input, PulledHigh>>(); // == 0
 
 = #(if lang == "en" [Zero Sized Types]
   else if lang == "de" [Typen der Größe Null]
+  else if lang == "zh" [零大小的类型(Zero Sized Types)]
   else { todo })
 
 ```rust
@@ -50,12 +55,16 @@ struct Enabled;
   „real" verhalten -- man kann sie kopieren, verschieben, Referenzen
   darauf erstellen usw. --, werden sie vom Optimierer vollständig
   entfernt.
+] else if lang == "zh" [
+  像这样定义的结构体被称为零大小的类型，因为它们不包含实际数据。虽然这些类型在编译时像是"真实的"(real) - 你可以拷贝它们，移动它们，引用它们，等等，然而优化器将会完全跳过它们。
 ] else { todo }
 
 #if lang == "en" [
   In this snippet of code:
 ] else if lang == "de" [
   In diesem Code-Ausschnitt:
+] else if lang == "zh" [
+  在这个代码片段里:
 ] else { todo }
 
 ```rust
@@ -87,10 +96,15 @@ pub fn into_input_high_z(self) -> GpioConfig<Enabled, Input, HighZ> {
   zusätzliche CPU- oder RAM-Ressourcen noch zusätzlichen Programmspeicher
   für die Zustandsverwaltung von `GpioConfig` und führt zu demselben
   Maschinencode wie ein direkter Registerzugriff.
+] else if lang == "zh" [
+  我们返回的GpioConfig在运行时并不存在。对这个函数的调用通常会被归纳为一条汇编指令
+  - 把一个常量寄存器值存进一个寄存器里。这意味着我们开发的类型状态接口是一个零成本抽象
+  - 它不会用更多的CPU，RAM，或者代码空间去跟踪`GpioConfig`的状态，会被渲染成和直接访问寄存器一样的机器码。
 ] else { todo }
 
 = #(if lang == "en" [Nesting]
   else if lang == "de" [Verschachtelung]
+  else if lang == "zh" [嵌套]
   else { todo })
 
 #if lang == "en" [
@@ -102,6 +116,8 @@ pub fn into_input_high_z(self) -> GpioConfig<Enabled, Input, HighZ> {
   verschachteln. Solange es sich bei allen verwendeten Komponenten um
   Typen ohne Größe (Zero-Sized Types) handelt, existiert die gesamte
   Struktur zur Laufzeit nicht.
+] else if lang == "zh" [
+  通常，这些抽象可能会被深深地嵌套起来。一旦结构体使用的所有的组件是零大小类型的，整个结构体将不会在运行时存在。
 ] else { todo }
 
 #if lang == "en" [
@@ -113,4 +129,6 @@ pub fn into_input_high_z(self) -> GpioConfig<Enabled, Input, HighZ> {
   alle möglichen Zustandskombinationen zu definieren. In solchen Fällen
   lassen sich Makros verwenden, um sämtliche Implementierungen zu
   generieren.
+] else if lang == "zh" [
+  对于复杂或者深度嵌套的结构体，定义所有可能的状态组合可能很乏味。在这些例子中，宏可能可以被用来生成所有的实现。
 ] else { todo }

@@ -2,6 +2,7 @@
 
 #h1(if lang == "en" [Concurrency]
   else if lang == "de" [Nebenläufigkeit]
+  else if lang == "zh" [并发]
   else { todo })
 <concurrency>
 
@@ -28,6 +29,11 @@
   - und in einigen Systemen Mehrkern-Mikroprozessoren, bei denen jeder
     Kern gleichzeitig und unabhängig voneinander einen anderen Teil Ihres
     Programms ausführen kann.
+] else if lang == "zh" [
+  当程序的不同部分有可能会在不同的时刻被执行或者不按顺序地被执行时，那并发就出现了。在一个嵌入式环境中，这包括:
+  - 中断处理函数，一旦相关的中断发生时，中断处理函数就会运行，
+  - 不同的多线程形式，在这块，微处理器通常会在程序的不同部分间进行切换，
+  - 在一些多核微处理器系统中，每个核可以同时独立地运行程序的不同部分。
 ] else { todo }
 
 #if lang == "en" [
@@ -41,10 +47,13 @@
   können auch viele schwer zu findende und komplexe Fehler auftreten.
   Glücklicherweise bietet Rust eine Reihe von Abstraktionen und
   Sicherheitsgarantien, die uns dabei helfen, korrekten Code zu schreiben.
+] else if lang == "zh" [
+  因为许多嵌入式程序需要处理中断，因此并发迟早会出现，这也是许多微妙和困难的bugs会出现的地方。幸运地是，Rust提供了许多抽象和安全保障去帮助我们写正确的代码。
 ] else { todo }
 
 == #(if lang == "en" [No Concurrency]
   else if lang == "de" [Keine Nebenläufigkeit]
+  else if lang == "zh" [没有并发]
   else { todo })
 
 #if lang == "en" [
@@ -61,6 +70,10 @@
   die vorliegende Aufgabenstellung ideal! Typischerweise liest die
   Schleife Eingabewerte ein, führt Berechnungen oder Verarbeitungen durch
   und gibt Ergebnisse aus.
+] else if lang == "zh" [
+  对于一个嵌入式程序来说最简单的并发是没有并发:
+  软件由一个保持运行的main循环组成，一点中断也没有。有时候这非常适合手边的问题!
+  通常你的循环将会读取一些输入，执行一些处理，且写入一些输出。
 ] else { todo }
 
 ```rust
@@ -85,10 +98,13 @@ fn main() {
   die gemeinsame Datennutzung zwischen verschiedenen Programmteilen oder
   die Synchronisierung des Zugriffs auf Peripheriegeräte machen. Wenn ein
   solch einfacher Ansatz ausreicht, kann dies eine hervorragende Lösung sein.
+] else if lang == "zh" [
+  因为这里没有并发，因此不需要担心程序不同部分间的共享数据或者同步对外设的访问。如果可以使用一个简单的方法来解决问题，这种方法是个不错的选择。
 ] else { todo }
 
 == #(if lang == "en" [Global Mutable Data]
   else if lang == "de" [Globale veränderliche Daten]
+  else if lang == "zh" [全局可变数据]
   else { todo })
 
 #if lang == "en" [
@@ -109,6 +125,9 @@ fn main() {
   über _statisch reservierten_, veränderbaren Speicher verfügen
   müssen, auf den sowohl der Interrupt-Handler als auch der
   Hauptprogrammcode zugreifen können.
+] else if lang == "zh" [
+  不像非嵌入式Rust，我们通常不会奢侈地在堆上分配数据，并将对该数据的引用传递到新创建的线程中。相反，我们的中断处理函数随时可能被调用，且必须知道如何访问我们正在使用的共享内存。从最底层看来，这意味着我们必须有
+  _静态分配的_ 可变的内存，中断处理函数和main代码都可以引用这块内存。
 ] else { todo }
 
 #let ln_staticmut = link("https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable")[`static mut`]
@@ -126,6 +145,8 @@ fn main() {
   (Wettlaufsituation) kommen: Der Zugriff auf die Variable wird mitten im
   Vorgang durch einen Interrupt unterbrochen, der seinerseits ebenfalls
   auf diese Variable zugreift.
+] else if lang == "zh" [
+  在Rust中，#ln_staticmut;这样的变量读取或者写入总是unsafe的，因为不特别关注它们的话，可能会触发一个竞态条件，对变量的访问在中途就被一个也访问那个变量的中断打断了。
 ] else { todo }
 
 #if lang == "en" [
@@ -137,6 +158,8 @@ fn main() {
   Code verursachen kann, betrachten Sie ein eingebettetes Programm, das
   die steigenden Flanken eines Eingangssignals innerhalb jedes
   Ein-Sekunden-Intervalls zählt (einen Frequenzzähler):
+] else if lang == "zh" [
+  为了举例这种行为如何在代码中导致了微妙的错误，思考一个嵌入式程序，这个程序在每一秒的周期内计数一些输入信号的上升沿(一个频率计数器):
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -154,6 +177,8 @@ fn main() -> ! {
               } else if lang == "de" {
                 "GEFAHR – Nicht wirklich sicher! Koennte zu Datenwettlaeufen 
             //          fuehren."
+              } else if lang == "zh" {
+                "危险 - 实际不安全! 可能导致数据竞争。"
               } else { todos } + "
             unsafe { COUNTER += 1 };
         }
@@ -193,10 +218,14 @@ fn timer() {
   ausgelöst, ginge das Zurücksetzen auf 0 nach der Rückkehr aus dem
   Interrupt verloren -- und wir würden für diesen Zeitraum doppelt so
   viele Signalwechsel zählen.
+] else if lang == "zh" [
+  每秒计时器中断会把计数器设置回0。这期间，main循环连续地测量信号，且当看到从低电平到高电平的变化时，增加计数器的值。因为它是`static mut`的，我们不得不使用`unsafe`去访问`COUNTER`，意思是我们向编译器保证我们的操作不会导致任何未定义的行为。你能发现竞态条件吗？`COUNTER`上的增加并不一定是原子的 -
+  事实上，在大多数嵌入式平台上，它将被分开成一个读取操作，然后是增加，然后是写回。如果中断在计数器被读取之后但是在被写回之前被激活，在中断返回后，重置回0的操作会被忽略掉 - 那期间，我们会算出两倍的转换次数。
 ] else { todo }
 
 == #(if lang == "en" [Critical Sections]
   else if lang == "de" [Kritische Abschnitte]
+  else if lang == "zh" [临界区(Critical Sections)]
   else { todo })
 
 #if lang == "en" [
@@ -212,6 +241,10 @@ fn timer() {
   `COUNTER` in der Funktion `main` in einen kritischen Abschnitt
   einbetten, stellen wir sicher, dass der Timer-Interrupt erst ausgelöst
   wird, nachdem wir das Inkrementieren von `COUNTER` abgeschlossen haben:
+] else if lang == "zh" [
+  因此，关于数据竞争可以做些什么？一个简单的方法是使用
+  _临界区(critical sections）_
+  ，在临界区的上下文中中断被关闭了。通过把对`main`中的`COUNTER`访问封装进一个临界区，我们能确保计时器中断将不会激活，直到我们完成了增加`COUNTER`的操作:
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -229,6 +262,8 @@ fn main() -> ! {
               } else if lang == "de" {
                 "Ein neuer kritischer Abschnitt gewaehrleistet den 
             // synchronisierten Zugriff auf COUNTER."
+              } else if lang == "zh" {
+                "新的临界区确保对COUNTER的同步访问"
               } else { todos } + "
             cortex_m::interrupt::free(|_| {
                 unsafe { COUNTER += 1 };
@@ -255,6 +290,9 @@ fn timer() {
   kritischen Abschnitt auszuführen. Dies entspricht im Grunde dem
   Deaktivieren von Interrupts, der Ausführung von Code und dem
   anschließenden erneuten Aktivieren der Interrupts.
+] else if lang == "zh" [
+  在这个例子里，我们使用
+  `cortex_m::interrupt::free`，但是其它平台将会有更简单的机制在一个临界区中执行代码。它们都有一样的逻辑，关闭中断，运行一些代码，然后重新使能中断。
 ] else { todo }
 
 #if lang == "en" [
@@ -268,6 +306,10 @@ fn timer() {
   - Das Schreiben von 0 in `COUNTER` kann nicht von einer Race-Condition
     betroffen sein, da wir den Wert nicht lesen.
   - Es wird ohnehin niemals vom `main`-Thread unterbrochen werden.
+] else if lang == "zh" [
+  注意，有两个理由，不需要把一个临界区放进计时器中断中:
+  - 向`COUNTER`写入0不会被一个竞争影响，因为我们不需要读取它
+  - 无论如何，它永远不会被`main`线程中断
 ] else { todo }
 
 #if lang == "en" [
@@ -278,6 +320,9 @@ fn timer() {
   Wenn `COUNTER` von mehreren Interrupt-Handlern gemeinsam genutzt würde,
   die sich gegenseitig _unterbrechen_ könnten, müsste jeder von ihnen
   ebenfalls einen kritischen Abschnitt verwenden.
+] else if lang == "zh" [
+  如果`COUNTER`被多个可能相互 _抢占_
+  的中断处理函数共享，那么每一个也需要一个临界区。
 ] else { todo }
 
 #if lang == "en" [
@@ -300,6 +345,8 @@ fn timer() {
   bis zur Verarbeitung schwankt stärker). Ob dies ein Problem darstellt,
   hängt vom jeweiligen System ab, doch im Allgemeinen sollten wir dies
   vermeiden.
+] else if lang == "zh" [
+  这解决了我们眼前的问题，但是我们仍然要编写许多unsafe的代码，我们需要仔细推敲这些代码，有些我们可能不需要使用临界区。因为每个临界区暂时暂停了中断处理，就会带来一些相关的成本，一些额外的代码大小，更高的中断延迟和抖动(中断可能花费很长时间去处理，等待被处理的时间变化非常大)。这是否是个问题取决于你的系统，但是通常，我们想要避免它。
 ] else { todo }
 
 #if lang == "en" [
@@ -315,10 +362,14 @@ fn timer() {
   könnte -- selbst ohne Interrupts -- problemlos auf denselben Speicher
   zugreifen wie Ihr eigener Kern. Wenn Sie mehrere Rechenkerne nutzen,
   benötigen Sie daher leistungsfähigere Synchronisationsmechanismen.
+] else if lang == "zh" [
+  值得注意的是，虽然一个临界区保障了不会发生中断，但是它在多核系统上不提供一个排他性保证(exclusivity
+  guarantee)！其它核可能很开心地访问与你的核一样的内存区域，即使没有中断。如果你正在使用多核，你将需要更强的同步原语(synchronisation primitives)。
 ] else { todo }
 
 == #(if lang == "en" [Atomic Access]
   else if lang == "de" [Atomarer Zugriff]
+  else if lang == "zh" [原子访问]
   else { todo })
 
 #if lang == "en" [
@@ -343,6 +394,10 @@ fn timer() {
   durchzuführen -- was meistens gelingt --, doch sollte eine Unterbrechung
   auftreten, wird der gesamte Vorgang automatisch erneut versucht. Diese
   atomaren Operationen sind auch in Mehrkernsystemen sicher.
+] else if lang == "zh" [
+  在一些平台上，可以使用特定的原子指令，它保障了读取-修改-写回操作。针对Cortex-M:
+  `thumbv6`\(Cortex-M0，Cortex-M0+)只提供原子读取和存取指令，而`thumv7`\(Cortex-M3及以上)提供完整的比较和交换(CAS)指令。这些CAS指令可以替代过重的禁用所有中断的方法:
+  我们可以尝试执行加法操作，它在大多数情况下都会成功，但是如果它被中断了它将会自动重试完整的加法操作。这些原子操作甚至在多核间也是安全的。
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -361,6 +416,8 @@ fn main() -> ! {
                 "Use `fetch_add` to atomically add 1 to COUNTER"
               } else if lang == "de" {
                 "Verwenden Sie `fetch_add`, um 1 atomar zu COUNTER zu addieren."
+              } else if lang == "zh" {
+                "使用 `fetch_add` 原子性地给 COUNTER 加一"
               } else { todos } + "
             COUNTER.fetch_add(1, Ordering::Relaxed);
         }
@@ -374,6 +431,8 @@ fn timer() {
         "Use `store` to write 0 directly to COUNTER"
       } else if lang == "de" {
         "Verwenden Sie `store`, um 0 direkt in COUNTER zu schreiben."
+      } else if lang == "zh" {
+        "使用 `store` 将 0 直接写入 COUNTER"
       } else { todos } + "
     COUNTER.store(0, Ordering::Relaxed)
 }
@@ -391,6 +450,8 @@ fn timer() {
   Hauptthread aus sicher geändert werden, ohne Interrupts zu deaktivieren.
   Wenn möglich, ist dies die bessere Lösung -- wird aber möglicherweise
   von Ihrer Plattform nicht unterstützt.
+] else if lang == "zh" [
+  这时，`COUNTER`是一个safe的`static`变量。多亏了`AtomicUsize`类型，不需要禁用中断，`COUNTER`能从中断处理函数和main线程被安全地修改。当可以这么做时，这是一个更好的解决方案 - 然而平台上可能不支持这么做。
 ] else { todo }
 
 #let ln_ordering = link("https://doc.rust-lang.org/core/sync/atomic/enum.Ordering.html")[`Ordering`]
@@ -414,6 +475,10 @@ fn timer() {
   Je nachdem, wofür Sie atomare Operationen verwenden, benötigen Sie dies
   möglicherweise nicht. Die genauen Details des atomaren Modells sind
   komplex und werden am besten an anderer Stelle beschrieben.
+] else if lang == "zh" [
+  关于#ln_ordering;的提醒:
+  它可能影响编译器和硬件如何重新排序指令，也会影响缓存可见性。假设目标是个单核平台，在这个案例里`Relaxed`是充足的和最有效的选择。更严格的排序将导致编译器在原子操作周围产生内存屏障(Memory
+  Barriers)；取决于你做什么原子操作，你可能需要或者不需要这个排序！原子模型的精确细节是复杂的，最好写在其它地方。
 ] else { todo }
 
 #let url_atomics = "https://doc.rust-lang.org/nomicon/atomics.html"
@@ -423,10 +488,13 @@ fn timer() {
 ] else if lang == "de" [
   Weitere Informationen zu atomaren Operationen und deren Reihenfolge
   finden Sie im #link(url_atomics)[nomicon].
+] else if lang == "zh" [
+  关于原子操作和排序的更多细节，可以看这里#link(url_atomics)[nomicon]。
 ] else { todo }
 
 == #(if lang == "en" [Abstractions, Send, and Sync]
   else if lang == "de" [Abstraktionen, Send und Sync]
+  else if lang == "zh" [抽象，Send和Sync]
   else { todo })
 
 #if lang == "en" [
@@ -437,6 +505,8 @@ fn timer() {
   Keine der oben genannten Lösungen ist wirklich zufriedenstellend. Sie
   erfordern unsichere Blöcke, die sehr sorgfältig geprüft werden müssen
   und nicht ergonomisch sind. In Rust geht das doch bestimmt besser!
+] else if lang == "zh" [
+  上面的解决方案都不是特别令人满意。它们需要`unsafe`块，`unsafe`块必须要被十分小心地检查且不符合人体工程学。确实，我们在Rust中可以做得更好！
 ] else { todo }
 
 #if lang == "en" [
@@ -449,6 +519,8 @@ fn timer() {
   die überall im Code sicher verwendet werden kann. In diesem Beispiel
   verwenden wir den Zähler für kritische Abschnitte, aber mit atomaren
   Operationen ließe sich etwas sehr Ähnliches realisieren.
+] else if lang == "zh" [
+  我们可以把我们的计数器抽象进一个安全的接口中，它可以在代码的其它地方被安全地使用。在这个例子里，我们将使用临界区的(cirtical-section)计数器，但是你可以用原子操作做一些非常类似的事情。
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -465,6 +537,10 @@ use cortex_m::interrupt;
 // der „Interior Mutability“ in Rust. Dank dieses Konzepts können wir `COUNTER` 
 // als `static` statt als `static mut` definieren und dennoch den Zaehlerwert 
 // veraendern."
+  } else if lang == "zh" {
+    "我们的计数器只是包围UnsafeCell<u32>的一个封装，它是Rust中内部可变性
+// (interior mutability)的关键。通过使用内部可变性，我们能让COUNTER
+// 变成`static`而不是`static mut`，但是仍能改变它的计数器值。"
   } else { todos } + "
 struct CSCounter(UnsafeCell<u32>);
 
@@ -481,6 +557,9 @@ impl CSCounter {
         // wir, dass wir uns innerhalb einer `CriticalSection` befinden; daher 
         // koennen wir bedenkenlos diesen `unsafe`-Block verwenden (der für den 
         // Aufruf von `UnsafeCell::get` erforderlich ist)."
+          } else if lang == "zh" {
+            "通过要求一个CriticalSection被传递进来，我们知道我们肯定正在一个
+        // CriticalSection中操作，且因此可以自信地使用这个unsafe块(调用UnsafeCell::get的前提)。"
           } else { todos } + "
         unsafe { *self.0.get() = 0 };
     }
@@ -495,6 +574,8 @@ impl CSCounter {
   } else if lang == "de" {
     "Erforderlich, um ein statisches CSCounter zu ermoeglichen. Siehe Erlaeuterung 
 // unten."
+  } else if lang == "zh" {
+    "允许静态CSCounter的前提。看下面的解释。"
   } else { todos } + "
 unsafe impl Sync for CSCounter {}
 
@@ -504,6 +585,9 @@ unsafe impl Sync for CSCounter {}
   } else if lang == "de" {
     "COUNTER ist nicht mehr `mut`, da es „Interior Mutability“ verwendet; daher 
 // sind fuer den Zugriff auch keine `unsafe`-Bloecke mehr erforderlich."
+  } else if lang == "zh" {
+    "COUNTER不再是`mut`的因为它使用内部可变性;
+// 因此访问它也不再需要unsafe块。"
   } else { todos } + "
 static COUNTER: CSCounter = CS_COUNTER_INIT;
 
@@ -516,6 +600,8 @@ fn main() -> ! {
         if state && !last_state {
             // " + if lang in ("en", "de") {
                 "No unsafe here!"
+              } else if lang == "zh" {
+                "这里不用unsafe!"
               } else { todos } + "
             interrupt::free(|cs| COUNTER.increment(cs));
         }
@@ -533,6 +619,9 @@ fn timer() {
         "Wir muessen hier tatsaechlich einen kritischen Abschnitt betreten, nur um 
     // ein gueltiges CS-Token zu erhalten, auch wenn wir wissen, dass kein 
     // anderer Interrupt diesen unterbrechen koennte."
+      } else if lang == "zh" {
+        "这里我们需要进入一个临界区，只是为了传递进一个有效的cs token，尽管我们知道
+    // 没有其它中断可以抢占这个中断。 "
       } else { todos } + "
     interrupt::free(|cs| COUNTER.reset(cs));
 
@@ -543,6 +632,9 @@ fn timer() {
         "Wir koennten „unsicheren“ Code (unsafe code) verwenden, um eine 
     // gefaelschte CriticalSection zu erzeugen, falls wir das wirklich wollten, 
     // und so den Overhead vermeiden:"
+      } else if lang == "zh" {
+        "如果我们真的需要，我们可以使用unsafe代码去生成一个假CriticalSection，
+    // 避免开销:"
       } else { todos } + "
     // let cs = unsafe { interrupt::CriticalSection::new() };
 }
@@ -556,6 +648,8 @@ fn timer() {
   Wir haben unseren `unsafe`-Code in unsere sorgfältig entworfene
   Abstraktion verlagert; nun enthält unser Anwendungscode keine
   `unsafe`-Blöcke mehr.
+] else if lang == "zh" [
+  我们已经把我们的`unsafe`代码移进了精心安排的抽象中，现在我们的应用代码不包含任何`unsafe`块。
 ] else { todo }
 
 #if lang == "en" [
@@ -577,6 +671,11 @@ fn timer() {
   entsteht also kein Laufzeit-Overhead durch `cs`. Hätten wir mehrere
   Zähler, könnten diese alle dasselbe `cs` verwenden, ohne dass mehrere
   verschachtelte kritische Abschnitte erforderlich wären.
+] else if lang == "zh" [
+  这个设计要求应用传递一个`CriticalSection` token进来:
+  这些tokens仅由`interrupt::free`安全地产生，因此通过要求传递进一个`CriticalSection`
+  token，我们确保我们正在一个临界区中操作，不用自己动手锁起来。这个保障由编译器静态地提供:
+  这将不会带来任何与`cs`有关的运行时消耗。如果我们有多个计数器，它们都可以被指定同一个`cs`，而不用要求多个嵌套的临界区。
 ] else { todo }
 
 #let url_sendsync = "https://doc.rust-lang.org/nomicon/send-and-sync.html"
@@ -599,6 +698,11 @@ fn timer() {
   vom Anwendungscode getrennten Thread ausgeführt werden; daher müssen
   Variablen, auf die sowohl ein Interrupt als auch der Hauptcode zugreift,
   `Sync` implementieren.
+] else if lang == "zh" [
+  这也带来了Rust中关于并发的一个重要主题:
+  #link(url_sendsync)[`Send` and `Sync`]
+  traits。总结一下Rust
+  book，当一个类型能够安全地被移动到另一个线程，它是Send，当一个类型能被安全地在多个线程间共享的时候，它是Sync。在一个嵌入式上下文中，我们认为中断是在应用代码的一个独立线程中执行的，因此在一个中断和main代码中都能被访问的变量必须是Sync。
 ] else { todo }
 
 #let ln_unsafecell = link("https://doc.rust-lang.org/core/cell/struct.UnsafeCell.html")[`UnsafeCell`]
@@ -613,8 +717,10 @@ fn timer() {
   Compiler für dich abgeleitet. Da `CSCounter` jedoch eine #ln_unsafecell
   enthält, ist der Typ nicht `Sync`\; folglich konnten wir keinen
   `static CSCounter` definieren, denn `static`-Variablen _müssen_
-  `Sync` sein, da von mehreren Threads aus auf sie zugegriffen werden
-  kann.
+  `Sync` sein, da von mehreren Threads aus auf sie zugegriffen werden kann.
+] else if lang == "zh" [
+  在Rust中的大多数类型，这两个traits都会由你的编译器为你自动地产生。然而，因为`CSCounter`包含了一个#ln_unsafecell，它不是Sync，因此我们不能使用一个`static CSCounter`:
+  `static` 变量 _必须_ 是Sync，因此它们能被多个线程访问。
 ] else { todo }
 
 #if lang == "en" [
@@ -630,10 +736,15 @@ fn timer() {
   Verwendung kritischer Abschnitte ist dies nur auf
   Single-Core-Plattformen sicher; bei mehreren Kernen wäre ein deutlich
   höherer Aufwand erforderlich, um die Sicherheit zu gewährleisten.
+] else if lang == "zh" [
+  为了告诉编译器我们已经注意到`CSCounter`事实上在线程间共享是安全的，我们显式地实现了Sync
+  trait。与之前使用的临界区一样，这只在单核平台上是安全的:
+  对于多核，你需要做更多的事来确保安全。
 ] else { todo }
 
 == #(if lang == "en" [Mutexes]
   else if lang == "de" [Mutexe]
+  else if lang == "zh" [互斥量(Mutexs)]
   else { todo })
 
 #if lang == "en" [
@@ -643,6 +754,8 @@ fn timer() {
   Wir haben eine nützliche, speziell auf unser Zählerproblem
   zugeschnittene Abstraktion entwickelt; es gibt jedoch viele gängige
   Abstraktionen für Nebenläufigkeit.
+] else if lang == "zh" [
+  我们已经为我们的计数器问题创造了一个有用的抽象，但是关于并发这里还存在许多通用的抽象。
 ] else { todo }
 
 #let ln_drop = link("https://doc.rust-lang.org/core/ops/trait.Drop.html")[`Drop`]
@@ -672,6 +785,15 @@ fn timer() {
   #ln_drop;-Traits
   implementieren; so ist sichergestellt, dass der Mutex immer freigegeben
   wird, sobald er den Gültigkeitsbereich (Scope) verlässt.
+] else if lang == "zh" [
+  一个互斥量(mutex)，互斥(mutual exclusion)的缩写，就是这样的一个
+  _同步原语_
+  。这些构造确保了对一个变量的排他访问，比如我们的计数器。一个线程会尝试
+  _lock_ (或者 _acquire_)
+  互斥量，或者当互斥量不能被锁住时返回一个错误。当线程持有锁时，它有权访问被保护的数据，当线程工作完成了，它
+  _unlocks_ (或者 _releases_)
+  互斥量，允许其它线程锁住它。在Rust中，我们通常使用#ln_drop
+  trait实现unlock去确保当互斥量超出作用域时它总是被释放。
 ] else { todo }
 
 #if lang == "en" [
@@ -691,6 +813,12 @@ fn timer() {
   freigeben, da die Ausführung im Interrupt-Handler verbleibt). Ein
   Deadlock gilt nicht als „unsicher" (unsafe): Er ist selbst in sicherem
   Rust möglich.
+] else if lang == "zh" [
+  将中断处理函数与一个互斥量一起使用可能有点棘手:
+  阻塞中断处理函数通常是不可接受的，如果它阻塞等待main线程去释放一个锁，那将是一场灾难。因为我们会
+  _死锁_
+  (因为执行停留在中断处理函数中，主线程将永远不会释放锁)。死锁被认为是不安全的:
+  即使在安全的Rust中这也是可能发生的。
 ] else { todo }
 
 #if lang == "en" [
@@ -706,6 +834,9 @@ fn timer() {
   Sektion der Dauer der Sperre entspricht, ist sichergestellt, dass wir
   exklusiven Zugriff auf die gekapselte Variable haben, ohne den
   Sperrstatus des Mutex explizit nachverfolgen zu müssen.
+] else if lang == "zh" [
+  为了完全避免这个行为，我们可以实现一个要求临界区的互斥量去锁住，就像我们的计数器例子一样。临界区的存在时间必须和锁存在的时间一样长，我们能确保我们对被封装的变量有排他式访问，甚至不需要跟踪互斥量的
+  lock/unlock 状态。
 ] else { todo }
 
 #if lang == "en" [
@@ -714,6 +845,9 @@ fn timer() {
 ] else if lang == "de" [
   Genau dies wird uns bereits durch die `cortex_m`-Crate abgenommen! Wir
   hätten unseren Zähler auch unter Verwendung dieser Crate implementieren können:
+] else if lang == "zh" [
+  实际上我们在 `cortex_m`
+  crate中就是这么做的！我们可以用它来写入我们的计数器:
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -743,6 +877,8 @@ fn timer() {
       } else if lang == "de" {
         "Wir muessen hier noch einen kritischen Abschnitt betreten, um die 
     // Mutex-Bedingung zu erfuellen."
+      } else if lang == "zh" {
+        "这里我们仍然需要进入一个临界区去满足互斥量。"
       } else { todos } + "
     interrupt::free(|cs| COUNTER.borrow(cs).set(0));
 }
@@ -775,6 +911,10 @@ fn timer() {
   Verwendung sicher, allerdings lässt sie sich nicht direkt in einer
   `static`-Variablen einsetzen, da `static`-Elemente die Eigenschaft
   `Sync` erfüllen müssen.
+] else if lang == "zh" [
+  我们现在使用了#link("https://doc.rust-lang.org/core/cell/struct.Cell.html")[`Cell`]，它与它的兄弟`RefCell`一起被用于提供safe的内部可变性。我们已经见过`UnsafeCell`了，在Rust中它是内部可变性的底层:
+  它允许你去获得对某个值的多个可变引用，但是只能与不安全的代码一起工作。一个`Cell`像一个`UnsafeCell`一样但是它提供了一个安全的接口:
+  它只允许拷贝现在的值或者替换它，不允许获取一个引用，因此它不是Sync，它不能被在线程间共享。这些限制意味着它用起来是safe的，但是我们不能直接将它用于`static`变量因为一个`static`必须是Sync。
 ] else { todo }
 
 #if lang == "en" [
@@ -788,6 +928,9 @@ fn timer() {
   Dies ist sicher möglich, da der Zugriff auf den Inhalt nur während eines
   kritischen Abschnitts gewährt wird. Dadurch erhalten wir einen sicheren
   Zähler ohne jeglichen unsicheren Code!
+] else if lang == "zh" [
+  因此为什么上面的例子可以工作?`Mutex<T>`对于任何是Send的`T`实现了Sync -
+  比如一个`Cell`。因为它只能在临界区对它的内容进行访问，所以它这么做是safe的。因此我们可以即使没有一点unsafe的代码我们也能获取一个safe的计数器！
 ] else { todo }
 
 #if lang == "en" [
@@ -799,12 +942,14 @@ fn timer() {
   Das ist ideal für einfache Typen wie den `u32` unseres Zählers. Was aber
   ist mit komplexeren Typen, die nicht `Copy` sind? Ein sehr häufiges
   Beispiel in eingebetteten Systemen ist eine Peripheriestruktur, die in
-  der Regel nicht `Copy` ist. Für diesen Fall können wir `RefCell`
-  verwenden.
+  der Regel nicht `Copy` ist. Für diesen Fall können wir `RefCell` verwenden.
+] else if lang == "zh" [
+  对于我们的简单类型，像是我们的计数器的`u32`来说是很棒的，但是对于更复杂的不能拷贝的类型呢？在一个嵌入式上下文中一个极度常见的例子是一个外设结构体，通常它们不是Copy。针对那种情况，我们可以使用`RefCell`。
 ] else { todo }
 
 == #(if lang == "en" [Sharing Peripherals]
   else if lang == "de" [Gemeinsame Nutzung von Peripheriegeräten]
+  else if lang == "zh" [共享外设]
   else { todo })
 
 #if lang == "en" [
@@ -821,6 +966,8 @@ fn timer() {
   die Sicherheit, erschwert jedoch den gleichzeitigen Zugriff auf eine
   Peripheriekomponente sowohl aus dem Haupt-Thread als auch aus einem
   Interrupt-Handler heraus.
+] else if lang == "zh" [
+  使用`svd2rust`生成的设备crates和相似的抽象，通过强制要求同时只能存在一个外设结构体的实例，提供了对外设的安全的访问。这个确保了安全性，但是使得它很难从main线程和一个中断处理函数一起访问一个外设。
 ] else { todo }
 
 #let ln_refcell = link("https://doc.rust-lang.org/core/cell/struct.RefCell.html")[`RefCell`]
@@ -834,13 +981,15 @@ fn timer() {
 ] else if lang == "de" [
   Um den Zugriff auf Peripheriekomponenten sicher zu teilen, können wir
   den bereits bekannten `Mutex` verwenden. Zudem benötigen wir
-  #link("https://doc.rust-lang.org/core/cell/struct.RefCell.html")[`RefCell`]\;
+  #ln_refcell;;
   dieses stellt mittels einer Laufzeitprüfung sicher, dass jeweils nur
   eine einzige Referenz auf eine Peripheriekomponente ausgegeben wird.
   Dies ist zwar mit einem höheren Overhead verbunden als bei einem
   einfachen `Cell`, doch da wir Referenzen anstatt Kopien weitergeben,
   müssen wir sicherstellen, dass zu jedem Zeitpunkt nur eine einzige
   Referenz existiert.
+] else if lang == "zh" [
+  为了安全地共享对外设的访问，我们能使用我们之前看到的`Mutex`。我们也将需要使用#ln_refcell，它使用一个运行时检查去确保对一个外设每次只有一个引用被给出。这个比纯`Cell`消耗更多，但是因为我们正给出引用而不是拷贝，我们必须确保每次只有一个引用存在。
 ] else { todo }
 
 #if lang == "en" [
@@ -853,8 +1002,9 @@ fn timer() {
   Peripheriekomponente in die gemeinsam genutzte Variable übertragen
   werden kann, nachdem sie im Hauptcode initialisiert wurde. Hierfür
   können wir den Typ `Option` verwenden, der zunächst mit `None`
-  initialisiert und später auf die Instanz der Peripheriekomponente
-  gesetzt wird.
+  initialisiert und später auf die Instanz der Peripheriekomponente gesetzt wird.
+] else if lang == "zh" [
+  最终，我们也必须考虑在main代码中初始化外设后，如何将外设移到共享变量中。为了做这个，我们使用`Option`类型，初始成`None`，之后设置成外设的实例。
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -875,6 +1025,9 @@ fn main() -> ! {
         "Die Peripherie-Singletons abrufen und konfigurieren.
     // Dieses Beispiel stammt aus einer mit svd2rust erstellten Crate, die 
     // meisten Crates für eingebettete Geräte sind jedoch ähnlich."
+      } else if lang == "zh" {
+        "获得外设的单例并配置它。这个例子来自一个svd2rust生成的crate，
+    // 但是大多数的嵌入式设备crates都相似。"
       } else { todos } + "
     let dp = stm32f405::Peripherals::take().unwrap();
     let gpioa = &dp.GPIOA;
@@ -886,6 +1039,8 @@ fn main() -> ! {
         "Eine Art Konfigurationsfunktion.
     // Gehen wir davon aus, dass es PA0 als Eingang und PA1 als Ausgang 
     // konfiguriert."
+      } else if lang == "zh" {
+        "某个配置函数。假设它把PA0设置成一个输入和把PA1设置成一个输出。"
       } else { todos } + "
     configure_gpio(gpioa);
 
@@ -900,6 +1055,8 @@ fn main() -> ! {
       } else if lang == "de" {
         "Wir koennen `gpioa` oder `dp.GPIOA` nicht mehr verwenden, sondern 
     // muessen stattdessen ueber den Mutex darauf zugreifen."
+      } else if lang == "zh" {
+        "把GPIOA存进互斥量中，移动它。"
       } else { todos } + "
     // access it via the mutex.
 
@@ -913,6 +1070,11 @@ fn main() -> ! {
     // Andernfalls koennte der Interrupt ausgeloest werden, solange MY_GPIO 
     // noch None enthaelt, was – wie implementiert (mit `unwrap()`) – zu einer 
     // Panic fuehren wuerde."
+      } else if lang == "zh" {
+        "我可以不再用`gpioa`或者`dp.GPIOA`，反而必须通过互斥量访问它。
+
+    // 请注意，只有在设置MY_GPIO后才能使能中断: 要不然当MY_GPIO还是包含None的时候，
+    // 中断可能会发生，然后像上面写的那样操作(使用`unwrap()`)，它将发生运行时恐慌。"
       } else { todos } + "
     set_timer_1hz();
     let mut last_state = false;
@@ -921,6 +1083,8 @@ fn main() -> ! {
             "We'll now read state as a digital input, via the mutex"
           } else if lang == "de" {
             "Wir lesen den Status nun als digitalen Eingang ueber den Mutex aus."
+            } else if lang == "zh" {
+              "我们现在将通过互斥量，读取其作为数字输入时的状态。"
           } else { todos } + "
         let state = interrupt::free(|cs| {
             let gpioa = MY_GPIO.borrow(cs).borrow();
@@ -933,6 +1097,8 @@ fn main() -> ! {
               } else if lang == "de" {
                 "Setze PA1 auf High, wenn an PA0 eine steigende Flanke erkannt 
             // wurde."
+              } else if lang == "zh" {
+                "如果我们在PA0上已经看到了一个上升沿，拉高PA1。"
               } else { todos } + "
             interrupt::free(|cs| {
                 let gpioa = MY_GPIO.borrow(cs).borrow();
@@ -949,6 +1115,8 @@ fn timer() {
         "This time in the interrupt we'll just clear PA0."
       } else if lang == "de" {
         "Diesmal setzen wir im Interrupt lediglich PA0 zurueck."
+      } else if lang == "zh" {
+        "这次在中断中，我们将清除PA0。"
       } else { todos } + "
     interrupt::free(|cs| {
         // " + if lang == "en" {
@@ -959,6 +1127,9 @@ fn timer() {
             "Wir koennen `unwrap()` verwenden, da wir wissen, dass der Interrupt 
         // erst aktiviert wurde, nachdem `MY_GPIO` gesetzt war; andernfalls 
         // muessten wir den moeglichen Fall eines `None`-Werts behandeln."
+          } else if lang == "zh" {
+            "我们可以使用`unwrap()` 因为我们知道直到MY_GPIO被设置后，中断都是禁用的；
+        // 否则我应该处理会出现一个None值的潜在可能"
           } else { todos } + "
         let gpioa = MY_GPIO.borrow(cs).borrow();
         gpioa.as_ref().unwrap().odr.modify(|_, w| w.odr1().clear_bit());
@@ -971,6 +1142,8 @@ fn timer() {
 ] else if lang == "de" [
   Das ist eine ganze Menge, die man erst einmal verarbeiten muss --
   schauen wir uns also die wichtigen Zeilen genauer an.
+] else if lang == "zh" [
+  这需要理解的内容很多，所以让我们把重要的内容分解一下。
 ] else { todo }
 
 ```rust
@@ -999,6 +1172,9 @@ static MY_GPIO: Mutex<RefCell<Option<stm32f405::GPIOA>>> =
   eigentlichen Wert erst später hineinzubewegen. Da wir nicht statisch,
   sondern nur zur Laufzeit auf das Peripherie-Singleton zugreifen können,
   ist dieses Vorgehen erforderlich.
+] else if lang == "zh" [
+  我们的共享变量现在是一个包围了一个`RefCell`的`Mutex`，`RefCell`包含一个`Option`。`Mutex`确保只在一个临界区中的时候可以访问，因此使变量变成了Sync，甚至即使一个纯`RefCell`不是Sync。`RefCell`赋予了我们引用的内部可变性，我们将需要使用我们的`GPIOA`。`Option`让我们可以初始化这个变量成空的东西，只在随后实际移动变量进来。只有在运行时，我们才能静态地访问外设单例，因此这是必须的。
+
 ] else { todo }
 
 ```rust
@@ -1014,6 +1190,8 @@ interrupt::free(|cs| MY_GPIO.borrow(cs).replace(Some(dp.GPIOA)));
   Mutex aufrufen, was uns eine Referenz auf die `RefCell` liefert.
   Anschließend rufen wir `replace()` auf, um unseren neuen Wert in die
   `RefCell` zu verschieben.
+] else if lang == "zh" [
+  在一个临界区中，我们可以在互斥量上调用`borrow()`，其给了我们一个指向`RefCell`的引用。然后我们调用`replace()`去移动我们的新值进来`RefCell`。
 ] else { todo }
 
 ```rust
@@ -1037,6 +1215,8 @@ interrupt::free(|cs| {
   Ausleihe; sobald die Referenz ihren Gültigkeitsbereich verlässt, wird
   der Status der `RefCell` aktualisiert, um anzuzeigen, dass sie nicht
   mehr ausgeliehen ist.
+] else if lang == "zh" [
+  最终，我们用一种安全和并发的方式使用`MY_GPIO`。临界区禁止了中断像往常一样发生，让我们借用互斥量。`RefCell`然后给了我们一个`&Option<GPIOA>`并追踪它还要借用多久 - 一旦引用超出作用域，`RefCell`将会被更新去指出引用不再被借用。
 ] else { todo }
 
 #if lang == "en" [
@@ -1049,6 +1229,8 @@ interrupt::free(|cs| {
   umwandeln. Dieses können wir schließlich mit `unwrap()` auflösen, um das
   `&GPIOA` zu erhalten, das uns den Zugriff zur Modifikation der
   Peripherieeinheit ermöglicht.
+] else if lang == "zh" [
+  因为我不能把`GPIOA`移出`&Option`，我们需要用`as_ref()`将它转换成一个`&Option<&GPIOA>`，最终我们能使用`unwrap()`获得`&GPIOA`，其让我们可以修改外设。
 ] else { todo }
 
 #if lang == "en" [
@@ -1060,6 +1242,8 @@ interrupt::free(|cs| {
   Ressource benötigen, sollten stattdessen `borrow_mut` und `deref_mut`
   verwendet werden. Der folgende Code zeigt ein Beispiel unter Verwendung
   des TIM2-Timers.
+] else if lang == "zh" [
+  如果我们需要一个共享的资源的可变引用，那么`borrow_mut`和`deref_mut`应该被使用。下面的代码展示了一个使用TIM2计时器的例子。
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -1085,6 +1269,9 @@ fn main() -> ! {
         "Eine Art Timer-Konfigurationsfunktion. 
     // Angenommen, sie konfiguriert den TIM2-Timer sowie dessen NVIC-Interrupt 
     // und startet schließlich den Timer."
+      } else if lang == "zh" {
+        "某个计时器配置函数。假设它配置了TIM2计时器和它的NVIC中断，
+    // 最终启动计时器。"
       } else { todos } + "
     let tim = configure_timer_interrupt(&mut cp, dp);
 
@@ -1113,11 +1300,13 @@ fn timer() {
 ] else if lang == "de" [
   Puh! Das ist zwar sicher, aber auch etwas unhandlich. Können wir sonst
   noch etwas tun?
+] else if lang == "zh" [
+  呼！这是安全的，但也有点笨拙。我们还能做些什么吗？
 ] else { todo }
 
 == RTIC
 
-#let url_rtic = "https://rtic.rs"
+#let url_rtic = "https://github.com/rtic-rs/cortex-m-rtic"
 #if lang == "en" [
   One alternative is the #link(url_rtic)[RTIC framework], short for Real Time
   Interrupt-driven Concurrency. It enforces static priorities and tracks
@@ -1138,6 +1327,10 @@ fn timer() {
   (wie bei `RefCell`) entstünde. Dies bietet eine Reihe von Vorteilen, wie
   etwa die Garantie von Deadlock-Freiheit sowie einen extrem geringen
   Zeit- und Speicheraufwand.
+] else if lang == "zh" [
+  另一个方法是使用#link(url_rtic)[RTIC框架]，Real
+  Time Interrupt-driven
+  Concurrency的缩写。它强制执行静态优先级并追踪对`static mut`变量("资源")的访问去确保共享资源总是能被安全地访问，而不需要总是进入临界区和使用引用计数带来的消耗(如`RefCell`中所示)。这有许多好处，比如保证没有死锁且时间和内存的消耗极度低。
 ] else { todo }
 
 #if lang == "en" [
@@ -1150,11 +1343,12 @@ fn timer() {
   herkömmlichen synchronen APIs auch `async`-APIs nutzen.
 ] else { todo }
 
+#let url_rtic_doc = "https://rtic.rs"
 #if lang == "en" [
   The framework also includes other features like message passing, which
   reduces the need for explicit shared state, and the ability to schedule
   tasks to run at a given time, which can be used to implement periodic
-  tasks. Check out #link(url_rtic)[the documentation] for more
+  tasks. Check out #link(url_rtic_doc)[the documentation] for more
   information!
 ] else if lang == "de" [
   Das Framework umfasst zudem Funktionen wie Message Passing -- was den
@@ -1162,7 +1356,10 @@ fn timer() {
   -- sowie die Möglichkeit, Tasks für einen bestimmten Zeitpunkt zu
   planen, womit sich beispielsweise periodische Aufgaben realisieren
   lassen. Weitere Informationen finden Sie in
-  #link(url_rtic)[der Dokumentation]!
+  #link(url_rtic_doc)[der Dokumentation]!
+] else if lang == "zh" [
+  这个框架也包括了其它的特性，像是消息传递(message
+  passing)，消息传递减少了对显式共享状态的需要，还提供了在一个给定时间调度任务去运行的功能，这功能能被用来实现周期性的任务。看下#link(url_rtic_doc)[文档]可以知道更多的信息！
 ] else { todo }
 
 == Embassy
@@ -1210,6 +1407,7 @@ fn timer() {
 
 == #(if lang == "en" [Real Time Operating Systems]
   else if lang == "de" [Echtzeitbetriebssysteme]
+  else if lang == "zh" [实时操作系统]
   else { todo })
 
 #let ln_freertos = link("https://freertos.org/")[FreeRTOS]
@@ -1237,6 +1435,9 @@ fn timer() {
   Typischerweise stellen RTOS Mechanismen wie Mutexe und andere
   Synchronisationsprimitive bereit und interagieren häufig mit
   Hardwarefunktionen wie DMA-Controllern.
+] else if lang == "zh" [
+  #todoupd("zh")
+  与嵌入式并发有关的另一个模型是实时操作系统(RTOS)。虽然现在在Rust中的研究较少，但是它们被广泛用于传统的嵌入式开发。开源的例子包括#ln_freertos;和#ln_chibi。这些RTOSs提供对运行多个应用线程的支持，CPU在这些线程间进行切换，切换要么发生在当线程让出控制权的时候(被称为非抢占式多任务)，要么是基于一个常规计时器或者中断(抢占式多任务)。RTOS通常提供互斥量或者其它的同步原语，经常与硬件功能相互使用，比如DMA引擎。
 ] else { todo }
 
 #if lang == "en" [
@@ -1246,10 +1447,14 @@ fn timer() {
   Zum jetzigen Zeitpunkt gibt es noch nicht viele Beispiele für Rust-RTOS,
   auf die man verweisen könnte; es handelt sich jedoch um ein
   interessantes Gebiet -- bleiben Sie also dran!
+] else if lang == "zh" [
+  在撰写本文时，没有太多的Rust
+  RTOS示例可供参考，但这是一个有趣的领域，所以请关注这块！
 ] else { todo }
 
 == #(if lang == "en" [Multiple Cores]
   else if lang == "de" [Mehrere Kerne]
+  else if lang == "zh" [多个核心]
   else { todo })
 
 #if lang == "en" [
@@ -1269,6 +1474,9 @@ fn timer() {
   Mehrkernsystem trifft dies jedoch nicht mehr zu. Stattdessen benötigen
   wir Synchronisierungsprimitive, die speziell für Mehrkernsysteme (auch
   SMP, für symmetrisches Multiprocessing, genannt) entwickelt wurden.
+] else if lang == "zh" [
+  在嵌入式处理器中有两个或者多个核心很正常，其为并发添加了额外一层复杂性。所有使用临界区的例子(包括`cortex_m::interrupt::Mutex`)都假设了另一个执行的线程仅是中断线程，但是在一个多核系统中，这不再是正确的假设。反而，我们将需要为多核设计的同步原语(也被叫做SMP，symmetric
+  multi-processing的缩写)。
 ] else { todo }
 
 #if lang == "en" [
@@ -1276,8 +1484,9 @@ fn timer() {
   processing system will ensure that atomicity is maintained over all cores.
 ] else if lang == "de" [
   Diese verwenden typischerweise die bereits erwähnten atomaren Befehle,
-  da das Verarbeitungssystem die Atomarität über alle Kerne hinweg
-  gewährleistet.
+  da das Verarbeitungssystem die Atomarität über alle Kerne hinweg gewährleistet.
+] else if lang == "zh" [
+  我们之前看到的，这些通常使用原子指令，因为处理系统将确保原子性在所有的核中都保持着。
 ] else { todo }
 
 #if lang == "en" [
@@ -1285,6 +1494,7 @@ fn timer() {
   book, but the general patterns are the same as for the single-core case.
 ] else if lang == "de" [
   Eine detaillierte Behandlung dieser Themen würde den Rahmen dieses
-  Buches sprengen, die allgemeinen Muster sind jedoch dieselben wie im
-  Einzelkernfall.
+  Buches sprengen, die allgemeinen Muster sind jedoch dieselben wie im Einzelkernfall.
+] else if lang == "zh" [
+  覆盖这些主题的细节已经超出了本书的范围，但是常规的模式与单核的相似。
 ] else { todo }

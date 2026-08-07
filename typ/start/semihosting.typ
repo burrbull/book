@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [Semihosting]
   else if lang == "de" [Semihosting]
+  else if lang == "zh" [半主机模式]
   else { todo })
 
 #if lang == "en" [
@@ -22,6 +23,8 @@
   jedoch die sehr geringe Geschwindigkeit: Je nach verwendetem
   Hardware-Debugger (z. B. ST-Link) kann jeder Schreibvorgang mehrere
   Millisekunden in Anspruch nehmen.
+] else if lang == "zh" [
+  半主机模式是一种可以让嵌入式设备在主机上进行I/O操作的的机制，主要被用来记录信息到主机控制台上。半主机模式需要一个debug会话，除此之外几乎没有其它要求了，因此它非常易于使用。缺点是它非常慢：每个写操作需要几毫秒的时间，其取决于你的硬件调试器(e.g.~ST-LINK)。
 ] else { todo }
 
 #let ln_sh = link("https://crates.io/crates/cortex-m-semihosting")[`cortex-m-semihosting`]
@@ -33,6 +36,9 @@
   Das #ln_sh;-Crate
   stellt eine API für Semihosting-Operationen auf Cortex-M-Geräten bereit.
   Das folgende Programm ist die Semihosting-Version von „Hello, world!":
+] else if lang == "zh" [
+  #ln_sh crate 提供了一个API去在Cortex-M设备上执行半主机操作。下面的程序是"Hello,
+  world!"的半主机版本。
 ] else { todo }
 
 ```rust
@@ -58,6 +64,9 @@ fn main() -> ! {
 ] else if lang == "de" [
   Wenn Sie dieses Programm auf der Hardware ausführen, sehen Sie die
   Meldung „Hello, world!" in den OpenOCD-Protokollen.
+] else if lang == "zh" [
+  如果你在硬件上运行这个程序，你将会在OpenOCD的logs中看到"Hello,
+  world!"信息。
 ] else { todo }
 
 ```text
@@ -71,6 +80,8 @@ Hello, world!
   You do need to enable semihosting in OpenOCD from GDB first:
 ] else if lang == "de" [
   Sie müssen zunächst Semihosting in OpenOCD über GDB aktivieren:
+] else if lang == "zh" [
+  你首先需要从GDB使能OpenOCD中的半主机模式。
 ] else { todo }
 
 ```console
@@ -91,10 +102,12 @@ semihosting is enabled
   `-semihosting-config` übergeben müssen, um die Semihosting-Unterstützung
   zu aktivieren; diese Optionen sind bereits in der Datei
   `.cargo/config.toml` der Vorlage enthalten.
+] else if lang == "zh" [
+  QEMU理解半主机操作，因此上面的程序不需要启动一个debug会话，也能在`qemu-system-arm`中工作。注意你需要传递`-semihosting-config`标志给QEMU去使能支持半主机模式；这些标识已经被包括在模板的`.cargo/config.toml`文件中了。
 ] else { todo }
 
 #raw(block: true, lang: "text",
-"$ # " + if lang == "en" {
+"$ # " + if lang in ("en", "zh") {
     "this program will block the terminal"
   } else if lang == "de" {
     "Dieses Programm wird das Terminal blockieren."
@@ -115,6 +128,8 @@ Hello, world!
   *nicht* auf echter Hardware; diese Funktion kann Ihre
   OpenOCD-Sitzung beschädigen, sodass Sie keine weiteren Programme mehr
   debuggen können, bis Sie die Sitzung neu starten.
+] else if lang == "zh" [
+  `exit`半主机操作也能被用于终止QEMU进程。重要：*不要*在硬件上使用`debug::exit`；这个函数会关闭你的OpenOCD对话，这样你就不能执行其它的程序调试操作了，除了重启它。
 ] else { todo }
 
 ```rust
@@ -157,6 +172,10 @@ $ echo $?
   `exit(EXIT_FAILURE)` einstellen. Dadurch lassen sich `no_std`-Tests
   schreiben, die erfolgreich durchlaufen und unter QEMU ausgeführt werden
   können.
+] else if lang == "zh" [
+  最后一个提示：你可以将运行时恐慌(panicking)的行为设置成
+  `exit(EXIT_FAILURE)`。这会允许你编写可以在QEMU上运行通过的 `no_std`
+  测试。
 ] else { todo }
 
 #if lang == "en" [
@@ -167,6 +186,10 @@ $ echo $?
   Praktischerweise bietet der `panic-semihosting`-Crate ein „exit"-Feature
   an; ist dieses aktiviert, wird `exit(EXIT_FAILURE)` aufgerufen, nachdem
   die Panic-Meldung auf dem `stderr` des Hosts ausgegeben wurde.
+] else if lang == "zh" [
+  为了方便，`panic-semihosting` crate有一个 "exit"
+  特性。当它使能的时候，在主机stderr上打印恐慌(painc)信息后会调用
+  `exit(EXIT_FAILURE)` 。
 ] else { todo }
 
 ```rust
@@ -207,20 +230,27 @@ $ echo $?
   *HINWEIS*: Um diese Funktion für `panic-semihosting` zu
   aktivieren, bearbeiten Sie den Abschnitt „dependencies" in Ihrer
   `Cargo.toml`, in dem `panic-semihosting` wie folgt angegeben ist:
+] else if lang == "zh" [
+  *注意*:
+  为了在`panic-semihosting`上使能这个特性，编辑你的`Cargo.toml`依赖，`panic-semihosting`改写成:
 ] else { todo }
 
 ```toml
 panic-semihosting = { version = "VERSION", features = ["exit"] }
 ```
 
+#let ln_spec_defs = link("https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html")[`specifying dependencies`]
 #if lang == "en" [
   where `VERSION` is the version desired. For more information on
   dependencies features check the
-  #link("https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html")[`specifying dependencies`]
+  #ln_spec_defs
   section of the Cargo book.
 ] else if lang == "de" [
   wobei `VERSION` für die gewünschte Version steht. Weitere Informationen
   zu Abhängigkeiten und Funktionen finden Sie im Abschnitt
-  "#link("https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html")[`specifying dependencies`]"
+  "#ln_spec_defs"
   des Cargo-Buchs.
+] else if lang == "zh" [
+  `VERSION`是想要的版本。关于依赖features的更多信息查看Cargo
+  book的#ln_spec_defs;部分。
 ] else { todo }

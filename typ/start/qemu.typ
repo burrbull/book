@@ -62,6 +62,8 @@
   sodass Sie sich in diesem Abschnitt nicht mit der Hardware beschäftigen
   müssen und wir uns auf die Werkzeuge und den Entwicklungsprozess
   konzentrieren können.
+] else if lang == "zh" [
+  我们将开始为#lm3s6965;编写程序，一个Cortex-M3微控制器。因为它能使用#link("https://wiki.qemu.org/Documentation/Platforms/ARM#Supported_in_qemu-system-arm")[QEMU仿真]，所以我们选择它作为我们的第一个目标，本节中，不需要使用硬件，我们注意力可以集中在工具和开发过程上。
 ] else { todo }
 
 #if lang == "en" [
@@ -75,10 +77,14 @@
   den Namen ersetzen, den Sie für Ihr Projekt gewählt haben. Alternativ
   können Sie Ihr Projekt auch „app" nennen und so die Ersetzungen
   vermeiden.
+] else if lang == "zh" [
+  *重要*
+  在这个引导里，我们将使用"app"这个名字来代指项目名。无论何时你看到单词"app"，你应该用你选择的项目名来替代"app"。或者你也可以选择把你的项目命名为"app"，避免要替换掉。
 ] else { todo }
 
 = #(if lang == "en" [Creating a non standard Rust program]
   else if lang == "de" [Erstellen eines nicht standardmäßigen Rust-Programms]
+  else if lang == "zh" [生成一个非标准的 Rust program]
   else { todo })
 
 #let ln_quick = link("https://github.com/rust-embedded/cortex-m-quickstart")[`cortex-m-quickstart`]
@@ -96,16 +102,21 @@
   eine neue Embedded-Rust-Anwendung. Darüber hinaus enthält das Projekt
   ein Verzeichnis `examples` mit mehreren separaten Anwendungen, die
   einige der wichtigsten Funktionen von Embedded Rust veranschaulichen.
+] else if lang == "zh" [
+  我们将使用#ln_quick;项目模板来生成一个新项目。生成的项目将包含一个最基本的应用:对于一个新的嵌入式rust应用来说，是一个很好的开始。另外，项目将包含一个`example`文件夹，文件夹中有许多独立的应用，突出了一些关键的嵌入式rust的功能。
 ] else { todo }
 
 == #(if lang == "en" [Using `cargo-generate`]
   else if lang == "de" [Verwendung von `cargo-generate`]
+  else if lang == "zh" [使用 `cargo-generate`]
   else { todo })
 
 #if lang == "en" [
   First install cargo-generate
 ] else if lang == "de" [
   Installieren Sie zunächst cargo-generate
+] else if lang == "zh" [
+  首先安装 cargo-generate
 ] else { todo }
 
 ```console
@@ -116,6 +127,8 @@ cargo install cargo-generate
   Then generate a new project
 ] else if lang == "de" [
   Erstellen Sie anschließend ein neues Projekt
+] else if lang == "zh" [
+  然后生成一个新项目
 ] else { todo }
 
 ```console
@@ -134,12 +147,15 @@ cd app
 
 == #(if lang == "en" [Using `git`]
   else if lang == "de" [Verwendung von `git`]
+  else if lang == "zh" [使用 `git`]
   else { todo })
 
 #if lang == "en" [
   Clone the repository
 ] else if lang == "de" [
   Das Repository klonen
+] else if lang == "zh" [
+  克隆仓库
 ] else { todo }
 
 ```console
@@ -151,6 +167,8 @@ cd app
   And then fill in the placeholders in the `Cargo.toml` file
 ] else if lang == "de" [
   Und fülle dann die Platzhalter in der Datei `Cargo.toml` aus
+] else if lang == "zh" [
+  然后补充`Cargo.toml`文件中的占位符
 ] else { todo }
 
 ```toml
@@ -170,6 +188,7 @@ bench = false
 
 == #(if lang == "en" [Using neither]
   else if lang == "de" [Keines von beiden verwenden]
+  else if lang == "zh" [要么使用]
   else { todo })
 
 #if lang == "en" [
@@ -178,6 +197,8 @@ bench = false
 ] else if lang == "de" [
   Laden Sie den neuesten Snapshot der Vorlage `cortex-m-quickstart`
   herunter und entpacken Sie ihn.
+] else if lang == "zh" [
+  抓取最新的 `cortex-m-quickstart` 模板，解压它。
 ] else { todo }
 
 ```console
@@ -191,8 +212,10 @@ cd app
   Or you can browse to #ln_quick, click the green "Clone or download" button and then click "Download ZIP".
 ] else if lang == "de" [
   Oder Sie navigieren zu #ln_quick,
-  klicken auf die grüne Schaltfläche „Clone or download" und anschließend
-  auf „Download ZIP".
+  klicken auf die grüne Schaltfläche „Clone or download" und anschließend auf „Download ZIP".
+] else if lang == "zh" [
+  或者你可以浏览#ln_quick，点击绿色的
+  "Clone or download" 按钮，然后点击 "Download ZIP" 。
 ] else { todo }
 
 #if lang == "en" [
@@ -201,10 +224,13 @@ cd app
 ] else if lang == "de" [
   Füllen Sie anschließend die Platzhalter in der Datei `Cargo.toml` aus,
   wie im zweiten Teil der Version „Verwendung von `git` beschrieben.
+] else if lang == "zh" [
+  然后像在 "使用 `git`" 那里的第二部分写的那样填充 `Cargo.toml` 。
 ] else { todo }
 
 = #(if lang == "en" [Program Overview]
   else if lang == "de" [Programmübersicht]
+  else if lang == "zh" [项目概览]
   else { todo })
 
 #if lang == "en" [
@@ -212,6 +238,8 @@ cd app
 ] else if lang == "de" [
   Der Einfachheit halber sind hier die wichtigsten Teile des Quellcodes in
   `src/main.rs` aufgeführt:
+] else if lang == "zh" [
+  这是`src/main.rs`中源码最重要的部分。
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -229,6 +257,8 @@ fn main() -> ! {
             "your code goes here"
           } else if lang == "de" {
             "Hier kommt Ihr Code hin."
+          } else if lang == "zh" {
+            "your code goes here"
           } else { todos } + "
     }
 }
@@ -240,6 +270,8 @@ fn main() -> ! {
 ] else if lang == "de" [
   Dieses Programm unterscheidet sich ein wenig von einem typischen
   Rust-Programm, schauen wir es uns also einmal genauer an.
+] else if lang == "zh" [
+  这个程序与标准Rust程序有一点不同，让我们走近点看看。
 ] else { todo }
 
 #if lang == "en" [
@@ -249,6 +281,9 @@ fn main() -> ! {
   `#![no_std]` gibt an, dass dieses Programm _nicht_ mit der
   Standard-Crate `std` verknüpft wird. Stattdessen wird es mit deren
   Teilmenge verknüpft: der Crate `core`.
+] else if lang == "zh" [
+  `#![no_std]`指出这个程序将 _不会_
+  链接标准crate`std`。反而它将会链接到它的子集: `core` crate。
 ] else { todo }
 
 #if lang == "en" [
@@ -262,6 +297,9 @@ fn main() -> ! {
   Hauptgrund (kein Wortspiel beabsichtigt) für die Verwendung von
   `no_main` ist, dass die Nutzung der `main`-Schnittstelle im
   `no_std`-Kontext „Nightly" erfordert.
+] else if lang == "zh" [
+  `#![no_main]`指出这个程序将不会使用标准的且被大多数Rust程序使用的`main`接口。使用`no_main`的主要理由是，在`no_std`上下文中使用`main`接口需要
+  nightly 版的 Rust。
 ] else { todo }
 
 #if lang == "en" [
@@ -273,6 +311,8 @@ fn main() -> ! {
   der das Verhalten des Programms im Panikfall definiert. Wir werden
   darauf im Kapitel #link(<getting-started-panicking>)[In Panik geraten] des Buches
   näher eingehen.
+] else if lang == "zh" [
+  `use panic_halt as _;`。这个crate提供了一个`panic_handler`，它定义了程序陷入`panic`时的行为。我们将会在这本书的#link(<getting-started-panicking>)[运行时恐慌(Panicking)]章节中覆盖更多的细节。
 ] else { todo }
 
 #let ln_entry = link("https://docs.rs/cortex-m-rt-macros/latest/cortex_m_rt_macros/attr.entry.html")[`#[entry]`]
@@ -288,6 +328,8 @@ fn main() -> ! {
   nicht die Standard-Schnittstelle `main` verwenden, benötigen wir eine
   andere Möglichkeit, den Einstiegspunkt des Programms anzugeben, und das
   wäre `#[entry]`.
+] else if lang == "zh" [
+  #ln_entry 是一个由#ln_rt;提供的属性，它用来标记程序的入口。当我们不使用标准的`main`接口时，我们需要其它方法来指示程序的入口，那就是`#[entry]`。
 ] else { todo }
 
 #let url_div = "https://doc.rust-lang.org/rust-by-example/fn/diverging.html"
@@ -303,10 +345,15 @@ fn main() -> ! {
   Wir verwenden eine #link(url_div)[divergent function]
   (das `-> !` in der Funktionssignatur), um bereits zur Kompilierungszeit
   sicherzustellen, dass dies auch der Fall ist.
+] else if lang == "zh" [
+  `fn main() -> !`。我们的程序将会是运行在目标板子上的 _唯一_
+  的进程，因此我们不想要它结束！我们使用一个#link(url_div)[发散函数]
+  (函数签名中的 `-> !` )来确保在编译时就是这么回事儿。
 ] else { todo }
 
 = #(if lang == "en" [Cross compiling]
   else if lang == "de" [Cross-Kompilierung]
+  else if lang == "zh" [交叉编译]
   else { todo })
 
 #if lang == "en" [
@@ -404,13 +451,15 @@ initialisiert wird! */"
   mit dem Befehl `cargo build --target $TRIPLE`, sofern Sie wissen, wie
   das Kompilierungsziel (`$TRIPLE`) lauten soll. Glücklicherweise finden
   Sie die Antwort in der Datei `.cargo/config.toml` in der Vorlage:
+] else if lang == "zh" [
+  下一步是为Cortex-M3架构_交叉_编译程序。如果你知道编译目标(`$TRIPLE`)应该是什么，运行`cargo build --target $TRIPLE`就可以了。幸运地，模板中的`.cargo/config.toml`有这个答案:
 ] else { todo }
 
 ```console
 tail -n6 .cargo/config.toml
 ```
 
-#if lang == "en" [
+#if lang in ("en", "zh") [
   ```toml
   [build]
   # Pick ONE of these compilation targets
@@ -441,6 +490,8 @@ tail -n6 .cargo/config.toml
   der Rust-Werkzeuge nicht automatisch installiert. Jetzt wäre ein guter
   Zeitpunkt, dieses Ziel zu den Werkzeugen hinzuzufügen, falls Sie dies
   noch nicht getan haben:
+] else if lang == "zh" [
+  为了交叉编译Cortex-M3架构我们不得不使用`thumbv7m-none-eabi`。当安装Rust工具时，target不会自动被安装，如果还没有添加，现在可以去添加那个target到工具链上。
 ] else { todo }
 
 ```console
@@ -454,6 +505,8 @@ rustup target add thumbv7m-none-eabi
   Da das Kompilierungsziel `thumbv7m-none-eabi` in Ihrer Datei
   `.cargo/config.toml` als Standard festgelegt wurde, haben die beiden
   folgenden Befehle dieselbe Wirkung:
+] else if lang == "zh" [
+  因为`thumbv7m-none-eabi`编译目标在你的`.cargo/config.toml`中被设置成默认值，下面的两个命令是一样的效果:
 ] else { todo }
 
 ```console
@@ -463,6 +516,7 @@ cargo build
 
 = #(if lang == "en" [Inspecting]
   else if lang == "de" [Überprüfen]
+  else if lang == "zh" [检查]
   else { todo })
 
 #if lang == "en" [
@@ -473,6 +527,8 @@ cargo build
   Nun haben wir eine nicht-native ELF-Binärdatei in
   `target/thumbv7m-none-eabi/debug/app`. Wir können sie mit
   `cargo-binutils` untersuchen.
+] else if lang == "zh" [
+  现在在`target/thumbv7m-none-eabi/debug/app`中有一个非主机环境的ELF二进制文件。我们能使用`cargo-binutils`检查它。
 ] else { todo }
 
 #if lang == "en" [
@@ -481,6 +537,8 @@ cargo build
 ] else if lang == "de" [
   Mit `cargo-readobj` können wir die ELF-Header ausgeben, um zu
   überprüfen, ob es sich um eine ARM- Binärdatei handelt.
+] else if lang == "zh" [
+  使用`cargo-readobj`我们能打印ELF头，确认这是一个ARM二进制。
 ] else { todo }
 
 ```console
@@ -496,6 +554,10 @@ cargo readobj --bin app -- --file-headers
   - `--bin app` ist eine vereinfachte Schreibweise
     für die Überprüfung der Binärdatei unter `target/$TRIPLE/debug/app`
   - `--bin app` kompiliert die Binärdatei bei Bedarf auch (neu)
+] else if lang == "zh" [
+  注意:
+  - `--bin app` 是一个用来查看二进制项`target/$TRIPLE/debug/app`的语法糖
+  - `--bin app` 需要时也会重新编译二进制项。
 ] else { todo }
 
 ```text
@@ -526,6 +588,8 @@ ELF Header:
 ] else if lang == "de" [
   Mit `cargo-size` lässt sich die Größe der Linker-Abschnitte der
   Binärdatei anzeigen.
+] else if lang == "zh" [
+  `cargo-size` 能打印二进制项的linker section的大小。
 ] else { todo }
 
 ```console
@@ -536,6 +600,8 @@ cargo size --bin app --release -- -A
   we use `--release` to inspect the optimized version
 ] else if lang == "de" [
   Wir verwenden `--release`, um die optimierte Version zu überprüfen.
+] else if lang == "zh" [
+  我们使用`--release`查看优化后的版本
 ] else { todo }
 
 ```text
@@ -586,6 +652,15 @@ Total              14570
   - Die Abschnitte `.ARM.attributes` und `.debug_*` enthalten Metadaten
     und werden _nicht_ beim Flashen der Binärdatei auf das Zielgerät
     geladen werden.
+] else if lang == "zh" [
+  ELF linker sections的复习
+  - `.text` 包含程序指令
+  - `.rodata` 包含像是字符串这样的常量
+  - `.data` 包含静态分配的初始值_非_零的变量
+  - `.bss` 也包含静态分配的初始值_是_零的变量
+  - `.vector_table` 是一个我们用来存储向量(中断)表的_非_标准的section
+  - `.ARM.attributes` 和 `.debug_*`
+    sections包含元数据，当烧录二进制文件时，它们不会被加载到目标上。
 ] else { todo }
 ]
 
@@ -601,26 +676,34 @@ Total              14570
   beanspruchen wird, wenn es auf ein Gerät geflasht wird. Verwenden Sie
   _immer_ `cargo-size`, um zu überprüfen, wie groß eine Binärdatei
   tatsächlich ist.
-]
+] else if lang == "zh" [
+  *重要*:
+  ELF文件包含像是调试信息这样的元数据，因此它们在_硬盘上的尺寸_没有正确地反应处程序被烧录到设备上时将占据的空间的大小。要_一直_使用`cargo-size`检查一个二进制项的大小。
+] else { todo }
 
 #if lang == "en" [
 `cargo-objdump` can be used to disassemble the binary.
 ] else if lang == "de" [
   Mit `cargo-objdump` lässt sich die Binärdatei disassemblieren.
-]
+] else if lang == "zh" [
+`cargo-objdump` 能用来反编译二进制项。
+] else { todo }
 
 ```console
 cargo objdump --bin app --release -- --disassemble --no-show-raw-insn --print-imm-hex
 ```
 
 #quote(block: true)[
-#let ln = link("https://github.com/rust-embedded/book/issues/269")
+#let ln_issue269 = link("https://github.com/rust-embedded/book/issues/269")
 #if lang == "en" [
   *NOTE* if the above command complains about
-  `Unknown command line argument` see the following bug report: #ln
+  `Unknown command line argument` see the following bug report: #ln_issue269
 ] else if lang == "de" [
   *HINWEIS*: Falls der obige Befehl die Fehlermeldung „Unbekanntes
-  Befehlszeilenargument" ausgibt, siehe den folgenden Fehlerbericht: #ln
+  Befehlszeilenargument" ausgibt, siehe den folgenden Fehlerbericht: #ln_issue269
+] else if lang == "zh" [
+  *注意* 如果上面的命令抱怨 `Unknown command line argument`
+  看下面的bug报告:#ln_issue269
 ] else { todo }
 ]
 
@@ -634,6 +717,9 @@ cargo objdump --bin app --release -- --disassemble --no-show-raw-insn --print-im
   Versionen von rustc, LLVM und Bibliotheken können unterschiedlichen
   Assemblercode erzeugen. Wir haben einige der Befehle gekürzt, um den
   Ausschnitt kurz zu halten.
+] else if lang == "zh" [
+  *注意* 在你的系统上这个输出可能不一样。rustc, LLVM
+  和库的新版本能产出不同的汇编。我们截取了一些指令
 ] else { todo }
 ]
 
@@ -678,6 +764,7 @@ HardFault:
 
 = #(if lang == "en" [Running]
   else if lang == "de" [Ausführen]
+  else if lang == "zh" [运行]
   else { todo })
 
 #if lang == "en" [
@@ -689,6 +776,10 @@ HardFault:
   QEMU ausführt! Diesmal verwenden wir das `hello`-Beispiel, das
   tatsächlich etwas tut. Standardmäßig nutzt dieses Beispiel `[defmt]` und
   RTT, um Text auszugeben.
+] else if lang == "zh" [
+  #todoupd("zh")
+  接下来，让我们看一个嵌入式程序是如何在QEMU上运行的！此刻我们将使用
+  `hello` 示例，来做些真正的事。
 ] else { todo }
 
 #quote(block: true)[
@@ -755,6 +846,8 @@ cargo build --bin hello
 ] else if lang == "de" [
   Um diese Binärdatei unter QEMU auszuführen, reicht in der Regel der
   folgende Befehl aus:
+] else if lang == "zh" [
+  为了在QEMU上运行这个二进制项，执行下列的命令:
 ] else { todo }
 
 ```console
@@ -839,6 +932,20 @@ echo $?
     und die Host-Eingabe (stdin) zu nutzen sowie Dateien auf dem Host zu erstellen.
   - `-kernel $file`. Damit wird QEMU mitgeteilt, welche Binärdatei auf der
     emulierten Maschine geladen und ausgeführt werden soll.
+] else if lang == "zh" [
+  #todoupd("zh")
+  让我们看看QEMU命令:
+  - `qemu-system-arm`。这是QEMU仿真器。这些QEMU二进制项有一些变体，这个仿真器能做ARM机器的全系统仿真。
+  - `-cpu cortex-m3`。这告诉QEMU去仿真一个Cortex-M3
+    CPU。指定CPU模型会让我们捕捉到一些误编译错误:比如，运行一个为Cortex-M4F编译的程序，它具有一个硬件FPU，在执行时将会使QEMU报错。
+  - `-machine lm3s6965evb`。这告诉QEMU去仿真
+    LM3S6965EVB，一个包含LM3S6965微控制器的评估板。
+  - `-nographic`。这告诉QEMU不要启动它的GUI。
+  - `-semihosting-config (..)`。这告诉QEMU使能半主机模式。半主机模式允许被仿真的设备，使用主机的stdout，stderr，和stdin，并在主机上创建文件。
+  - `-kernel $file`。这告诉QEMU在仿真机器上加载和运行哪个二进制项。
+
+  输入这么长的QEMU命令太费功夫了！我们可以设置一个自定义运行器(runner)简化步骤。`.cargo/config.toml`
+  有一个被注释掉的，可以调用QEMU的运行器。让我们去掉注释。
 ] else { todo }
 
 #if lang == "en" [
@@ -875,6 +982,10 @@ runner = \"qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semih
   Dieser Runner gilt nur für das Ziel `thumbv7m-none-eabi`, das unser
   Standard-Kompilierungsziel ist. Nun kompiliert `cargo run` das Programm
   und führt es auf QEMU aus:
+] else if lang == "zh" [
+  这个运行器只会应用于 `thumbv7m-none-eabi`
+  目标，它是我们的默认编译目标。现在 `cargo run`
+  将会编译程序且在QEMU上运行它。
 ] else { todo }
 
 ```console
@@ -892,6 +1003,7 @@ Hello, world!
 
 = #(if lang == "en" [Debugging]
   else if lang == "de" [Fehlerbehebung (Debugging)]
+  else if lang == "zh" [调试]
   else { todo })
 
 #if lang == "en" [
@@ -899,6 +1011,8 @@ Hello, world!
 ] else if lang == "de" [
   Das Debuggen ist für die Embedded-Entwicklung von entscheidender
   Bedeutung. Schauen wir uns einmal an, wie es funktioniert.
+] else if lang == "zh" [
+  对于嵌入式开发来说，调试非常重要。让我们来看下如何调试它。
 ] else { todo }
 
 #if lang == "en" [
@@ -909,6 +1023,9 @@ Hello, world!
   Das Debuggen eines Embedded-Geräts erfolgt _remote_, da das
   Programm, das wir debuggen möchten, nicht auf dem Rechner läuft, auf dem
   das Debugger-Programm (GDB oder LLDB) ausgeführt wird.
+] else if lang == "zh" [
+  因为我们想要调试的程序所运行的机器上并没有运行一个调试器程序(GDB或者LLDB)，所以调试一个嵌入式设备就涉及到了
+  _远程_ 调试
 ] else { todo }
 
 #if lang == "en" [
@@ -919,18 +1036,25 @@ Hello, world!
   Beim Remote-Debugging sind ein Client und ein Server beteiligt. In einer
   QEMU-Umgebung ist der Client ein GDB- (oder LLDB-)Prozess und der Server
   der QEMU-Prozess, auf dem auch das eingebettete Programm läuft.
+] else if lang == "zh" [
+  远程调试涉及一个客户端和一个服务器。在QEMU的情况中，客户端将是一个GDB(或者LLDM)进程且服务器将会是运行着嵌入式程序的QEMU进程。
+
 ] else { todo }
 
 #if lang == "en" [
   In this section we'll use the `hello` example we already compiled.
 ] else if lang == "de" [
   In diesem Abschnitt verwenden wir das bereits kompilierte Beispiel `hello`.
+] else if lang == "zh" [
+  在这部分，我们要使用我们已经编译的 `hello` 示例。
 ] else { todo }
 
 #if lang == "en" [
   The first debugging step is to launch QEMU in debugging mode:
 ] else if lang == "de" [
   Der erste Schritt beim Debuggen besteht darin, QEMU im Debugging-Modus zu starten:
+] else if lang == "zh" [
+  调试的第一步是在调试模式中启动QEMU：
 ] else { todo }
 
 ```console
@@ -961,6 +1085,10 @@ qemu-system-arm \
     einzufrieren. Ohne diese Option hätte das Programm das Ende der
     Funktion `main` erreicht, bevor wir die Gelegenheit gehabt hätten, den
     Debugger zu starten!
+] else if lang == "zh" [
+  这个命令将不打印任何东西到调试台上，且将会阻塞住终端。此刻我们还传递了两个额外的标志。
+  - `-gdb tcp::3333`。这告诉QEMU在3333的TCP端口上等待一个GDB连接。
+  - `-S`。这告诉QEMU在启动时，冻结机器。没有这个，在我们有机会启动调试器之前，程序有可能已经到达了主程序的底部了!
 ] else { todo }
 
 #if lang == "en" [
@@ -969,6 +1097,8 @@ qemu-system-arm \
 ] else if lang == "de" [
   Als Nächstes starten wir GDB in einem anderen Terminal und weisen es an,
   die Debug-Symbole des Beispiels zu laden:
+] else if lang == "zh" [
+  接下来我们在另一个终端启动GDB，且告诉它去加载示例的调试符号。
 ] else { todo }
 
 ```console
@@ -984,6 +1114,10 @@ gdb-multiarch -q target/thumbv7m-none-eabi/debug/examples/hello
   `gdb-multiarch` eine andere Version von gdb, je nachdem, welche Sie im
   Kapitel zur Installation installiert haben. Dies könnte auch
   `arm-none-eabi-gdb` oder einfach nur `gdb` sein.
+] else if lang == "zh" [
+  *注意*: 你可能需要另一个gdb版本而不是
+  `gdb-multiarch`，取决于你在安装章节中安装了哪个。这个可能是
+  `arm-none-eabi-gdb` 或者只是 `gdb`。
 ] else { todo }
 
 #if lang == "en" [
@@ -992,6 +1126,9 @@ gdb-multiarch -q target/thumbv7m-none-eabi/debug/examples/hello
 ] else if lang == "de" [
   Anschließend stellen wir innerhalb der GDB-Shell eine Verbindung zu QEMU
   her, das auf dem TCP-Port 3333 auf eine Verbindung wartet.
+] else if lang == "zh" [
+  然后在GDB shell中，我们连接QEMU，QEMU正在等待一个在3333
+  TCP端口上的连接。
 ] else { todo }
 
 ```console
@@ -1012,6 +1149,9 @@ Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473
   Sie werden feststellen, dass der Prozess angehalten wurde und der
   Programmzähler auf eine Funktion namens `Reset` zeigt. Das ist der
   Reset-Handler: das, was Cortex-M-Kerne beim Booten ausführen.
+] else if lang == "zh" [
+  你将看到，进程被挂起了，程序计数器正指向一个名为 `Reset` 的函数。那是
+  reset 句柄：Cortex-M 内核在启动时执行的中断函数。
 ] else { todo }
 
 #quote(block: true)[
@@ -1023,6 +1163,8 @@ Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473
   Beachten Sie, dass gdb in manchen Konfigurationen anstelle der oben
   gezeigten Zeile `Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473`
   möglicherweise Warnungen wie die folgenden ausgibt:
+] else if lang == "zh" [
+  注意在一些配置中，可能不会像上面一样，显示`Reset() at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473`，gdb可能打印一些警告，比如:
 ] else { todo }
 
 `core::num::bignum::Big32x40::mul_small () at src/libcore/num/bignum.rs:254`
@@ -1034,6 +1176,8 @@ Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473
 ] else if lang == "de" [
   Das ist ein bekannter Fehler. Sie können diese Warnungen getrost
   ignorieren, da Sie sich höchstwahrscheinlich bei `Reset()` befinden.
+] else if lang == "zh" [
+  那是一个已知的小bug，你可以安全地忽略这些警告，你非常大可能已经进入Reset()了。
 ] else { todo }
 ]
 
@@ -1048,6 +1192,8 @@ Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473
   Befehls `continue` überspringen. Um den Haltepunkt zu setzen, schauen
   wir uns zunächst mit dem Befehl `list` an, an welcher Stelle in unserem
   Code wir anhalten möchten.
+] else if lang == "zh" [
+  这个reset句柄最终将调用我们的主函数，让我们使用一个断点和`continue`命令跳过所有的步骤。为了设置断点，让我们首先看下我们想要在我们代码哪里打断点，使用`list`指令
 ] else { todo }
 
 ```console
@@ -1058,6 +1204,8 @@ list main
   This will show the source code, from the file examples/hello.rs.
 ] else if lang == "de" [
   Dadurch wird der Quellcode aus der Datei „examples/hello.rs" angezeigt.
+] else if lang == "zh" [
+  这将显示从examples/hello.rs文件来的源代码。
 ] else { todo }
 
 ```text
@@ -1079,6 +1227,9 @@ list main
 ] else if lang == "de" [
   Wir möchten einen Haltepunkt direkt vor „Hello, world!" setzen, das sich
   in Zeile 13 befindet. Dazu verwenden wir den Befehl `break`:
+] else if lang == "zh" [
+  我们想要在"Hello,
+  world!"之前添加一个断点，在13行那里。我们可以使用`break`命令
 ] else { todo }
 
 ```console
@@ -1091,6 +1242,8 @@ break 13
 ] else if lang == "de" [
   Wir können gdb nun mit dem Befehl `continue` anweisen, bis zu unserer
   Hauptfunktion weiterzulaufen:
+] else if lang == "zh" [
+  我们现在能使用`continue`命令指示gdb运行到我们的主函数。
 ] else { todo }
 
 ```console
@@ -1110,6 +1263,8 @@ Breakpoint 1, hello::__cortex_m_rt_main () at examples\hello.rs:13
 ] else if lang == "de" [
   Wir sind nun fast bei dem Code angelangt, der „Hello, world!" ausgibt.
   Machen wir weiter mit dem Befehl `next`.
+] else if lang == "zh" [
+  我们现在靠近打印"Hello, world!"的代码。让我们使用`next`命令继续前进。
 ] else { todo }
 
 ```console
@@ -1126,6 +1281,8 @@ next
 ] else if lang == "de" [
   An dieser Stelle sollte auf dem Terminal, auf dem `qemu-system-arm`
   läuft, „Hello, world!" angezeigt werden.
+] else if lang == "zh" [
+  在这里，你应该看到 "Hello, world!" 被打印到正在运行 `qemu-system-arm` 的终端上。
 ] else { todo }
 
 ```text
@@ -1137,6 +1294,8 @@ Hello, world!
   Calling `next` again will terminate the QEMU process.
 ] else if lang == "de" [
   Ein erneuter Aufruf von `next` beendet den QEMU-Prozess.
+] else if lang == "zh" [
+  再次调用`next`将会终止QEMU进程。
 ] else { todo }
 
 ```console
@@ -1151,6 +1310,8 @@ next
   You can now exit the GDB session.
 ] else if lang == "de" [
   Sie können die GDB-Sitzung nun beenden.
+] else if lang == "zh" [
+  你现在能退出GDB的会话了。
 ] else { todo }
 
 ```console
