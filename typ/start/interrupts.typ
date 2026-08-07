@@ -2,6 +2,7 @@
 
 #h1(offset: whole,
   if lang in ("en", "de") [Interrupts]
+  else if lang == "zh" [中断]
   else { todo })
 
 #if lang == "en" [
@@ -18,6 +19,8 @@
   sich bei Interrupts -- sowohl hinsichtlich der Benennung als auch der
   Funktionalität -- stets um herstellerspezifische (und oft sogar
   chip-spezifische) Implementierungen.
+] else if lang == "zh" [
+  虽然中断和异常在很多方面都不一样，但是它们的操作和使用几乎是一样的，且它们也能被同一个中断控制器处理。然而异常是由Cortex-M微架构定义的，中断在命名和功能上总是由特定厂商(经常甚至是芯片)实现的。
 ] else { todo }
 
 #if lang == "en" [
@@ -44,6 +47,11 @@
   - Im Allgemeinen muss die Ursache für die Auslösung des Interrupts
     beseitigt werden, um zu verhindern, dass der Interrupt-Handler endlos
     erneut aufgerufen wird.
+] else if lang == "zh" [
+  中断提供了更多的灵活性，当尝试用一种高级的方法使用它们时，我们需要对这种灵活性进行解释。但我们将不会在这本书里涵盖这些内容，最好把下面的东西记在心里:
+  - 中断有可以编程的优先级，其决定了它们的处理函数的执行顺序。
+  - 中断能嵌套且抢占，i.e.~一个中断处理函数的执行可以被其它更高优先级的中断打断。
+  - 通常需要清除掉导致中断被触发的原因，避免无限地再次进入中断处理函数。
 ] else { todo }
 
 #if lang == "en" [
@@ -58,6 +66,11 @@
   - Legen Sie die gewünschte Priorität des Interrupt-Handlers im
     Interrupt-Controller fest.
   - Aktivieren Sie den Interrupt-Handler im Interrupt-Controller.
+] else if lang == "zh" [
+  运行时的初始化步骤总是相同的:
+  - 设置外设在想要的事件发生时产生中断请求
+  - 在中断控制器中设置需要的中断处理函数的优先级 
+  - 在中断控制器中使能中断处理函数
 ] else { todo }
 
 #let ln_int = link("https://docs.rs/cortex-m-rt-macros/0.1.5/cortex_m_rt_macros/attr.interrupt.html")[`interrupt`]
@@ -74,6 +87,10 @@
   wenn das Device-Feature aktiviert ist. Es ist
   allerdings nicht für die direkte Verwendung vorgesehen; eine solche
   würde zu einem Kompilierfehler führen.
+] else if lang == "zh" [
+  #todoupd("zh")
+  与异常相似，`cortex-m-rt`
+  crate提供了一个#ln_int;属性去声明中断处理函数。可用的中断(及它们在中断向量表中的位置)通常由`svd2rust`从一个SVD描述文件自动地生成。
 ] else { todo }
 
 #if lang == "en" [
@@ -93,29 +110,33 @@
   automatisch aus einer SVD-Datei generiert.
 ] else { todo }
 
-#if lang == "en" [
-  ```rust
-  use lm3s6965::interrupt; // Re-exported attribute from the device crate
+#raw(block: true, lang: "rust",
+"rust
+use lm3s6965::interrupt; // " + if lang == "en" {
+                            "Re-exported attribute from the device crate"
+                          } else if lang == "de" {
+                            "Aus dem Device-Crate zurueck-exportiertes Attribut"
+                          } else { todos } + "
 
-  // Interrupt handler for the Timer2 interrupt
-  #[interrupt]
-  fn TIMER2A() {
-      // ..
-      // Clear reason for the generated interrupt request
-  }
-  ```
-] else if lang == "de" [
-  ```rust
-  use lm3s6965::interrupt; // Aus dem Device-Crate zurueck-exportiertes Attribut
-
-  // Interrupt-Handler fuer den Timer2-Interrupt
-  #[interrupt]
-  fn TIMER2A() {
-      // ..
-      // Eindeutiger Grund fuer die generierte Interrupt-Anforderung
-  }
-  ```
-] else { todo }
+// " + if lang == "en" {
+    "Interrupt handler for the Timer2 interrupt"
+  } else if lang == "de" {
+    "Interrupt-Handler fuer den Timer2-Interrupt"
+  } else if lang == "zh" {
+    "Timer2中断的中断处理函数"
+  } else { todos } + "
+#[interrupt]
+fn TIMER2A() {
+    // ..
+    // " + if lang == "en" {
+        "Clear reason for the generated interrupt request"
+      } else if lang == "de" {
+        "Eindeutiger Grund fuer die generierte Interrupt-Anforderung"
+      } else if lang == "zh" {
+        "清除生成中断请求的原因"
+      } else { todos } + "
+}
+")
 
 #if lang == "en" [
   Interrupt handlers look like plain functions (except for the lack of
@@ -130,6 +151,8 @@
   Firmware aufgerufen werden. Es ist allerdings möglich,
   Interrupt-Anforderungen per Software zu erzeugen, um einen Sprung zum
   Interrupt-Handler auszulösen.
+] else if lang == "zh" [
+  中断处理函数和异常处理函数一样看起来像是普通的函数(除了没有入参)。然而由于特殊的调用规定，它不能被固件的其它部分直接调用。然而，可以在软件中生成中断请求，转移到中断处理函数中。
 ] else { todo }
 
 #if lang == "en" [
@@ -139,6 +162,9 @@
   Ähnlich wie bei Exception-Handlern ist es auch hier möglich,
   `static mut`-Variablen innerhalb der Interrupt-Handler zu deklarieren,
   um den Zustand auf _sichere_ Weise zu speichern.
+] else if lang == "zh" [
+  与异常处理函数一样，也能在中断处理函数中声明`static mut`变量且保持
+  _safe_ 状态。
 ] else { todo }
 
 #raw(block: true, lang: "rust",
@@ -150,6 +176,8 @@ fn TIMER2A() {
         "`COUNT` has type `&mut u32` and it's safe to use"
       } else if lang == "de" {
         "`COUNT` hat den Typ `&mut u32` und ist sicher zu verwenden."
+      } else if lang == "zh" {
+        "`COUNT` 的类型是 `&mut u32` 且它用起来安全"
       } else { todos } + "
     *COUNT += 1;
 }
@@ -162,4 +190,6 @@ fn TIMER2A() {
   Für eine detailliertere Beschreibung der hier veranschaulichten
   Mechanismen konsultieren Sie bitte den
   #link(<getting-started-exceptions>)[Abschnitt zu Ausnahmen].
+] else if lang == "zh" [
+  关于这里所说的机制的更多细节描述，请参考#link(<getting-started-exceptions>)[异常章节]。
 ] else { todo }
