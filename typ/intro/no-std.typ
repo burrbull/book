@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [A `no_std` Rust Environment]
   else if lang == "de" [Eine `no_std`-Rust-Umgebung]
+  else if lang == "ja" [Rustの`no_std`環境]
   else if lang == "zh" [一个 `no_std` Rust环境]
   else { todo })
 
@@ -27,6 +28,13 @@
   und 1 GB RAM verfügt. Je nach Zielsystem und Anwendungsfall gelten bei
   der Programmierung unterschiedliche Einschränkungen und
   Rahmenbedingungen.
+] else if lang == "ja" [
+  組込みプログラミングという用語は、様々な分野のプログラミングに使用されます。
+  たった数キロバイトのRAMかROMが付随する8ビットMCU
+  (例えば、#ln_st72325)から、32/64ビットの4コア
+  Cortex-A53 \@ 1.4GHzと1GBのRAMが搭載されたRaspberry
+  Pi(#ln_rpi)のようなシステムまで、幅広いです。
+  どのような種類の目的とユースケースがあるか、によって、コードを書くときに異なる制限/限界が課されます。
 ] else if lang == "zh" [
   嵌入式编程这个词被广泛用于许多不同的编程场景中。小到RAM和ROM只有KB的8位机(像是#ln_st72325)，大到一个具有32/64位4核Cortex-A53和1GB
   RAM的系统，比如树莓派(#ln_rpi)。当编写代码时，取决于你的目标环境和用例，将会有不同的限制和局限。
@@ -36,12 +44,15 @@
   There are two general Embedded Programming classifications:
 ] else if lang == "de" [
   Es gibt zwei grundlegende Kategorien der Programmierung eingebetteter Systeme:
+] else if lang == "ja" [
+  2つの一般的な組込みプログラミングの分類があります。
 ] else if lang == "zh" [
   通常嵌入式编程有两类:
 ] else { todo }
 
 = #(if lang == "en" [Hosted Environments]
   else if lang == "de" [Hosted Environments]
+  else if lang == "ja" [ホストされた環境]
   else if lang == "zh" [主机环境下]
   else { todo })
 
@@ -70,12 +81,19 @@
   Ein-/Ausgabeschnittstellen (I/Os) können vorhanden sein. Insgesamt
   vermittelt die Programmierung den Eindruck, in einer auf einen
   speziellen Einsatzzweck ausgerichteten PC-Umgebung zu arbeiten.
+] else if lang == "ja" [
+  この分類の環境は、普通のPCの環境に近いです。
+  これの意味するところは、#link("https://en.wikipedia.org/wiki/POSIX")[POSIX]のようなシステムインタフェースが提供されている、ということです。システムインタフェースは、ファイルシステムやネットワーク、メモリ管理、スレッドといった多様なシステムとやりとりするための基本要素を提供します。
+  通常、標準ライブラリは、その機能を実装するために、これらの基本要素に依存します。
+  また、sysrootや、RAM/ROM利用の制限、そしておそらく特別なハードウェアやIOがあるかもしれません。
+  全体としては、特殊な用途のPC環境でコーディングをするようなものです。
 ] else if lang == "zh" [
   这类环境与一个常见的PC环境类似。意味着向你提供了一个系统接口#link(ln_posix)[比如 POSIX]，使你能和不同的系统进行交互，比如文件系统，网络，内存管理，进程，等等。标准库相应地依赖这些接口去实现了它们的功能。可能有某种sysroot并限制了对RAM/ROM的使用，可能还有一些特别的硬件或者I/O。总之感觉像是在专用的PC环境上编程一样。
 ] else { todo }
 
 = #(if lang == "en" [Bare Metal Environments]
   else if lang == "de" [Rein physische Umgebung]
+  else if lang == "ja" [ベアメタル環境]
   else if lang == "zh" [裸机环境下]
   else { todo })
 
@@ -103,12 +121,21 @@
   immer erwünscht sind. Eine dieser Funktionen ist ein Speicherallokator
   für die dynamische Speicherverwaltung. Falls Sie diese oder andere
   Funktionalitäten benötigen, stehen Ihnen häufig entsprechende Crates zur Verfügung.
+] else if lang == "ja" [
+  #todoupd("ja")
+  ベアメタル環境では、高機能なOSが動作していて、私たちのコードをホスティングしてくれる、ということはありません。
+  これは、基本要素がないことを意味しており、それ故に、デフォルトでは標準ライブラリもありません。
+  コードに`no_std`のマーキングをすることで、そのコードが、ベアメタル環境で実行できることを示します。
+  no_stdなコードからは、Rustの#link("https://doc.rust-lang.org/std/")[libstd]とメモリの動的確保が使えません。
+  しかしながら、no_stdなコードでも#ln_core;を使うことができます。libcoreは、ほんの数種類のシンボルを提供することで、いかなる環境でも容易に利用することができます
+  (詳細は、#ln_core;を参照して下さい)。
 ] else if lang == "zh" [
   在一个裸机环境中，程序被加载前，环境中不存在代码。没有系统提供的软件，我们不能加载标准库。相反地，程序和它使用的crates只能使用硬件(裸机)去运行。使用`no-std`可以防止rust读取标准库。标准库中与平台无关的部分在#link("https://doc.rust-lang.org/core/")[libcore]中。libcore剔除了那些在一个嵌入式环境中非必要的东西。比如用于动态分配的内存分配器。如果你需要这些或者其它的某些功能，通常会有提供这些功能的crates。
 ] else { todo }
 
 == #(if lang == "en" [The libstd Runtime]
   else if lang == "de" [Die libstd-Laufzeitumgebung]
+  else if lang == "ja" [libstdランタイム]
   else if lang == "zh" [libstd运行时]
   else { todo })
 
@@ -135,12 +162,17 @@
   sowie das Starten des Haupt-Threads, bevor die `main`-Funktion des
   Programms aufgerufen wird. In einer `no_std`-Umgebung steht diese
   Laufzeitumgebung nicht zur Verfügung.
+] else if lang == "ja" [
+  上述の通り、#ln_std;の利用には、いくらかのシステムインテグレーションが必要です。しかし、これは#ln_std;がOSの抽象にアクセスするための共通の方法を提供しているだけでなく、ランタイムも提供しているためです。
+  ランタイムは、とりわけ、スタックオーバーフロープロテクションの準備、コマンドライン引数の処理、メインスレッドの生成、をプログラムのメイン関数が呼び出される前に処理します。
+  このランタイムも、`no_std`環境では利用できません。
 ] else if lang == "zh" [
-  就像之前提到的，使用#link("https://doc.rust-lang.org/std/")[libstd]需要一些系统集成，这不仅仅是因为#link("https://doc.rust-lang.org/std/")[libstd]使用了一个公共的方法访问操作系统，它也提供了一个运行时环境。这个运行时环境，负责设置堆栈溢出保护，处理命令行参数，并在一个程序的主函数被激活前启动一个主线程。在一个`no_std`环境中，这个运行时环境也是不可用的。
+  就像之前提到的，使用#ln_std;需要一些系统集成，这不仅仅是因为#ln_std;使用了一个公共的方法访问操作系统，它也提供了一个运行时环境。这个运行时环境，负责设置堆栈溢出保护，处理命令行参数，并在一个程序的主函数被激活前启动一个主线程。在一个`no_std`环境中，这个运行时环境也是不可用的。
 ] else { todo }
 
 = #(if lang == "en" [Summary]
   else if lang == "de" [Zusammenfassung]
+  else if lang == "ja" [まとめ]
   else if lang == "zh" [总结]
   else { todo })
 
@@ -170,6 +202,12 @@
   dieser Eigenschaften eignen sich `no_std`- und
   #ln_core;-Code für jegliche Art
   von Bootstrapping-Code (Stufe 0), wie etwa Bootloader, Firmware oder Kernel.
+] else if lang == "ja" [
+  `#![no_std]`は、クレートレベルの属性で、そのクレートがstdクレートの代わりにcoreクレートとリンクすることを意味します。
+  #ln_core;クレートは、プラットフォームに依存しないstdクレートのサブセットです。libcoreクレートは、プログラムが動作するシステムについて前提を置きません。
+  libcoreクレートは、浮動小数点、文字列やスライスといった言語の基本要素となるAPIと、アトミック操作やSIMD命令といったプロセッサの機能を公開するAPIとを、提供します。一方、プラットフォームインテグレーションを伴うようなAPIは欠如しています。
+  これらの特性のため、no\_stdと#ln_core;のコードは、ブートローダー、ファームウェア、カーネルといったあらゆるブートストラップ
+  (ステージ0)のコードにも利用できます。
 ] else if lang == "zh" [
   `#![no_std]`是一个crate层级的属性，它说明crate将连接至core-crate而不是std-crate。#ln_core crate是std
   crate的一个的子集，其与平台无关，它对程序将要运行的系统没有做要求。比如，它提供了像是floats，strings和切片的APIs，暴露了像是与原子操作和SIMD指令相关的处理器功能的APIs。然而，它缺少涉及到平台集成的那些APIs。由于这些特性，no_std和#ln_core;代码可以用于任何引导程序(stage
@@ -178,6 +216,7 @@
 
 == #(if lang == "en" [Overview]
   else if lang == "de" [Überblick]
+  else if lang == "ja" [概略]
   else if lang == "zh" [概述]
   else { todo })
 
@@ -189,6 +228,7 @@
     table.header(
       if lang == "en" [feature]
       else if lang == "de" [Eigenschaft]
+      else if lang == "ja" [機能]
       else if lang == "zh" [特性]
       else { todo },
       [no_std],
@@ -196,34 +236,41 @@
     ),
     if lang == "en" [heap (dynamic memory)]
     else if lang == "de" [heap (dynamischer Speicher)]
+    else if lang == "ja" [ヒープ (動的メモリ)]
     else if lang == "zh" [堆 (dynamic memory)]
     else { todo },
     [\*], [✓],
     if lang == "en" [collections (Vec, BTreeMap, etc)]
     else if lang == "de" [collections (Vec, BTreeMap, usw.)]
+    else if lang == "ja" [コレクション (Vec, HashMap, など)]
     else if lang == "zh" [容器 (Vec, BTreeMap, etc)]
     else { todo },
     [\*\*], [✓],
     if lang == "en" [stack overflow protection]
     else if lang == "de" [Schutz vor Stack-Überlauf]
+    else if lang == "ja" [スタックオーバーフロープロテクション]
     else if lang == "zh" [栈溢出保护]
     else { todo },
     [✘], [✓],
     if lang == "en" [runs init code before main]
     else if lang == "de" [führt Initialisierungscode vor der main-Funktion aus]
+    else if lang == "ja" [main関数前の初期化コード実行]
     else if lang == "zh" [在进入main之前运行的初始化代码]
     else { todo },
     [✘], [✓],
     if lang in ("en", "zh") [libstd available]
     else if lang == "de" [libstd verfügbar]
+    else if lang == "ja" [libstdの利用]
     else { todo },
     [✘], [✓],
     if lang in ("en", "zh") [libcore available]
     else if lang == "de" [libcore verfügbar]
+    else if lang == "ja" [libcoreの利用]
     else { todo },
     [✓], [✓],
     if lang == "en" [writing firmware, kernel, or bootloader code]
     else if lang == "de" [schreibt firmware, kernel, oder bootloader code]
+    else if lang == "ja" [ファームウェア、カーネル、ブートローダーのコードを書く]
     else if lang == "zh" [编写固件，内核，或者引导程序]
     else { todo },
     [✓], [✘],
@@ -235,6 +282,8 @@
   \* Only if you use the `alloc` crate and use a suitable allocator like #ln_cortex.
 ] else if lang == "de" [
   \* Nur wenn Sie das `alloc`-Crate und einen geeigneten Allocator wie #ln_cortex verwenden.
+] else if lang == "ja" [
+  \* `alloc`クレートを使い、\[alloc-cortex-m\]のような適切なアロケータを使った場合のみ
 ] else if lang == "zh" [
   \* 只有在你使用了 `alloc` crate
   并设置了一个适合的分配器后，比如#ln_cortex;后可用．
@@ -244,6 +293,8 @@
   \*\* Only if you use the `collections` crate and configure a global default allocator.
 ] else if lang == "de" [
   \*\* Nur wenn Sie das `collections`-Crate verwenden und einen globalen Standard-Allocator konfigurieren.
+] else if lang == "ja" [
+  \*\* `collections`クレートを使い、グローバルなデフォルトアロケータを設定した場合のみ
 ] else if lang == "zh" [
   \*\* 只有在你使用了 `collections` crate
   并配置了一个全局默认的分配器后可用．
@@ -260,6 +311,7 @@
 
 = #(if lang == "en" [See Also]
   else if lang == "de" [Siehe auch]
+  else if lang == "ja" [参照]
   else if lang == "zh" [参见]
   else { todo })
 

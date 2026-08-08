@@ -6,6 +6,7 @@
     content: include "intro/index.typ",
     title: if lang == "en" [Introduction]
       else if lang == "de" [Einleitung]
+      else if lang == "ja" [導入]
       else if lang == "uk" [Вступ]
       else if lang == "zh" [引言]
       else { todo },
@@ -13,6 +14,7 @@
       "intro/hardware": (
         content: include "intro/hardware.typ",
         title: if lang in ("en", "de") [Hardware]
+          else if lang == "ja" [ハードウェア]
           else if lang == "uk" [Залізо]
           else if lang == "zh" [硬件]
           else { todo }
@@ -25,6 +27,7 @@
         content: include "intro/tooling.typ",
         title: if lang == "en" [Tooling]
           else if lang == "de" [Werkzeuge]
+          else if lang == "ja" [ツール]
           else if lang == "uk" [Інструменти]
           else if lang == "zh" [工具]
           else { todo }
@@ -32,6 +35,7 @@
       "intro/install": (
         content: include "intro/install.typ",
         title: if lang in ("en", "de") [Installation]
+          else if lang == "ja" [インストール]
           else if lang == "uk" [Встановлення]
           else if lang == "zh" [安装]
           else { todo },
@@ -52,6 +56,7 @@
             content: include "intro/install/verify.typ",
             title: if lang == "en" [Verify Installation]
               else if lang == "de" [Die Installation überprüfen]
+              else if lang == "ja" [インストールの確認]
               else if lang == "uk" [Перевірка встановлення]
               else if lang == "zh" [验证工具链的安装]
               else { todo }
@@ -64,6 +69,7 @@
     content: include "start/index.typ",
     title: if lang == "en" [Getting started]
       else if lang == "de" [Erste Schritte]
+      else if lang == "ja" [入門]
       else if lang == "uk" [Початок роботи]
       else if lang == "zh" [开始]
       else { todo },
@@ -75,6 +81,7 @@
       "start/hardware": (
         content: include "start/hardware.typ",
         title: if lang in ("en", "de") [Hardware]
+          else if lang == "ja" [ハードウェア]
           else if lang == "uk" [Залізо]
           else if lang == "zh" [硬件]
           else { todo }
@@ -83,6 +90,7 @@
         content: include "start/registers.typ",
         title: if lang == "en" [Memory-mapped Registers]
           else if lang == "de" [Im Speicher abgebildete Register]
+          else if lang == "ja" [メモリマップドレジスタ]
           else if lang == "uk" [Відображені в пам'яті регістри]
           else if lang == "zh" [存储映射的寄存器]
           else { todo }
@@ -90,6 +98,7 @@
       "start/semihosting": (
         content: include "start/semihosting.typ",
         title: if lang in ("en", "de", "uk") [Semihosting]
+          else if lang == "ja" [セミホスティング]
           else if lang == "zh" [半主机模式]
           else { todo }
       ),
@@ -97,6 +106,7 @@
         content: include "start/panicking.typ",
         title: if lang == "en" [Panicking]
           else if lang == "de" [In Panik geraten]
+          else if lang == "ja" [パニック]
           else if lang == "uk" [Паніка]
           else if lang == "zh" [运行时恐慌(Panicking)]
           else { todo }
@@ -104,6 +114,7 @@
       "start/exceptions": (
         content: include "start/exceptions.typ",
         title: if lang in ("en", "de") [Exceptions]
+          else if lang == "ja" [例外]
           else if lang == "uk" [Виключення]
           else if lang == "zh" [异常]
           else { todo }
@@ -111,6 +122,7 @@
       "start/interrupts": (
         content: include "start/interrupts.typ",
         title: if lang in ("en", "de") [Interrupts]
+          else if lang == "ja" [割り込み]
           else if lang == "uk" [Переривання]
           else if lang == "zh" [中断]
           else { todo }
@@ -121,6 +133,7 @@
     content: include "peripherals/index.typ",
     title: if lang == "en" [Peripherals]
       else if lang == "de" [Peripheriegeräte]
+      else if lang == "ja" [ペリフェラル]
       else if lang == "uk" [Периферійні пристрої]
       else if lang == "zh" [外设]
       else { todo },
@@ -129,6 +142,7 @@
         content: include "peripherals/a-first-attempt.typ",
         title: if lang == "en" [A first attempt in Rust]
           else if lang == "de" [Ein erster Versuch in Rust]
+          else if lang == "ja" [Rustでの最初の試み]
           else if lang == "uk" [Перша спроба на Rust]
           else if lang == "zh" [Rust尝鲜]
           else { todo }
@@ -137,6 +151,7 @@
         content: include "peripherals/borrowck.typ",
         title: if lang == "en" [The Borrow Checker]
           else if lang == "de" [Der Borrow-Prüfer]
+          else if lang == "ja" [借用チェッカ]
           else if lang == "uk" [Перевірка запозичень]
           else if lang == "zh" [借用检查器]
           else { todo }
@@ -144,6 +159,7 @@
       "peripherals/singletons": (
         content: include "peripherals/singletons.typ",
         title: if lang in ("en", "de") [Singletons]
+          else if lang == "ja" [シングルトン]
           else if lang == "uk" [Одинаки]
           else if lang == "zh" [单例]
           else { todo }
@@ -154,6 +170,7 @@
     content: include "static-guarantees/index.typ",
     title: if lang == "en" [Static Guarantees]
       else if lang == "de" [Statische Garantien]
+      else if lang == "ja" [静的な保証]
       else if lang == "uk" [Статичні гарантії]
       else if lang == "zh" [静态保障(static guarantees)]
       else { todo },
@@ -162,6 +179,7 @@
         content: include "static-guarantees/typestate-programming.typ",
         title: if lang == "en" [Typestate Programming]
           else if lang == "de" [Typgestützte Programmierung]
+          else if lang == "ja" [型状態プログラミング]
           else if lang == "uk" [Програмування типів-станів]
           else if lang == "zh" [类型状态编程]
           else { todo }
@@ -170,6 +188,7 @@
         content: include "static-guarantees/state-machines.typ",
         title: if lang == "en" [Peripherals as State Machines]
           else if lang == "de" [Peripheriegeräte als Zustandsmaschinen]
+          else if lang == "ja" [ステートマシンとしてのペリフェラル]
           else if lang == "uk" [Периферія як кінцеві автомати]
           else if lang == "zh" [把外设当作状态机]
           else { todo }
@@ -178,6 +197,7 @@
         content: include "static-guarantees/design-contracts.typ",
         title: if lang == "en" [Design Contracts]
           else if lang == "de" [Designverträge]
+          else if lang == "ja" [設計契約]
           else if lang == "uk" [Угоди щодо дизайну]
           else if lang == "zh" [设计约定]
           else { todo }
@@ -186,6 +206,7 @@
         content: include "static-guarantees/zero-cost-abstractions.typ",
         title: if lang == "en" [Zero Cost Abstractions]
           else if lang == "de" [Abstraktionen ohne Kosten]
+          else if lang == "ja" [ゼロコスト抽象化]
           else if lang == "uk" [Безкоштовні абстракції]
           else if lang == "zh" [零成本抽象]
           else { todo }
@@ -196,6 +217,7 @@
     content: include "portability/index.typ",
     title: if lang == "en" [Portability]
       else if lang == "de" [Portabilität]
+      else if lang == "ja" [移植性]
       else if lang == "uk" [Переносимість]
       else if lang == "zh" [可移植性]
       else { todo }
@@ -204,6 +226,7 @@
     content: include "concurrency/index.typ",
     title: if lang == "en" [Concurrency]
       else if lang == "de" [Nebenläufigkeit]
+      else if lang == "ja" [並行性]
       else if lang == "uk" [Паралелізм]
       else if lang == "zh" [并发]
       else { todo }
@@ -212,6 +235,7 @@
     content: include "collections/index.typ",
     title: if lang == "en" [Collections]
       else if lang == "de" [Sammlungen]
+      else if lang == "ja" [コレクション]
       else if lang == "uk" [Колекції]
       else if lang == "zh" [容器]
       else { todo }
@@ -274,6 +298,7 @@
     content: include "c-tips/index.typ",
     title: if lang == "en" [Tips for embedded C developers]
       else if lang == "de" [Tipps für Entwickler im Bereich Embedded-C]
+      else if lang == "ja" [組込みC開発者へのヒント]
       else if lang == "uk" [Поради для розробників мовою C]
       else if lang == "zh" [给嵌入式C开发者的贴士]
       else { todo }
@@ -282,6 +307,7 @@
     content: include "interoperability/index.typ",
     title: if lang == "en" [Interoperability]
       else if lang == "de" [Interoperabilität]
+      else if lang == "ja" [相互運用性]
       else if lang == "uk" [Сумісність]
       else if lang == "zh" [互操性]
       else { todo },
@@ -290,6 +316,7 @@
         content: include "interoperability/c-with-rust.typ",
         title: if lang == "en" [A little C with your Rust]
           else if lang == "de" [Ein bisschen C zu Ihrem Rust]
+          else if lang == "ja" [Rustと少しのC]
           else if lang == "uk" [Трошки C в вашому Rust]
           else if lang == "zh" [使用C的Rust]
           else { todo }
@@ -298,6 +325,7 @@
         content: include "interoperability/rust-with-c.typ",
         title: if lang == "en" [A little Rust with your C]
           else if lang == "de" [Ein bisschen Rust zu Ihrem C]
+          else if lang == "ja" [Cと少しのRust]
           else if lang == "uk" [Трошки Rust в вашому C]
           else if lang == "zh" [使用Rust的C]
           else { todo }
@@ -308,6 +336,7 @@
     content: include "unsorted/index.typ",
     title: if lang == "en" [Unsorted topics]
       else if lang == "de" [Unsortierte Themen]
+      else if lang == "ja" [未分類のトピック]
       else if lang == "uk" [Невідсортовані теми]
       else if lang == "zh" [没有排序的主题]
       else { todo },
@@ -316,6 +345,7 @@
         content: include "unsorted/speed-vs-size.typ",
         title: if lang == "en" [Optimizations: The speed size tradeoff]
           else if lang == "de" [Optimierungen: Der Kompromiss zwischen Geschwindigkeit und Größe]
+          else if lang == "ja" [最適化: 速度とサイズのトレードオフ]
           else if lang == "uk" [Оптимізація: компроміс між швидкістю та розміром]
           else if lang == "zh" [优化: 速度与大小间的博弈]
           else { todo }

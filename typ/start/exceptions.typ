@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [Exceptions]
   else if lang == "de" [Ausnahmen (Exceptions)]
+  else if lang == "ja" [例外]
   else if lang == "zh" [异常]
   else { todo })
 <getting-started-exceptions>
@@ -19,6 +20,9 @@
   Ausführung einer ungültigen Anweisung) behandelt. Ausnahmen implizieren
   Präemption und erfordern Ausnahmebehandlungsroutinen, die als Reaktion
   auf das auslösende Signal ausgeführt werden.
+] else if lang == "ja" [
+  例外と割り込みは、プロセッサが非同期イベントと致命的なエラー（例えば、不正な命令の実行）を扱うためのハードウェアの仕組みです。
+  例外はプリエンプションを意味し、例外ハンドラを呼び出します。例外ハンドラは、イベントを引き起こした信号に応答して実行されるサブルーチンです。
 ] else if lang == "zh" [
   异常和中断，是处理器用来处理异步事件和致命错误(e.g.~执行一个无效的指令)的一种硬件机制。异常意味着抢占并涉及到异常处理程序，即响应触发事件的信号的子程序。
 ] else { todo }
@@ -28,6 +32,8 @@
   The `cortex-m-rt` crate provides an #ln_ex attribute to declare exception handlers.
 ] else if lang == "de" [
   Die `cortex-m-rt`-Crate bietet das Attribut #ln_ex zur Deklaration von Ausnahmebehandlungsroutinen.
+] else if lang == "ja" [
+  `cortex-m-rt`クレートは、例外ハンドラを宣言するために、#ln_ex;アトリビュートを提供しています。
 ] else if lang == "zh" [
   `cortex-m-rt` crate提供了一个 #ln_ex 属性去声明异常处理程序。
 ] else { todo }
@@ -37,6 +43,8 @@
     "Exception handler for the SysTick (System Timer) exception"
   } else if lang == "de" {
     "Ausnahmebehandlungsroutine fuer die SysTick-Ausnahme (System-Timer)"
+  } else if lang == "ja" {
+    "SysTick（システムタイマ）例外のための例外ハンドラ"
   } else if lang == "zh" {
     "SysTick (System计时器)异常的异常处理函数"
   } else { todos } + "
@@ -57,6 +65,10 @@ fn SysTick() {
   Unterschied: `exception`-Handler können _nicht_ per Software
   aufgerufen werden. Bezogen auf das vorherige Beispiel würde die
   Anweisung `SysTick();` zu einem Kompilierfehler führen.
+] else if lang == "ja" [
+  `exception`属性の他は、例外ハンドラは普通の関数のように見えます。しかし、もう1つ違いがあります。
+  `exception`ハンドラはソフトウェアから呼び出すことが_できません_。前述の例では、`SysTick();`というステートメントは、
+  コンパイルエラーになります。
 ] else if lang == "zh" [
   除了 `exception`
   属性，异常处理函数看起来和普通函数一样，但是有一个很大的不同:
@@ -73,6 +85,9 @@ fn SysTick() {
   bestimmte Eigenschaft zu gewährleisten: `static mut`-Variablen, die
   _innerhalb_ von `exception`-Handlern deklariert werden, sind
   _sicher_ in der Verwendung.
+] else if lang == "ja" [
+  この動作は、非常に意図的なものです。
+  これは`exception`ハンドラ_内_で宣言された`static mut`変数の利用を_安全_にする、という機能を提供するためのものです。
 ] else if lang == "zh" [
   这么做是有目的的，因为异常处理函数必须具有一个特性:
   在异常处理函数中被声明为`static mut`的变量能被安全(safe)地使用。
@@ -87,6 +102,8 @@ fn SysTick() {
       } else if lang == "de" {
         "`COUNT` wurde in den Typ `&mut u32` umgewandelt und ist sicher in der 
     // Verwendung."
+      } else if lang == "ja" {
+        "`COUNT`は`&mut u32`の型をもっており、その利用は安全です"
       } else if lang == "zh" {
         "`COUNT` 被转换到了 `&mut u32` 类型且它用起来是安全的"
       } else { todos } + "
@@ -108,6 +125,10 @@ fn SysTick() {
   wiedereintrittsfähige Funktion direkt oder indirekt aus mehr als einem
   Ausnahme- oder Interrupt-Handler oder aus `main` und einem oder mehreren
   Ausnahme- oder Interrupt-Handlern heraus aufzurufen.
+] else if lang == "ja" [
+  ご存知かもしれませんが、`static mut`変数を関数内で使うことは、その関数を_再入不可能_にします。
+  直接的または間接的に、複数の例外・割り込みハンドラから、もしくは、`main`と1つ以上の例外・割り込みハンドラから、
+  再進入不可能な関数を呼び出すことは、未定義動作です。
 ] else if lang == "zh" [
   就像你可能已经知道的那样，在一个函数里使用`static mut`变量，会让函数变成#link(url_re)[_非可重入函数(non-reentrancy)_]。从多个异常/中断处理函数，或者从`main`函数和多个异常/中断处理函数中，直接或者间接地调用一个非可重入(non-reentrancy)函数是未定义的行为。
 ] else { todo }
@@ -129,6 +150,11 @@ fn SysTick() {
   (Reentrancy) stattfinden kann. Diese Handler werden von der Hardware
   selbst aufgerufen, bei der davon ausgegangen wird, dass sie physisch
   keine Nebenläufigkeit aufweist.
+] else if lang == "ja" [
+  #todoupd("ja")
+  安全なRustは、決して未定義動作になりません。そのため、再入不可能な関数は、`unsafe`とマークされなければなりません。
+  それでも、`exception`ハンドラは`static mut`な変数を安全に使える、と述べました。これが可能なのは、どうしてでしょうか。
+  `exception`ハンドラはソフトウェアから呼び出すことが_できない_ため、再入する可能性はありません。だから、安全に使えるのです。
 ] else if lang == "zh" [
   #todoupd("zh")
   安全的Rust不能导致未定义的行为出现，所以非可重入函数必须被标记为
@@ -199,6 +225,7 @@ fn SysTick() {
 
 = #(if lang == "en" [A complete example]
   else if lang == "de" [Ein vollständiges Beispiel]
+  else if lang == "ja" [完全な例]
   else if lang == "zh" [一个完整的例子]
   else { todo })
 
@@ -214,6 +241,10 @@ fn SysTick() {
   `SysTick`-Exception-Handler protokolliert in der Variablen `COUNT`, wie
   oft er aufgerufen wurde, und gibt anschließend den Wert von `COUNT`
   mittels Semihosting auf der Host-Konsole aus.
+] else if lang == "ja" [
+  `SysTick`例外を大体1秒毎に発生させるシステムタイマの例を使います。
+  `SysTick`例外ハンドラは、呼び出された回数を`COUNT`変数に記録し、
+  セミホスティングを使ってホストコンソールに`COUNT`の値を出力します。
 ] else if lang == "zh" [
   这里有个例子，使用系统计时器大概每秒抛出一个 `SysTick`
   异常。异常处理函数使用 `COUNT`
@@ -228,6 +259,8 @@ fn SysTick() {
 ] else if lang == "de" [
   *HINWEIS*: Sie können dieses Beispiel auf jedem Cortex-M-Gerät
   ausführen; es lässt sich auch unter QEMU ausführen.
+] else if lang == "ja" [
+  *注記*：この例は、どのCortex-Mデバイスでも実行できます。QEMU上でも実行可能です。
 ] else if lang == "zh" [
   *注意*: 你能在任何Cortex-M设备上运行这个例子;你也能在QEMU运行它。
 ] else { todo }
@@ -259,6 +292,8 @@ fn main() -> ! {
       } else if lang == "de" {
         "konfiguriert den System-Timer so, dass er jede Sekunde eine SysTick-
     // Exception ausloest"
+      } else if lang == "ja" {
+        "毎秒SysTick例外を起こすためのシステムタイマを設定します"
       } else if lang == "zh" {
         "配置系统的计时器每秒去触发一个SysTick异常"
       } else { todos } + "
@@ -268,6 +303,8 @@ fn main() -> ! {
       } else if lang == "de" {
         "Dies ist für den LM3S6965 konfiguriert, der einen Standard-CPU-Takt von 
     // 12 MHz hat"
+      } else if lang == "ja" {
+        "デフォルトのCPUクロックが12MHzのLM3S6965向けの設定です"
       } else if lang == "zh" {
         "这是关于LM3S6965的配置，其有一个12MHz的默认CPU时钟"
       } else { todos } + "
@@ -290,6 +327,8 @@ fn SysTick() {
         "Lazy initialization"
       } else if lang == "de" {
         "Verzoegerte Initialisierung"
+      } else if lang == "ja" {
+        "遅延初期化"
       } else if lang == "zh" {
         "惰性初始化(Lazy initialization)"
       } else { todos } + "
@@ -308,6 +347,9 @@ fn SysTick() {
         "WICHTIG: Lassen Sie diesen `if`-Block weg, wenn Sie das Programm auf 
     //          echter Hardware ausfuehren, da sich Ihr Debugger sonst in 
     //          einem inkonsistenten Zustand befinden wird."
+      } else if lang == "ja" {
+        "重要。実際のハードウェアで実行するときは`if`ブロックを削除して下さい。そうでなければ、
+    // デバッガが不整合な状態に陥るでしょう。"
       } else if lang == "zh" {
         "重要信息 如果运行在真正的硬件上，去掉这个 `if` 块，
     // 否则你的调试器将会以一种不一致的状态结束"
@@ -317,6 +359,8 @@ fn SysTick() {
             "This will terminate the QEMU process"
           } else if lang == "de" {
             "Dies beendet den QEMU-Prozess."
+          } else if lang == "ja" {
+            "QEMUプロセスを終了します"
           } else if lang == "zh" {
             "这将终结QEMU进程"
           } else { todos } + "
@@ -351,12 +395,16 @@ $ cargo run --release
   Wenn Sie dies auf dem Discovery-Board ausführen, sehen Sie die Ausgabe
   in der OpenOCD-Konsole. Außerdem hält das Programm _nicht_ an, wenn
   der Zählerstand 9 erreicht.
+] else if lang == "ja" [
+  Discoveryボードでこのコードを実行すると、OpenOCDコンソールに出力を確認できるでしょう。
+  プログラムは、カウントが9に到達しても停止_しません_。
 ] else if lang == "zh" [
   如果你在Discovery开发板上运行这个例子，你将会在OpenOCD控制台上看到输出。还有，当计数到达9的时候，程序将 _会_ 停止。
 ] else { todo }
 
 = #(if lang == "en" [The default exception handler]
   else if lang == "de" [Der Standard-Exception-Handler]
+  else if lang == "ja" [デフォルト例外ハンドラ]
   else if lang == "zh" [默认异常处理函数]
   else { todo })
 
@@ -371,6 +419,10 @@ $ cargo run --release
   _überschrieben_ wird. Wenn Sie den Handler für eine bestimmte
   Exception nicht überschreiben, wird sie von der Funktion
   `DefaultHandler` behandelt, die standardmäßig Folgendes tut:
+] else if lang == "ja" [
+  `exception`アトリビュートが実際に行っていることは、特定の例外を処理するデフォルト例外ハンドラの_オーバーライド_です。
+  特定の例外について、ハンドラをオーバーライドしない場合、`DefaultHandler`関数がその例外を処理します。
+  DefaultHandler関数は下記の通りです。
 ] else if lang == "zh" [
   `exception` 属性真正做的是，_覆盖_
   了一个特定异常的默认异常处理函数。如果你不覆盖一个特定异常的处理函数，它将会被
@@ -392,6 +444,9 @@ fn DefaultHandler() {
   `#[no_mangle]` markiert, sodass Sie einen Breakpoint auf
   „DefaultHandler" setzen und _unbehandelte_ Exceptions abfangen
   können.
+] else if lang == "ja" [
+  この関数は、`cortex-m-rt`クレートによって提供されており、`#[no_mangle]`とマークされています。
+  そのため、「DefaultHandler」にブレイクポイントを設定することができ、_未処理の_例外を捕捉することができます。
 ] else if lang == "zh" [
   这个函数是 `cortex-m-rt` crate提供的，且被标记为 `#[no_mangle]`
   因此你能在 "DefaultHandler" 上放置一个断点并捕获 _unhandled_ 异常。
@@ -403,6 +458,8 @@ fn DefaultHandler() {
 ] else if lang == "de" [
   Es ist möglich, diesen `DefaultHandler` mithilfe des
   `exception`-Attributs zu überschreiben:
+] else if lang == "ja" [
+  `exception`アトリビュートを使うことで、`DefaultHandler`をオーバーライドできます。
 ] else if lang == "zh" [
   可以使用 `exception` 属性覆盖这个 `DefaultHandler`:
 ] else { todo }
@@ -414,6 +471,8 @@ fn DefaultHandler(irqn: i16) {
         "custom default handler"
       } else if lang == "de" {
         "benutzerdefinierter Standard-Handler"
+      } else if lang == "ja" {
+        "カスタムデフォルトハンドラ"
       } else if lang == "zh" {
         "自定义默认处理函数"
       } else { todos } + "
@@ -431,12 +490,16 @@ fn DefaultHandler(irqn: i16) {
   wird, während ein Wert von null oder ein positiver Wert darauf hinweist,
   dass eine gerätespezifische Exception -- auch als Interrupt bezeichnet
   -- bearbeitet wird.
+] else if lang == "ja" [
+  `irqn`引数は、どの例外が処理されているかを示します。負の値は、Cortex-Mの例外が処理されていることを意味します。
+  ゼロまたは正の値は、デバイス固有の例外、すなわち、割り込みが処理されていること、を示しています。
 ] else if lang == "zh" [
   `irqn` 参数指出了被服务的是哪个异常。一个负数值指出了被服务的是一个Cortex-M异常;0或者一个正数值指出了被服务的是一个设备特定的异常，也就是中断。
 ] else { todo }
 
 = #(if lang == "en" [The hard fault handler]
   else if lang == "de" [Der "Schwere Fehler"-Handler]
+  else if lang == "ja" [ハードフォールトハンドラ]
   else if lang == "zh" [硬错误(Hard Fault)处理函数]
   else { todo })
 
@@ -453,6 +516,10 @@ fn DefaultHandler(irqn: i16) {
   führen könnte. Zudem führt die Runtime-Crate einige Vorarbeiten durch,
   bevor der benutzerdefinierte `HardFault`-Handler aufgerufen wird, um die
   Fehlersuche (Debugging) zu erleichtern.
+] else if lang == "ja" [
+  `HardFault`例外は、少し特別です。この例外は、プログラムが不正な状態になった場合に発生します。
+  そのため、このハンドラはリターンすることができず、未定義動作を引き起こす可能性があります。
+  ランタイムクレートは、デバッグ性を向上するために、ユーザ定義の`HardFault`ハンドラが呼び出される前に、少し仕事をします。
 ] else if lang == "zh" [
   `HardFault`异常有点特别。当程序进入一个无法工作的状态时，这个异常被触发，因此它的处理函数
   _不能_ 返回，因为这么做可能导致一个未定义的行为。在用户定义的
@@ -473,6 +540,10 @@ fn DefaultHandler(irqn: i16) {
   Stack gesichert wurden. Diese Register stellen eine Momentaufnahme des
   Prozessorzustands zum Zeitpunkt der Auslösung der Exception dar und sind
   für die Diagnose eines Hard Faults hilfreich.
+] else if lang == "ja" [
+  その結果、`HardFault`ハンドラは、`fn(&ExceptionFrame) -> !`のシグネチャを持つ必要があります。
+  ハンドラの引数は、例外によってスタックにプッシュされたレジスタへのポインタです。
+  これらのレジスタは、例外が発生した瞬間のプロセッサステートのスナップショットで、ハードフォールトの原因を突き止めるのに便利です。
 ] else if lang == "zh" [
   结果是，`HardFault`处理函数必须有下列的签名: `fn(&ExceptionFrame) -> !`
   。处理函数的参数是一个指针，它指向被异常推入栈中的寄存器。这些寄存器是异常被触发那刻，处理器状态的一个记录，能被用来分析一个硬错误。
@@ -484,6 +555,8 @@ fn DefaultHandler(irqn: i16) {
 ] else if lang == "de" [
   Hier ist ein Beispiel für eine unzulässige Operation: der Lesezugriff
   auf eine nicht existierende Speicheradresse.
+] else if lang == "ja" [
+  不正な操作を行う例を示します。存在しないメモリ位置への読み込みです。
 ] else if lang == "zh" [
   这里有个执行不合法操作的案例: 读取一个不存在的存储位置。
 ] else { todo }
@@ -498,6 +571,10 @@ fn DefaultHandler(irqn: i16) {
   (d.~h. es stürzt nicht ab), da `qemu-system-arm -machine lm3s6965evb`
   keine Überprüfung von Speicherzugriffen durchführt und beim Lesen von
   ungültigem Speicher problemlos den Wert `0` zurückgibt.
+] else if lang == "ja" [
+  *注記*：このプログラムは、QEMU上ではうまく動きません。つまり、クラッシュしません。
+  `qemu-system-arm -machine lm3s6965evb`はメモリの読み込みをチェックしないため、
+  無効なメモリを読み込むと、幸いにも、`0`を返します。
 ] else if lang == "zh" [
   *注意*: 这个程序在QEMU上不能起作用，i.e.~它不会崩溃，因为
   `qemu-system-arm -machine lm3s6965evb`
@@ -524,6 +601,8 @@ fn main() -> ! {
         "read a nonexistent memory location"
       } else if lang == "de" {
         "liest einen nicht existierenden Speicherbereich"
+      } else if lang == "ja" {
+        "存在しないメモリ位置を読み込みます"
       } else if lang == "zh" {
         "读取一个无效的存储位置"
       } else { todos } + "
@@ -550,6 +629,9 @@ fn HardFault(ef: &ExceptionFrame) -> ! {
 ] else if lang == "de" [
   Der `HardFault`-Handler gibt den Wert des `ExceptionFrame` aus. Wenn Sie
   dies ausführen, sehen Sie auf der OpenOCD-Konsole eine Ausgabe wie diese.
+] else if lang == "ja" [
+  `HardFault`ハンドラは、`ExceptionFrame`の値を表示します。実行すると、
+  OpenOCDコンソールに次のような表示が見えるでしょう。
 ] else if lang == "zh" [
   `HardFault`处理函数打印了`ExceptionFrame`值。如果你运行这个，你将会看到下面的东西打印到OpenOCD控制台上。
 ] else { todo }
@@ -575,6 +657,8 @@ ExceptionFrame {
 ] else if lang == "de" [
   Der Wert `pc` ist der Wert des Programmzählers zum Zeitpunkt der
   Ausnahme und verweist auf die Anweisung, die die Ausnahme ausgelöst hat.
+] else if lang == "ja" [
+  `pc`の値は、例外発生時のプログラムカウンタの値で、例外を引き起こした命令を指しています。
 ] else if lang == "zh" [
   `pc`值是异常时程序计数器(Program Counter)的值，它指向触发了异常的指令。
 ] else { todo }
@@ -583,6 +667,8 @@ ExceptionFrame {
   If you look at the disassembly of the program:
 ] else if lang == "de" [
   Wenn Sie sich den Disassembler des Programms ansehen:
+] else if lang == "ja" [
+  プログラムのディスアセンブル結果を見ます。
 ] else if lang == "zh" [
   如果你看向程序的反汇编:
 ] else { todo }
@@ -611,6 +697,10 @@ ResetTrampoline:
 
   Das Feld `r0` von `ExceptionFrame` gibt an, dass der Wert des Registers
   `r0` zu diesem Zeitpunkt `0x3fff_fffe` war.
+] else if lang == "ja" [
+  #todoupd("ja")
+  ロード命令（`ldr r0, [r0]`）が例外を発生させたことがわかります。そして、この時の`r0`レジスタの値は、
+  `0x3fff_fffe`です。この値は、`ExceptionFrame`の`r0`フィールドと一致します。
 ] else if lang == "zh" [
   你可以在反汇编中搜索程序计数器`0x0800094a`的值。你将会看到一个读取操作(`ldr r0, [r0]`)导致了异常。`ExceptionFrame`的`r0`字段将告诉你，那时寄存器`r0`的值是`0x3fff_fffe`
   。

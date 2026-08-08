@@ -2,6 +2,7 @@
 
 #h1(offset: whole,
   if lang in ("en", "de") [Hardware]
+  else if lang == "ja" [ハードウェア]
   else if lang == "zh" [硬件]
   else { todo })
 <getting-started-hardware>
@@ -14,12 +15,16 @@
   Mittlerweile sollten Sie mit den Werkzeugen und dem Entwicklungsprozess
   einigermaßen vertraut sein. In diesem Abschnitt wechseln wir zur echten
   Hardware; der Prozess bleibt im Großen und Ganzen gleich. Tauchen wir ein.
+] else if lang == "ja" [
+  ここまでで、ツールと開発プロセスにある程度慣れたはずです。このセクションでは、実際のハードウェアに切り替えます。
+  開発プロセスは、ほとんど同じままです。飛び込みましょう。
 ] else if lang == "zh" [
   现在你应该有点熟悉工具和开发过程了。在这部分我们将切换到真正的硬件上；步骤非常相似。让我们深入下去。
 ] else { todo }
 
 = #(if lang == "en" [Know your hardware]
   else if lang == "de" [Kennen Sie Ihre Hardware]
+  else if lang == "ja" [ハードウェアを知る]
   else if lang == "zh" [认识你的硬件]
   else { todo })
 
@@ -43,6 +48,14 @@
     Flash und 32 KiB RAM.
   - Wo werden Flash-Speicher und RAM im Adressraum abgebildet? zB RAM ist
     befindet sich üblicherweise an der Adresse `0x2000_0000`.
+] else if lang == "ja" [
+  始める前に、プロジェクトの設定に利用するターゲットデバイスのいくつかの特徴を確認する必要があります。
+  - ARMコア、例えばCortex-M3です。
+  - そのARMコアはFPUを搭載していますか？Cortex-M4#[*F*]とCortex-M7#[*F*]は、搭載しています。
+  - ターゲットデバイスに搭載されているフラッシュメモリとRAMの容量はいくらですか？
+    例えば、フラッシュは256KiBでRAMは32KiBです。
+  - フラッシュメモリとRAMは、アドレス空間のどこにマッピングされていますか？
+    例えば、RAMは、通常`0x2000_0000`番地に位置します。
 ] else if lang == "zh" [
   在我们开始之前，你需要了解下你的目标设备的一些特性，因为你将用它们来配置项目:
   - ARM 内核。比如 Cortex-M3 。
@@ -57,6 +70,8 @@
 ] else if lang == "de" [
   Diese Informationen finden Sie im Datenblatt oder im Referenzhandbuch
   Ihres/Ihrer Microcontrollers/Microcontrollerplatine.
+] else if lang == "ja" [
+  これらの情報は、デバイスのデータシートかリファレンスマニュアルに掲載されています。
 ] else if lang == "zh" [
   你可以在你的设备的数据手册和参考手册上找到这些信息。
 ] else { todo }
@@ -77,6 +92,12 @@
   - 256 KiB Flash befinden sich an der Adresse 0x0800_0000.
   - 440 KiB RAM an der Adresse 0x2000_0000. (Es gibt noch eine weitere
     RAM-Region, aber der Einfachheit halber ignorieren wir das).
+] else if lang == "ja" [
+  このセクションでは、私たちのリファレンスハードウェアであるSTM32F3DISCOVERYを使用します。
+  このボードは、STM32F303VCT6マイクロコントローラを1つ搭載しています。このマイクロコントローラは以下のものを持っています。
+  - 単精度FPUを含むCortex-M4Fコアが1つ
+  - 0x0800_0000番地に配置された256KiBのフラッシュメモリ
+  - 0x2000_0000番地に配置された40KiBのRAM。（別のRAM領域もありますが、説明の簡単化のため、取り扱いません）
 ] else if lang == "zh" [
   这部分，要使用我们的参考硬件，STM32F3DISCOVERY。这个板子包含一个STM32F303VCT6微控制器。这个微控制器拥有:
   - 一个Cortex-M4F核心，它包含一个单精度FPU。
@@ -86,6 +107,7 @@
 
 = #(if lang == "en" [Configuring]
   else if lang == "de" [Konfigurieren]
+  else if lang == "ja" [設定]
   else if lang == "zh" [配置]
   else { todo })
 
@@ -95,6 +117,9 @@
 ] else if lang == "de" [
   Wir beginnen bei Null mit einer neuen Vorlageninstanz. Zur Auffrischung
   siehe #link(<getting-started-qemu>)[vorheriger Abschnitt zu QEMU], wie man das ohne `cargo-generate` macht.
+] else if lang == "ja" [
+  テンプレートの新しいインスタンスを使って、スクラッチから書いていきましょう。
+  `cargo-generate`を使用しない方法については、#link(<getting-started-qemu>)[前セクションのQEMU]を参照して下さい。
 ] else if lang == "zh" [
   我们将使用一个新的模板实例从零开始。对于新手，请参考#link(<getting-started-qemu>)[先前的QEMU]章节，了解如何在没有`cargo-generate`的情况下完成配置。
 ] else { todo }
@@ -113,6 +138,8 @@ $ cd app
 ] else if lang == "de" [
   Schritt Nummer eins besteht darin, ein Standardkompilierungsziel in
   `.cargo/config.toml` festzulegen.
+] else if lang == "ja" [
+  第一ステップは、`.cargo/config`にデフォルトコンパイルターゲットを設定することです。
 ] else if lang == "zh" [
   第一步是在`.cargo/config.toml`中设置一个默认编译目标。
 ] else { todo }
@@ -137,12 +164,23 @@ tail -n5 .cargo/config.toml
   # target = "thumbv7em-none-eabi"   # Cortex-M4 and Cortex-M7 (no FPU)
   target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)
   ```
+] else if lang == "ja" [
+  ```toml
+  [build]
+  # 以下のコンパイルターゲットから1つを選びます
+  # target = "thumbv6m-none-eabi"    # Cortex-M0およびCortex-M0+
+  # target = "thumbv7m-none-eabi"    # Cortex-M3
+  # target = "thumbv7em-none-eabi"   # Cortex-M4およびCortex-M7 (no FPU)
+  target = "thumbv7em-none-eabihf" # Cortex-M4FおよびCortex-M7F (with FPU)
+  ```
 ] else { todo }
 
 #if lang == "en" [
   We'll use `thumbv7em-none-eabihf` as that covers the Cortex-M4F core.
 ] else if lang == "de" [
   Wir verwenden `thumbv7em-none-eabihf`, da es den Cortex-M4F-Kern abdeckt.
+] else if lang == "ja" [
+  Cortex-M4Fコアを対象とするものとして、`thumbv7em-none-eabihf`を使います。
 ] else if lang == "zh" [
   我们将使用 `thumbv7em-none-eabihf`，因为它包括了Cortex-M4F内核． 
 ] else { todo }
@@ -169,6 +207,8 @@ tail -n5 .cargo/config.toml
   The second step is to enter the memory region information into the `memory.x` file.
 ] else if lang == "de" [
   Der zweite Schritt besteht darin, die Speicherbereichsinformationen in die Datei `memory.x` einzugeben
+] else if lang == "ja" [
+  第二ステップは、`memory.x`ファイルにメモリ領域の情報を入力することです。
 ] else if lang == "zh" [
   第二步是将存储区域信息(memory region information)输入`memory.x`。
 ] else { todo }
@@ -216,6 +256,9 @@ MEMORY
 ] else if lang == "de" [
   Stellen Sie in `examples/hello.rs`sicher, daß `debug::exit()` auskommentiert
   oder entfernt wurde. Es wird nur zum Ausführen in QEMU verwendet.
+] else if lang == "ja" [
+  `debug::exit()`の呼び出しが、コメントアウトされているか削除されていることを確認して下さい。
+  これは、QEMUで実行する時のみ、使用します。
 ] else if lang == "zh" [
   在`examples/hello.rs`中，确保`debug::exit()`调用被注释掉了或者移除掉了。它只能用于在QEMU中运行的情况。
 ] else { todo }
@@ -233,6 +276,10 @@ fn main() -> ! {
         "exit QEMU
     // HINWEIS: Fuehren Sie dies nicht auf der Hardware aus; es kann den 
     //          OpenOCD-Zustand beschaedigen.
+    // debug::exit(debug::EXIT_SUCCESS);"
+      } else if lang == "ja" {
+        "QEMUを終了する
+    // 注記、ハードウェア上で実行しないで下さい。OpenOCDの状態を破壊する可能性があります。
     // debug::exit(debug::EXIT_SUCCESS);"
       } else if lang == "zh" {
         "退出 QEMU
@@ -254,6 +301,11 @@ fn main() -> ! {
   `cortex-m-rt`-Crate übernimmt die gesamte für den Betrieb des Chips
   erforderliche „Magie", da erfreulicherweise so gut wie alle
   Cortex-M-CPUs auf die gleiche Weise booten.
+] else if lang == "ja" [
+  これまでやってきた通り、`cargo build`でプログラムをクロスコンパイルし、
+  `cargo-binutils`でバイナリを調べることができます。
+  `cortex-m-rt`クレートは、チップを動作させるために必要な、全てのおまじないを処理します。
+  便利なことに、ほとんど全てのCortex-M CPUが同じ方法で起動します。
 ] else if lang == "zh" [
   你可以像你之前做的一样，使用`cargo build`检查编译程序，使用`cargo-binutils`观察二进制项。`cortex-m-rt`库可以处理所有让芯片运行起来所需的魔法，几乎所有的Cortex-M
   CPUs都按同样的方式启动。
@@ -265,6 +317,7 @@ cargo build --example hello
 
 = #(if lang == "en" [Debugging]
   else if lang == "de" [Fehlerbehebung (Debugging)]
+  else if lang == "ja" [デバッグ]
   else if lang == "zh" [调试]
   else { todo })
 
@@ -282,6 +335,11 @@ cargo build --example hello
   STM32F3DISCOVERY laufenden Programms erforderlich sind. Dies soll als
   Referenz dienen; für gerätespezifische Informationen zum Debugging
   konsultieren Sie bitte #link(url_dn)[das Debugonomicon].
+] else if lang == "ja" [
+  デバッグ方法は少し違います。実際、最初のステップは、ターゲットデバイスによって異なります。
+  このセクションでは、STM32F3DISCOVERY上で実行しているプログラムをデバッグするために必要となる手順を説明します。
+  これは、参考の役目を果たします。デバイス固有のデバッグ情報は、
+  #link(url_dn)[the Debugonomicon]を参照して下さい。
 ] else if lang == "zh" [
   调试会看起来有点不一样。事实上，取决于不同的目标设备，第一步可能看起来不一样。在这个章节里，我们将展示，调试一个在STM32F3DISCOVERY上运行的程序，所需要的步骤。这作为一个参考。关于调试有关的设备特定的信息，可以看#link(url_dn)[the Debugonomicon]。
 ] else { todo }
@@ -292,6 +350,9 @@ cargo build --example hello
 ] else if lang == "de" [
   Wie zuvor führen wir Remote-Debugging durch, wobei der Client ein
   GDB-Prozess ist. Diesmal ist der Server jedoch OpenOCD.
+] else if lang == "ja" [
+  以前と同様に、リモートデバッグを行います。クライアントがGDBプロセスであることも同様です。
+  しかし、今回、サーバはOpenOCDになります。
 ] else if lang == "zh" [
   像之前一样，我们将进行远程调试，客户端将是一个GDB进程。不同的是，OpenOCD将是服务器。
 ] else { todo }
@@ -305,6 +366,9 @@ cargo build --example hello
   "#link(<verify-installation>)[Die Installation überprüfen]"
   beschrieben, das Discovery Board mit Ihrem Laptop/PC und prüfen Sie, ob
   der ST-LINK-Header ausgefüllt ist.
+] else if lang == "ja" [
+  #link(<verify-installation>)[インストールの確認]セクションでやったように、ノートPCまたはPCをdiscoveryボードに接続し、
+  ST-LINKヘッダが設定されていることを確認して下さい。
 ] else if lang == "zh" [
   像是在#link(<verify-installation>)[安装验证]中做的那样，把你的笔记本/个人电脑和discovery开发板连接起来，检查ST-LINK的短路帽是否被安装了。
 ] else { todo }
@@ -320,6 +384,10 @@ cargo build --example hello
   im Stammverzeichnis der Vorlage aus; `openocd` greift dabei auf die
   Datei `openocd.cfg` zu, in der festgelegt ist, welche Schnittstellen-
   und Zieldateien verwendet werden sollen.
+] else if lang == "ja" [
+  discoveryボードのST-LINKに接続するために、端末で`openocd`を実行して下さい。
+  このコマンドは、テンプレートプロジェクトのルートディレクトリから実行して下さい。
+  `openocd`は、どのインタフェースファイルとターゲットファイルを使うか、が記述されている`openocd.cfg`ファイルを見つけます。
 ] else if lang == "zh" [
   在一个终端上运行 `openocd` 连接到你的开发板上的 ST-LINK
   。从模板的根目录运行这个命令；`openocd` 将会选择 `openocd.cfg`
@@ -361,6 +429,21 @@ cat openocd.cfg
 
   source [find target/stm32f3x.cfg]
   ```
+] else if lang == "ja" [
+  ```text
+  # STM32F3DISCOVERY開発ボード用のOpenOCD設定サンプル
+
+  # 持っているハードウェアのリビジョンに応じて、これらのインタフェースのうち、1つを選んで下さい。
+  # 常に、1つのインタフェースがコメントアウトされているべきです。
+
+  # リビジョンC （新しいリビジョン）
+  source [find interface/stlink-v2-1.cfg]
+
+  # リビジョンAとB（古いリビジョン）
+  # source [find interface/stlink-v2.cfg]
+
+  source [find target/stm32f3x.cfg]
+  ```
 ] else { todo }
 
 #quote(block: true)[
@@ -375,6 +458,10 @@ cat openocd.cfg
   feststellen, dass Sie eine ältere Revision des Discovery-Boards
   besitzen, sollten Sie an dieser Stelle die Datei `openocd.cfg` so
   anpassen, dass `interface/stlink-v2.cfg` verwendet wird.
+] else if lang == "ja" [
+  *注記*
+  #link(<verify-installation>)[インストールの確認]セクションで、古いバージョンのdiscoveryボードを持っていることが判明している場合、
+  `interface/stlink-v2.cfg`を使うように`openocd.cfg`ファイルを修正する必要があります。
 ] else if lang == "zh" [
   *注意*
   如果你在#link(<verify-installation>)[安装验证]章节中，发现你的discovery开发板是一个更旧的版本，那么你应该修改你的
@@ -408,6 +495,8 @@ Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 ] else if lang == "de" [
   Starten Sie in einem weiteren Terminal GDB, ebenfalls vom
   Stammverzeichnis des Templates aus.
+] else if lang == "ja" [
+  別の端末で、GDBを実行します。こちらも、テンプレートプロジェクトのルートディレクトから実行して下さい。
 ] else { todo }
 
 ```text
@@ -432,6 +521,8 @@ gdb-multiarch -q target/thumbv7em-none-eabihf/debug/examples/hello
   Next connect GDB to OpenOCD, which is waiting for a TCP connection on port 3333.
 ] else if lang == "de" [
   Verbinden Sie nun GDB mit OpenOCD, das auf eine TCP-Verbindung an Port 3333 wartet.
+] else if lang == "ja" [
+  次に、TCP 3333ポートで接続待ちしているOpenOCDに、GDBを接続します。
 ] else if lang == "zh" [
   接下来把GDB连接到OpenOCD，它正在等待一个在端口3333上的TCP链接。
 ] else { todo }
@@ -448,6 +539,8 @@ Remote debugging using :3333
 ] else if lang == "de" [
   Fahren Sie nun damit fort, das Programm mithilfe des Befehls `load` auf
   den Mikrocontroller zu _flashen_ (zu laden).
+] else if lang == "ja" [
+  それでは、`load`コマンドを使って、マイクロコントローラにプログラムを_書き込んで_下さい。
 ] else if lang == "zh" [
   接下来使用`load`命令，继续 _flash_(加载) 程序到微控制器上。
 ] else { todo }
@@ -470,6 +563,10 @@ Transfer rate: 13 KB/sec, 2489 bytes/write.
   müssen wir OpenOCD anweisen, Semihosting zu aktivieren, bevor wir einen
   entsprechenden Aufruf tätigen. Befehle können mithilfe des Befehls
   `monitor` an OpenOCD gesendet werden.
+] else if lang == "ja" [
+  プログラムがロードされました。このプログラムはセミホスティングを使用します。そこで、
+  セミホスティングを呼び出して何かを行う前に、OpenOCDにセミホスティングを有効にするように、
+  指示する必要があります。
 ] else if lang == "zh" [
   程序现在被加载了。这个程序使用半主机模式，因此在我们调用半主机模式之前，我们必须告诉OpenOCD使能半主机。你可以使用
   `monitor` 命令，发送命令给OpenOCD 。
@@ -486,6 +583,8 @@ semihosting is enabled
 ] else if lang == "de" [
   Sie können sich alle OpenOCD-Befehle anzeigen lassen, indem Sie den
   Befehl `monitor help` aufrufen.
+] else if lang == "ja" [
+  `monitor help`コマンドを実行することで、全てのOpenOCDコマンドを見ることができます。
 ] else if lang == "zh" [
   通过调用 `monitor help` 命令，你能看到所有的OpenOCD命令。
 ] else { todo }
@@ -497,6 +596,8 @@ semihosting is enabled
 ] else if lang == "de" [
   Wie zuvor können wir mithilfe eines Breakpoints und des Befehls
   `continue` direkt zu `main` springen.
+] else if lang == "ja" [
+  以前のように、ブレイクポイントと`continue`コマンドを使用することで、`main`までスキップすることができます。
 ] else if lang == "zh" [
   像我们之前一样，使用一个断点和 `continue` 命令我们可以跳过所有的步骤到
   `main` 。
@@ -554,6 +655,10 @@ hello::__cortex_m_rt_main () at examples/hello.rs:13
 ] else if lang == "de" [
   Nachdem Sie das Programm mit `next` weitergeführt haben, sollten Sie
   unter anderem „Hello, world!" auf der OpenOCD-Konsole ausgegeben sehen.
+] else if lang == "ja" [
+  #todoupd("ja")
+  この時点で、OpenOCDコンソールに、他のものと入り混じって「Hello,
+  world!」と表示されるはずです。
 ] else if lang == "zh" [
   在使用了`next`让函数继续执行之后，你应该看到 "Hello, world!"
   被打印到了OpenOCD控制台上。
@@ -637,19 +742,20 @@ load
 # start the process but immediately halt the processor
 stepi
 ```
-
+#let cmd_gdb_hello = `<gdb> -x openocd.gdb target/thumbv7em-none-eabihf/debug/examples/hello`
 #if lang == "en" [
-  Now running `<gdb> -x openocd.gdb target/thumbv7em-none-eabihf/debug/examples/hello`
+  Now running #cmd_gdb_hello
   will immediately connect GDB to OpenOCD, enable semihosting, load the
   program and start the process.
 ] else if lang == "de" [
-  Wenn Sie nun den Befehl
-  `<gdb> -x openocd.gdb target/thumbv7em-none-eabihf/debug/examples/hello`
+  Wenn Sie nun den Befehl #cmd_gdb_hello
   ausführen, verbindet sich GDB sofort mit OpenOCD, aktiviert Semihosting,
   lädt das Programm und startet den Prozess.
+] else if lang == "ja" [
+  #cmd_gdb_hello;を実行することで、GDBはすぐにOpenOCDに接続し、
+  セミホスティングを有効化し、プログラムをロードした上で、プロセスを開始します。
 ] else if lang == "zh" [
-  现在运行
-  `<gdb> -x openocd.gdb target/thumbv7em-none-eabihf/debug/examples/hello`
+  现在运行 #cmd_gdb_hello
   将会立即把GDB和OpenOCD连接起来，使能半主机，加载程序和启动进程。
 ] else { todo }
 
@@ -662,6 +768,10 @@ stepi
   Runner einrichten, sodass `cargo run` das Programm baut _und_ eine
   GDB-Sitzung startet. Dieser Runner ist bereits in der Datei
   `.cargo/config.toml` enthalten, jedoch auskommentiert.
+] else if lang == "ja" [
+  別の方法として、`<gdb> -x openocd.gdb`をカスタムランナーにして、`cargo run`でプログラムをビルドし、
+  _さらに_GDBセッションを開始することもできます。このランナーは、`.cargo/config`に含まれていますが、
+  コメントアウトされています。
 ] else if lang == "zh" [
   另外，你能将 `<gdb> -x openocd.gdb` 放进一个自定义的 runner 中，使
   `cargo run` 能编译程序并启动一个GDB会话。这个 runner 在
@@ -672,34 +782,33 @@ stepi
 head -n10 .cargo/config.toml
 ```
 
-#if lang in ("en", "zh") [
-  ```toml
-  [target.thumbv7m-none-eabi]
-  # uncomment this to make `cargo run` execute programs on QEMU
-  # runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"
+#raw(block: true, lang: "toml",
+"[target.thumbv7m-none-eabi]
+# " + if lang in ("en", "zh") {
+    "uncomment this to make `cargo run` execute programs on QEMU"
+  } else if lang == "de" {
+    "Dies auskommentieren, damit `cargo run` Programme auf QEMU ausfuehrt."
+  } else if lang == "ja" {
+    "ここのコメントアウトを外すと、`cargo run`はQEMUでプログラムを実行します"
+  } else { todos } + "
+# runner = \"qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel\"
 
-  [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-  # uncomment ONE of these three option to make `cargo run` start a GDB session
-  # which option to pick depends on your system
-  runner = "arm-none-eabi-gdb -x openocd.gdb"
-  # runner = "gdb-multiarch -x openocd.gdb"
-  # runner = "gdb -x openocd.gdb"
-  ```
-] else if lang == "de" [
-  ```toml
-  [target.thumbv7m-none-eabi]
-  # Dies auskommentieren, damit `cargo run` Programme auf QEMU ausfuehrt.
-  # runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"
-
-  [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-  # Heben Sie die Auskommentierung einer dieser drei Optionen auf, damit 
+[target.'cfg(all(target_arch = \"arm\", target_os = \"none\"))']
+# " + if lang in ("en", "zh") {
+    "uncomment ONE of these three option to make `cargo run` start a GDB session
+# which option to pick depends on your system"
+  } else if lang == "de" {
+    "Heben Sie die Auskommentierung einer dieser drei Optionen auf, damit 
   # `cargo run` eine GDB-Sitzung startet.
-  # Welche Option Sie waehlen sollten, haengt von Ihrem System ab.
-  runner = "arm-none-eabi-gdb -x openocd.gdb"
-  # runner = "gdb-multiarch -x openocd.gdb"
-  # runner = "gdb -x openocd.gdb"
-  ```
-] else { todo }
+# Welche Option Sie waehlen sollten, haengt von Ihrem System ab."
+  } else if lang == "ja" {
+    "3つの選択肢のうち、1つのコメントアウトを外すと、`cargo run`はGDBセッションを開始します。
+# どの選択肢を使うか、は対象システムによって異なります。"
+  } else { todos } + "
+runner = \"arm-none-eabi-gdb -x openocd.gdb\"
+# runner = \"gdb-multiarch -x openocd.gdb\"
+# runner = \"gdb -x openocd.gdb\"
+")
 
 ```text
 $ cargo run --example hello

@@ -2,6 +2,7 @@
 
 #h1(offset: whole*2,
   [macOS])
+<install-macos>
 
 #let brew_ln = link("http://brew.sh/")[Homebrew]
 #let ports_ln = link("https://www.macports.org/")[MacPorts]
@@ -10,6 +11,9 @@
   All the tools can be installed using #brew_ln or #ports_ln:
 ] else if lang == "de" [
   Alle Werkzeuge können mit #brew_ln oder #ports_ln installiert werden:
+] else if lang == "ja" [
+  #todoupd("ja")
+  全てのツールは、#brew_ln;を使ってインストールできます。
 ] else if lang == "zh" [
   所有的工具都可以使用#brew_ln;或者#ports_ln;来安装：
 ] else { todo }
@@ -66,6 +70,8 @@ $ sudo port install qemu
   That's all! Go to the #link(<verify-installation>)[next section].
 ] else if lang == "de" [
   Das war's! Gehen Sie zum #link(<verify-installation>)[nächsten Abschnitt].
+] else if lang == "ja" [
+  以上です！#link(<verify-installation>)[次のセクション]に進んで下さい。
 ] else if lang == "zh" [
   这是全部内容，请转入#link(<verify-installation>)[下个章节]．
 ] else { todo }

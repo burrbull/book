@@ -14,6 +14,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
 
+      - name: Install PDF fonts
+        run: sudo apt install -y fonts-noto-cjk
+
       - name: Install Python dependencies
         run: |
           pip3 install --user python-dateutil linkchecker
@@ -25,15 +28,15 @@ jobs:
         id: cache-cargo-typst
         with:
           path: ~/cargo-bin
-          key: cache-cargo
+          key: cache-cargo-typst
       - name: Install Typst
-        if: steps.cache-cargo.outputs.cache-hit != 'true'
+        if: steps.cache-cargo-typst.outputs.cache-hit != 'true'
         uses: actions-rs/install@v0.1
         with:
           crate: typst-cli
           version: latest
       - name: Copy typst to cache directory
-        if: steps.cache-cargo.outputs.cache-hit != 'true'
+        if: steps.cache-cargo-typst.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/cargo-bin
           cp ~/.cargo/bin/typst ~/cargo-bin
@@ -47,12 +50,14 @@ jobs:
 
       - name: Build translated book
         run: |
-          typst compile typ/book.typ --input lang=zh --input target=html book --features bundle,html -f bundle
-          typst compile typ/book.typ --input lang=zh --input target=pdf book/book_zh.pdf
           typst compile typ/book.typ --input lang=de --input target=html book --features bundle,html -f bundle
           typst compile typ/book.typ --input lang=de --input target=pdf book/book_de.pdf
+          typst compile typ/book.typ --input lang=ja --input target=html book --features bundle,html -f bundle
+          typst compile typ/book.typ --input lang=ja --input target=pdf book/book_ja.pdf
           typst compile typ/book.typ --input lang=uk --input target=html book --features bundle,html -f bundle
           typst compile typ/book.typ --input lang=uk --input target=pdf book/book_uk.pdf
+          typst compile typ/book.typ --input lang=zh --input target=html book --features bundle,html -f bundle
+          typst compile typ/book.typ --input lang=zh --input target=pdf book/book_zh.pdf
  
       - name: Check links
         run: linkchecker book

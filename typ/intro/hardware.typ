@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [Meet Your Hardware]
   else if lang == "de" [Lernen Sie Ihre Hardware kennen]
+  else if lang == "ja" [ハードウェアとの出会い]
   else if lang == "uk" [Зустрічайте залізо]
   else if lang == "zh" [熟悉你的硬件]
   else { todo })
@@ -11,6 +12,8 @@
   Let's get familiar with the hardware we'll be working with.
 ] else if lang == "de" [
   Machen wir uns mit der Hardware vertraut, mit der wir arbeiten werden.
+] else if lang == "ja" [
+  これから作業するハードウェアに詳しくなりましょう。
 ] else if lang == "uk" [
   Давайте ознайомимося з обладнанням, з яким ми будемо працювати.
 ] else if lang == "zh" [
@@ -23,6 +26,7 @@
 
 = #(if lang in ("en", "zh") [STM32F3DISCOVERY (the "F3")]
   else if lang == "de" [STM32F3DISCOVERY (die "F3")]
+  else if lang == "ja" [STM32F3DISCOVERY ("F3")]
   else if lang == "uk" [STM32F3DISCOVERY (скорочено "F3")]
   else { todo })
 
@@ -30,6 +34,8 @@
   What does this board contain?
 ] else if lang == "de" [
   Was beinhaltet diese Platine?
+] else if lang == "ja" [
+  私たちは、本書内でこのボードを"F3"と呼びます。
 ] else if lang == "uk" [
   Що міститься на цій платі?
 ] else if lang == "zh" [
@@ -88,6 +94,26 @@
     Dieser Mikrocontroller ist eigentlich Teil eines
     On-Board-Programmers/Debuggers und mit dem Mini-USB-Anschluss namens
     „USB ST-LINK" verbunden.
+] else if lang == "ja" [
+  このボードには何が搭載されているか見てみましょう。
+  - STM32F303VCT6マイクロコントローラが1つ。このマイクロコントローラは、次のものを搭載しています。
+    - 単精度浮動小数点演算をハードウェアサポートし、最大72MHzのクロック周波数で動作するシングルコアのARM
+      Cortex-M4Fプロセッサ
+    - 256 KiBの"フラッシュ"メモリ (1 KiB = 10#[*24*] bytes)
+    - 48 KiBのRAM
+    - 多くの"ペリフェラル": タイマ、GPIO、I2C、SPI、USART、他
+    - 両側面の"ヘッダ"に配置された多数の"ピン"
+    - *重要* このマイクロコントローラは、約3.3ボルトで動作します。
+  - #link(wiki_accelerometer)[加速度センサ]と#link(wiki_magnetometer)[磁気センサ]が1つずつ
+    (1つのパッケージにまとめられています)
+  - #link(wiki_gyroscope)[ジャイロセンサ]が1つ
+  - 円形に配置された8個のユーザLED
+  - 第2のマイクロコントローラ:
+    STM32F103CBT。このマイクロコントローラは、実際には、ST-LINKというオンボードプログラマおよびデバッガの一部であり、"USB
+    ST-LINK"という名前のUSBポートに接続されています。
+  - "USB
+    USER"というラベルが付いている第2のUSBポート。このUSBポートは、メインマイクロコントローラ
+    (STM32F303VCT6)に接続されており、アプリケーションで利用できます。
 ] else if lang == "uk" [
   - Мікроконтролер #link(url_f303)[STM32F303VCT6]. Цей мікроконтролер має:
     - Одноядерний процесор ARM Cortex-M4F з апаратною підтримкою операцій
