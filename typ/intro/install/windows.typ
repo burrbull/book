@@ -2,6 +2,7 @@
 
 #h1(offset: whole*2,
   [Windows])
+<install-windows>
 
 = `arm-none-eabi-gdb`
 
@@ -18,6 +19,10 @@
   Abschluss des Installationsvorgangs die Option „Add path to environment
   variable". Überprüfen Sie anschließend, ob die Werkzeuge in Ihrem
   `%PATH%` enthalten sind:
+] else if lang == "ja" [
+  ARMはWindows向けに`.exe`インストーラを提供しています。#link(url_arm_gnu)[here]から1つを入手して、手順に従って下さい。
+  インストールプロセスが終了する直前に"環境変数にパスを追加"オプションを選択します。
+  その後、ツールが`%PATH%`にあることを確認します。
 ] else if lang == "zh" [
   ARM提供了用于Windows的`.exe`安装程序。从#link(url_arm_gnu)[这里]获取,
   然后按照说明操作。 在完成安装之前，勾选/选择"Add path to environment
@@ -76,11 +81,15 @@ Open On-Chip Debugger 0.10.0
   Grab QEMU from #link(url_qemu)[the official website].
 ] else if lang == "de" [
   Lade QEMU von #link(url_qemu)[der offiziellen Website] herunter.
+] else if lang == "ja" [
+  #link(url_qemu)[QEMU公式サイト]からQEMUを入手します。
 ] else if lang == "zh" [
   从#link(url_qemu)[官网]获取QEMU。
 ] else { todo }
 
-= ST-LINK USB driver
+= #(if lang in ("en", "de", "zh") [ST-LINK USB driver]
+  else if lang == "ja" [ST-LINK USBドライバ]
+  else { todo })
 
 #let url_stlink = "http://www.st.com/en/embedded-software/stsw-link009.html"
 #if lang == "en" [
@@ -92,6 +101,9 @@ Open On-Chip Debugger 0.10.0
   installieren, da OpenOCD sonst nicht funktioniert. Befolgen Sie die
   Anweisungen des Installationsprogramms und stellen Sie sicher, dass Sie
   die richtige Version des Treibers (32-Bit oder 64-Bit) installieren.
+] else if lang == "ja" [
+  #link(url_stlink)[USBドライバ]もインストールする必要があります。そうでなければOpenOCDは動きません。インストーラの手順に従って下さい。
+  そして、正しいドライバのバージョン(32ビットか64ビット)をインストールすることを確認して下さい。
 ] else if lang == "zh" [
   你还需要安装这个
   #link(url_stlink)[USB驱动]
@@ -102,6 +114,8 @@ Open On-Chip Debugger 0.10.0
   That's all! Go to the #link(<verify-installation>)[next section].
 ] else if lang == "de" [
   Das war's! Gehen Sie zum #link(<verify-installation>)[nächsten Abschnitt].
+] else if lang == "ja" [
+  以上です！#link(<verify-installation>)[次のセクション]に進んで下さい。
 ] else if lang == "zh" [
   以上是全部内容！转到 #link(<verify-installation>)[下个章节]。
 ] else { todo }

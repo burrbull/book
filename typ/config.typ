@@ -3,6 +3,7 @@
 #let languages = (
   "en": [English],
   "de": [German],
+  "ja": [Japanese],
   "uk": [Ukrainian],
   "zh": [Chinese]
 )
@@ -11,6 +12,7 @@
 
 // str: use in code blocks
 #let todos = (if lang == "de" { "unübersetzt" }
+  else if lang == "ja" { "未翻訳" }
   else if lang == "uk" { "не перекладено" }
   else if lang == "zh" { "未翻译" }
   else { "untranslated" }
@@ -24,9 +26,10 @@
 #let todoupds(l) = {
   assert(l in languages, message: "add language name")
   if lang == "de" { "die Übersetzung ist veraltet" }
-    else if lang == "uk" { "переклад застарів" }
-    else if lang == "zh" { "翻译已过时" }
-    else { "translation is outdated" }
+  else if lang == "ja" { "翻訳が古くなっています。" }
+  else if lang == "uk" { "переклад застарів" }
+  else if lang == "zh" { "翻译已过时" }
+  else { "translation is outdated" }
 } // content: use in other places
 #let todoupd(l) = text(
   fill: orange,

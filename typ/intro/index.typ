@@ -2,6 +2,7 @@
 
 #h1(if lang == "en" [Introduction]
   else if lang == "de" [Einleitung]
+  else if lang == "ja" [導入]
   else if lang == "uk" [Вступ]
   else if lang == "zh" [引言]
   else { todo })
@@ -13,6 +14,9 @@
 ] else if lang == "de" [
   Willkommen bei „Das Embedded-Rust Buch“ – einem Einführungswerk zur Verwendung
   der Programmiersprache Rust auf „Bare-Metal“-Embedded-Systemen, wie etwa Mikrocontrollern.
+] else if lang == "ja" [
+  _The Embedded Rust
+  Book_へようこそ。Rustをマイクロコントローラのような、「ベアメタル」の組込みシステムで使うための入門書です。
 ] else if lang == "uk" [
   Ласкаво просимо до The Embedded Rust Book: ознайомчої книги про використання
   мови програмування Rust у вбудованих "Bare Metal" системах, таких як мікроконтролери.
@@ -22,6 +26,7 @@
 
 = #(if lang == "en" [Who Embedded Rust is For]
   else if lang == "de" [Für wen Embedded-Rust geeignet ist]
+  else if lang == "ja" [組込みRustは誰のためのもの]
   else if lang == "uk" [Для кого Вбудований Rust]
   else if lang == "zh" [嵌入式Rust是为谁准备的]
   else { todo })
@@ -39,6 +44,9 @@
 
   (Siehe auch
   #link(url_rustbook)[Für wen ist Rust geeignet?])
+] else if lang == "ja" [
+  組込みRustは、Rustの高い抽象度と安全性のもと、組込みプログラミングをしたい人のためのものです。
+  (#url_rustbook)[Rustは誰のためのもの]も合わせて見て下さい)
 ] else if lang == "uk" [
   Вбудований Rust для кожного, хто бажає програмувати вбудовані системи використовуючи
   переваги концепцій вищого рівня та гарантій безпеки, які надає мова Rust.
@@ -49,6 +57,7 @@
 
 = #(if lang == "en" [Scope]
   else if lang == "de" [Umfang]
+  else if lang == "ja" [スコープ]
   else if lang == "uk" [Область застосування]
   else if lang == "zh" [本书范围]
   else { todo })
@@ -71,6 +80,11 @@
     Rust optimal nutzt, um korrektere Embedded-Software zu schreiben.
   - Dient in einigen Fällen als Kochbuch -- zum Beispiel: Wie kombiniere
     ich C und Rust in einem einzigen Projekt?
+] else if lang == "ja" [
+  この本の目的は、以下の通りです。
+  - 組込みRustをできる限り速く開始できるようにします。すなわち、開発環境のセットアップ方法です。
+  - 組込み開発におけるRustの_現在_のベストプラクティスを共有します。つまり、より正しい組込みソフトウェアを書くための、Rustの最善な利用方法です。
+  - いくつかのケースに対するマニュアルを提供します。例えば、1つのプロジェクト内で、C言語とRustとを混在する方法です。
 ] else if lang == "uk" [
   Цілі цієї книги:
   - Надати розробникам швидкий доступ до розробки вбудованих систем на Rust.
@@ -99,6 +113,10 @@
   setzt das Buch keine Vorkenntnisse zu dieser speziellen Architektur
   voraus und erläutert die entsprechenden Besonderheiten, wo immer dies
   erforderlich ist.
+] else if lang == "ja" [
+  本書は出来る限り一般的な事項を取り扱います。ただし、説明を簡単にするために、全ての例で、ARM
+  Cortex-Mアーキテクチャを利用します。
+  読者は、このアーキテクチャに詳しい必要はありません。本書では、アーキテクチャ固有の詳細について、必要に応じて説明をします。
 ] else if lang == "uk" [
   Ця книга намагається бути якомога більш загальною, але щоб полегшити роботу
   як читачам, так і авторам, у ній використовується архітектура ARM Cortex-M у всіх її прикладах.
@@ -111,6 +129,7 @@
 
 = #(if lang == "en" [Who This Book is For]
   else if lang == "de" [Für wen dieses Buch gedacht ist]
+  else if lang == "ja" [この本は誰のためのもの]
   else if lang == "uk" [Для кого Ця Книга]
   else if lang == "zh" [这本书是为谁准备的]
   else { todo })
@@ -134,6 +153,8 @@
   Buch zu ziehen und das Leseerlebnis zu verbessern. Im Abschnitt „Weitere
   Ressourcen" finden Sie Hinweise zu Themen, in die Sie sich bei Bedarf
   einarbeiten können.
+] else if lang == "ja" [
+  本書は、組込み開発か、Rustかのバックグラウンドを持つ人々に向けたものです。しかし、組込みRustに興味がある人なら、誰でも、この本から何かを得られると思います。本書による学習効果を高めるために、事前知識が不足している読者は、「仮定と前提条件」のセクションを読み、不足している知識を補うことをお勧めします。不足知識を補うリソースを見つけるために、「その他のリソース」セクションをチェックすることができます。
 ] else if lang == "uk" [
   Ця книга розрахована на людей, які мають досвід роботи з вбудованими програмами або з Rust,
   але ми віримо, що всі, хто цікавиться програмуванням у вбудованому Rust, можуть щось отримати з цієї книги.
@@ -146,6 +167,7 @@
 
 == #(if lang == "en" [Assumptions and Prerequisites]
   else if lang == "de" [Annahmen und Voraussetzungen]
+  else if lang == "ja" [仮定と前提条件]
   else if lang == "uk" [Припущення та передумови]
   else if lang == "zh" [要求和预备知识]
   else { todo })
@@ -179,6 +201,16 @@
     - Im Speicher abgebildete Peripheriegeräte
     - Interrupts
     - Gängige Schnittstellen wie I2C, SPI, seriell usw.
+] else if lang == "ja" [
+  - Rustでのプログラミングを楽しんでおり、デスクトップ環境でRustアプリケーションを書いたり、実行したり、デバッグしたりしたことがあることを前提とします。また、本書ではRust
+    2018を対象とするため、2018
+    editionのイディオムに慣れ親しんでいる必要があります。
+  - C, C++,
+    Adaといった言語で組込みシステムを開発、デバッグすることに慣れており、次の概念になじみがあることを想定します。
+    - クロスコンパイル
+    - メモリマップ方式のペリフェラル
+    - 割り込み
+    - I2C、SPI、シリアルといった一般的なインタフェース
 ] else if lang == "uk" [
   - Вам зручно користуватися мовою програмування Rust і ви вже писали,
     запускали та налагоджували програми Rust у середовищі робочого столу.
@@ -202,6 +234,7 @@
 
 == #(if lang == "en" [Other Resources]
   else if lang == "de" [Weitere Ressourcen]
+  else if lang == "ja" [その他のリソース]
   else if lang == "uk" [Інші ресурси]
   else if lang == "zh" [其它资源]
   else { todo })
@@ -214,6 +247,8 @@
   Falls Ihnen einer der oben genannten Punkte nicht vertraut ist oder Sie
   mehr über ein bestimmtes, in diesem Buch erwähntes Thema erfahren
   möchten, könnten einige dieser Ressourcen hilfreich für Sie sein.
+] else if lang == "ja" [
+  もしあなたが上述した何らかの事項をよく知らない場合、もしくは、本書内の特定トピックに関して、より詳細な情報を知りたい場合、これらのリソースが役に立つでしょう。
 ] else if lang == "uk" [
   Якщо ви не знайомі з чимось із згаданого вище або вам потрібна додаткова інформація про конкретну тему, згадану в цій книзі, деякі з цих ресурсів можуть стати в нагоді.
 ] else if lang == "zh" [
@@ -228,14 +263,17 @@
     table.header(
       if lang == "en" [Topic]
       else if lang == "de" [Thema]
+      else if lang == "ja" [トピック]
       else if lang == "zh" [主题]
       else { todo },
       if lang == "en" [Resource]
       else if lang == "de" [Ressource]
+      else if lang == "ja" [リソース]
       else if lang == "zh" [资源]
       else { todo },
       if lang == "en" [Description]
       else if lang == "de" [Beschreibung]
+      else if lang == "ja" [説明]
       else if lang == "zh" [描述]
       else { todo }
     ),
@@ -246,6 +284,8 @@
     ] else if lang == "de" [
       Wenn Sie sich mit Rust noch nicht sicher fühlen,
       empfehlen wir Ihnen dringend, dieses Buch zu lesen.
+    ] else if lang == "ja" [
+      もしRustに親しんでいない場合、この本を読むことを強くお勧めします。
     ] else if lang == "zh" [
       如果你还不熟悉Rust，我们强烈建议你读这本书．
     ] else { todo },
@@ -267,6 +307,8 @@
     ] else if lang == "de" [
       Hier finden Sie weitere Ressourcen, die von der Embedded Working Group
       von Rust bereitgestellt werden.
+    ] else if lang == "ja" [
+      Rust組込みワーキンググループによるいくらかのリソースがあります。
     ] else if lang == "zh" [
       在这里，你可以找到由Rust的嵌入式工作组提供的许多其它资源．
     ] else { todo },
@@ -277,6 +319,8 @@
       The nitty gritty details when doing embedded programming in Rust.
     ] else if lang == "de" [
       Die Feinheiten der Embedded-Programmierung mit Rust.
+    ] else if lang == "ja" [
+      Rustで組込みプログラミングを行うときのより深い詳細が記載されています。
     ] else if lang == "zh" [
       用Rust进行嵌入式编程的细节．
     ] else { todo },
@@ -287,6 +331,8 @@
       Frequently asked questions about Rust in an embedded context.
     ] else if lang == "de" [
       Häufig gestellte Fragen zu Rust im Embedded-Umfeld.
+    ] else if lang == "ja" [
+      組込みでRustを使う際のよくある質問と回答です。
     ] else if lang == "zh" [
       Rust在嵌入式上下文中遇到的常见问题．
     ] else { todo },
@@ -352,6 +398,7 @@ if lang == "en" [
 
 == #(if lang == "en" [How to Use This Book]
   else if lang == "de" [Wie Sie dieses Buch nutzen]
+  else if lang == "ja" [この本はどう使う]
   else if lang == "uk" [Як читати цю книгу]
   else if lang == "zh" [如何使用这本书]
   else { todo })
@@ -367,6 +414,8 @@ if lang == "en" [
   Kapitel auf; dabei werden bestimmte Themen in den früheren Kapiteln
   möglicherweise noch nicht bis ins Detail behandelt, sondern erst in
   einem späteren Kapitel erneut aufgegriffen.
+] else if lang == "ja" [
+  この本は、前から順番に読んでいくことを想定しています。後半の章は、前半の章で説明する概念に基づいて成り立っています。前半の章では、トピックの詳細に深入りせず、後半の章で再訪問します。
 ] else if lang == "uk" [
   Ця книга зазвичай передбачає, що ви читаєте її послідовно. Подальші
   розділи ґрунтуються на концепціях попередніх розділів, і попередні розділи можуть
@@ -394,6 +443,9 @@ if lang == "en" [
   Implementierungsdetails der Mikrocontroller je nach Hersteller -- und
   oft sogar zwischen verschiedenen Mikrocontroller-Familien desselben
   Herstellers.
+] else if lang == "ja" [
+  この本は、ほとんどの例で、STマイクロエレクトロニクスの#link(url_f3disco)[STM32F3DISCOVERY]開発ボードを使用します。このボードは、ARM
+  Cortex-Mアーキテクチャをベースとしています。基本機能はこのアーキテクチャベースのCPUでは共通です。一方、ペリフェラルとマイクロコントローラ実装の詳細は、他のベンダーと異なります。同じSTマイクロエレクトロニクスのマイクロコントローラファミリでも、違いがあります。
 ] else if lang == "uk" [
   Для більшості наведених у цій книзі прикладів використовуватиметься
   розробна плата #link(url_f3disco)[STM32F3DISCOVERY] від STMicroelectronics. Ця плата
@@ -416,6 +468,8 @@ if lang == "en" [
   Aus diesem Grund empfehlen wir die Anschaffung des Entwicklungsboards
   #link(url_f3disco)[STM32F3DISCOVERY],
   um die Beispiele in diesem Buch praktisch nachvollziehen zu können.
+] else if lang == "ja" [
+  上記の理由から、本書内の例を理解するために、#link(url_f3disco)[STM32F3DISCOVERY]開発ボードを購入することをお勧めします。
 ] else if lang == "uk" [
   З цієї причини ми пропонуємо придбати плату розробки
   #link(url_f3disco)[STM32F3DISCOVERY] щоб повторювати приклади з цієї книги.

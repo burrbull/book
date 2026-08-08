@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [Tooling]
   else if lang == "de" [Werkzeuge]
+  else if lang == "ja" [ツール]
   else if lang == "zh" [工具]
   else { todo })
 
@@ -15,15 +16,16 @@
   Werkzeuge, da wir es mit einer Architektur zu tun haben, die sich von
   der Ihres Laptops unterscheidet, und Programme auf einem
   _entfernten_ Gerät ausführen sowie debuggen müssen.
+] else if lang == "ja" [
+  マイクロコントローラを扱う際は、いくつかの異なるツールを利用することになります。あなたのノートPCとは異なるアーキテクチャを扱うことになるでしょうし、_リモート_デバイス上でプログラムを実行しデバッグする必要があります。
 ] else if lang == "zh" [
   与微控制器打交道需要使用几种不同的工具，因为我们要处理的架构与笔记本电脑不同，我们必须在 _远程_
 ] else { todo }
 
-#{
-let ln_binutils = link("https://github.com/rust-embedded/cargo-binutils")[`cargo-binutils`]
-let ln_qemu = link("https://www.qemu.org/")[`qemu-system-arm`]
-let ln_generate = link("https://github.com/ashleygwilliams/cargo-generate")[`cargo-generate`]
-if lang == "en" [
+#let ln_binutils = link("https://github.com/rust-embedded/cargo-binutils")[`cargo-binutils`]
+#let ln_qemu = link("https://www.qemu.org/")[`qemu-system-arm`]
+#let ln_generate = link("https://github.com/ashleygwilliams/cargo-generate")[`cargo-generate`]
+#if lang == "en" [
   We'll use all the tools listed below. Any recent version should work
   when a minimum version is not specified, but we have listed the versions
   we have tested.
@@ -50,6 +52,16 @@ if lang == "en" [
     empfohlen. Getestete Versionen: 7.10, 7.11, 7.12 und 8.1.
   - #ln_generate oder `git`.
     Diese Werkzeuge sind optional, erleichtern es jedoch, dem Buch zu folgen.
+] else if lang == "ja" [
+  下記リストのツールを利用します。最小バージョンが指定されていない場合、新しいバージョンであれば機能するはずです。私たちがテストしたバージョンをリストに示しています。
+  - ARM Cortex-Mコンパイルサポートを追加したRust 1.31、1.31-beta以上のツールチェイン。
+  - #ln_binutils\~0.1.4
+  - #ln_qemu。テストしたバージョン: 3.0.0
+  - OpenOCD \>=0.8.テストしたバージョン: v0.9.0とv0.10.0
+  - ARMサポートのGDB。バージョン7.12以上を強く推奨。テストしたバージョン:
+    7.10、7.11、7.12、8.1
+  - \[任意\]
+    `git`または#ln_generate。どちらもインストールしていないのであれば、どちらをインストールしてもかまいません。
 ] else if lang == "zh" [
   设备上运行和调试程序。我们将使用下面列举出来的工具。当没有指定一个最小版本时，最新的版本应该也可以用，但是我们还是列出了我们已经测过的那些版本。
   - Rust 1.31, 1.31-beta, 或者一个更新的，支持ARM Cortex-M编译的工具链。
@@ -60,7 +72,6 @@ if lang == "en" [
   - #ln_generate 或者 `git`。
   这些工具都是可选的，但是跟着这本书来使用它们，会更容易。
 ] else { todo }
-}
 
 #if lang == "en" [
   The text below explains why we are using these tools. Installation
@@ -68,12 +79,15 @@ if lang == "en" [
 ] else if lang == "de" [
   Der folgende Text erläutert, warum wir diese Werkzeuge verwenden.
   Installationsanweisungen finden Sie auf der nächsten Seite.
+] else if lang == "ja" [
+  下記に、なぜこれらのツールを利用するのか、を説明します。インストール方法は、次のページにあります。
 ] else if lang == "zh" [
   下面的文档将解释我们为什么使用这些工具。安装指令可以在下一页找到。
 ] else { todo }
 
 = #(if lang == "en" [`cargo-generate` OR `git`]
   else if lang == "de" [`cargo-generate` ODER `git`]
+  else if lang == "ja" [`cargo-generate`か`git`]
   else if lang == "zh" [`cargo-generate` 或者 `git`]
   else { todo })
 
@@ -93,6 +107,11 @@ if lang == "en" [
   erforderlich. Wir haben diese Elemente in einer Vorlage zusammengefasst,
   sodass Sie lediglich die noch fehlenden Angaben ergänzen müssen (etwa
   den Projektnamen und die Spezifikationen Ihrer Zielhardware).
+] else if lang == "ja" [
+  ベアメタルプログラムは、非標準
+  (`no_std`)なRustプログラムであり、プログラムのメモリレイアウトを正しくするために、リンクプロセスをいじる必要があります。
+  これには、独特なファイル(リンカスクリプトなど)と設定(リンカフラグ)が必要です。
+  プロジェクト名やターゲットハードウェアの特徴などを、空白に入力するだけで済むように、テンプレートを用意しています。
 ] else if lang == "zh" [
   裸机编程是非标准Rust编程，为了得到正确的程序的内存布局，需要对链接过程进行一些调整，这要求添加一些额外的文件(比如linker
   scripts)和配置(比如linker
@@ -108,6 +127,9 @@ if lang == "en" [
   Cargo-Unterbefehl zum Erstellen neuer Cargo-Projekte auf Basis von
   Vorlagen. Alternativ können Sie die Vorlage auch mithilfe von `git`,
   `curl`, `wget` oder Ihrem Webbrowser herunterladen.
+] else if lang == "ja" [
+  このテンプレートは、`cargo-generate`との互換性があります。`cargo-generate`は、テンプレートからCargoプロジェクトを作成するためのCargoのサブコマンドです。
+  このテンプレートは、`git`や`curl`、`wget`、ウェブブラウザを使ってダウンロードできます。
 ] else if lang == "zh" [
   我们的模板兼容`cargo-generate`:一个用来从模板生成新的Cargo项目的Cargo子命令。你也能使用`git`,`curl`,`wget`,或者你的网页浏览器下载模板。
 ] else { todo }
@@ -124,6 +146,9 @@ if lang == "en" [
   Verwendung der mit der Rust-Toolchain ausgelieferten LLVM-Werkzeuge
   vereinfachen. Zu diesen Werkzeugen gehören die LLVM-Varianten von
   `objdump`, `nm` und `size`, die zur Untersuchung von Binärdateien dienen.
+] else if lang == "ja" [
+  `cargo-binutils`は、Rustツールチェインとともに配布されているLLVMツールを簡単に使うためのCargoサブコマンド一式です。
+  これらのツールは、LLVMの`objdump`や`nm`、`size`を含んでおり、バイナリを調査するために使われます。
 ] else if lang == "zh" [
   `cargo-binutils`是一个Cargo命令的子集，它让我们能轻松使用Rust工具链带来的LLVM工具。这些工具包括LLVM版本的`objdump`，`nm`和`size`，用来查看二进制文件。
   在GNU
@@ -144,6 +169,11 @@ if lang == "en" [
   (#cmd) erfolgt und (b) Werkzeuge wie
   `objdump` alle von `rustc` unterstützten Architekturen abdecken -- von
   ARM bis x86_64 --, da sie auf demselben LLVM-Backend basieren.
+] else if lang == "ja" [
+  GNU binutilsではなく、これらのツールを利用する利点は次の通りです。 (a)
+  LLVMツールのインストールは、OSに関わらず、共通のコマンド1つ(cmd)で済みます。
+  (b)
+  `objdump`などのツールは、`rustc`がサポートする全てのアーキテクチャ(ARMからx86\_64まで)をサポートします。これは、同じLLVMバックエンドを共有しているためです。
 ] else if lang == "zh" [
   binutils之上使用这些工具的好处是，(a)无论你的操作系统是什么，安装这些LLVM工具都可以用同一条命令(#cmd)。(b)像是`objdump`这样的工具，支持所有`rustc`支持的架构--从ARM到x86\_64--因为它们都有一样的LLVM后端。
 ] else { todo }
@@ -162,6 +192,10 @@ if lang == "en" [
   Embedded-Programme auf dem Host-System auszuführen. Auf diese Weise
   können Sie einige Teile dieses Buches auch dann nachvollziehen, wenn Sie
   keine Hardware zur Hand haben!
+] else if lang == "ja" [
+  QEMUはエミュレータです。今回は、ARMシステムを完全にエミュレートできるものを使います。
+  私たちは、ホスト上で組込みプログラムを実行するためにQEMUを利用します。
+  このおかげで、ハードウェアを持っていなくても、この本のいくつかの部分を試すことができます。
 ] else if lang == "zh" [
   QEMU是一个仿真器。在这个例子里，我们使用能完全仿真ARM系统的改良版QEMU。我们使用QEMU在主机上运行嵌入式程序。多亏了它，你可以在没有任何硬件的情况下，尝试这本书的部分示例。
 ] else { todo }
