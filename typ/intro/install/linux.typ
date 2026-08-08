@@ -2,16 +2,19 @@
 
 #h1(offset: whole*2,
   [Linux])
+<install-linux>
 
 #if lang == "en" [
   Here are the installation commands for a few Linux distributions.
 ] else if lang == "de" [
   Hier sind die Installationsbefehle für einige Linux-Distributionen.
+] else if lang == "ja" [
+  いくつかのLinuxディストリビューションのインストールコマンドを示します。
 ] else if lang == "zh" [
   这部分是在某些Linux发行版下的安装指令。
 ] else { todo }
 
-= #(if lang == "en" [Packages]
+= #(if lang in ("en", "ja") [Packages]
   else if lang == "de" [Pakete]
   else if lang == "zh" [依赖包]
   else { todo })
@@ -20,6 +23,8 @@
   - Ubuntu 18.04 or newer / Debian stretch or newer
 ] else if lang == "de" [
   - Ubuntu 18.04 oder neuer / Debian Stretch oder neuer
+] else if lang == "ja" [
+  - Ubuntu 18.04以上 / Debian stretch以降
 ] else if lang == "zh" [
   - Ubuntu 18.04 或者更新的版本 / Debian stretch 或者更新的版本
 ] else { todo }
@@ -31,6 +36,9 @@
 ] else if lang == "de" [
   *HINWEIS* `gdb-multiarch` ist der GDB-Befehl, den Sie zum
   Debuggen Ihrer ARM-Cortex-M-Programme verwenden werden.
+] else if lang == "ja" [
+  *注記* `gdb-multiarch`は、ARM
+  Cortex-Mプログラムをデバッグするために使用するGDBのコマンドです。
 ] else if lang == "zh" [
   * 注意* `gdb-multiarch` 是你将用来调试你的ARM
 ] else { todo }
@@ -44,6 +52,8 @@ sudo apt install gdb-multiarch openocd qemu-system-arm
   - Ubuntu 14.04 and 16.04
 ] else if lang == "de" [
   - Ubuntu 14.04 und 16.04
+] else if lang == "ja" [
+  - Ubuntu 14.04と16.04
 ] else { todo }
 
 #quote(block: true)[
@@ -53,6 +63,9 @@ sudo apt install gdb-multiarch openocd qemu-system-arm
 ] else if lang == "de" [
   *HINWEIS* `arm-none-eabi-gdb` ist der GDB-Befehl, den Sie zum
   Debuggen Ihrer ARM-Cortex-M-Programme verwenden werden.
+] else if lang == "ja" [
+  *注記* `arm-none-eabi-gdb`は、ARM
+  Cortex-Mプログラムをデバッグするために使用するGDBのコマンドです。
 ] else if lang == "zh" [
   *注意* `arm-none-eabi-gdb` 是你将用来调试你的ARM
   Cortex-M程序的GDB命令
@@ -67,6 +80,8 @@ sudo apt install gdb-arm-none-eabi openocd qemu-system-arm
   - Fedora 27 or newer
 ] else if lang == "de" [
   - Fedora 27 oder neuer
+] else if lang == "ja" [
+  - Fedora 27以上
 ] else if lang == "zh" [
   - Fedora 27 或者更新的版本
 ] else { todo }
@@ -84,6 +99,9 @@ sudo dnf install gdb openocd qemu-system-arm
 ] else if lang == "de" [
   *HINWEIS* `arm-none-eabi-gdb` ist der GDB-Befehl, den Sie zum
   Debuggen von ARM-Cortex-M-Programmen verwenden.
+] else if lang == "ja" [
+  *注記* `arm-none-eabi-gdb`は、ARM
+  Cortex-Mプログラムをデバッグするために使用するGDBのコマンドです。
 ] else if lang == "zh" [
   *注意* `arm-none-eabi-gdb` 是你将用来调试你的ARM Cortex-M程序的GDB命令
 ] else { todo }
@@ -95,6 +113,7 @@ sudo pacman -S arm-none-eabi-gdb qemu-system-arm openocd
 
 = #(if lang == "en" [udev rules]
   else if lang == "de" [udev-Regeln]
+  else if lang == "ja" [udevルール]
   else if lang == "zh" [udev 规则]
   else { todo }) <linux-udev-rules>
 
@@ -102,20 +121,23 @@ sudo pacman -S arm-none-eabi-gdb qemu-system-arm openocd
   This rule lets you use OpenOCD with the Discovery board without root privilege.
 ] else if lang == "de" [
   Diese Regel ermöglicht die Nutzung von OpenOCD mit dem Discovery Board ohne Root-Rechte.
+] else if lang == "ja" [
+  このルールにより、ルート権限なしで、OpenOCDをDiscoveryボードに対して使えるようにします。
 ] else if lang == "zh" [
   这个规则可以让你在不使用超级用户权限的情况下，使用OpenOCD和Discovery开发板。
 ] else { todo }
 
-#{
-let f = `/etc/udev/rules.d/70-st-link.rules`
-if lang == "en" [
-  Create the file #f with the contents shown below.
+#let file_stlink = `/etc/udev/rules.d/70-st-link.rules`
+#if lang == "en" [
+  Create the file #file_stlink with the contents shown below.
 ] else if lang == "de" [
-  Erstellen Sie die Datei #f mit dem unten stehenden Inhalt.
+  Erstellen Sie die Datei #file_stlink mit dem unten stehenden Inhalt.
+] else if lang == "ja" [
+  #todoupd("ja")
+  下記の内容で、`/etc/udev/rules.d`ディレクトリにファイルを作成します。
 ] else if lang == "zh" [
-  生成包含下列内容的 `/etc/udev/rules.d/70-st-link.rules` 文件
+  生成包含下列内容的 #file_stlink 文件
 ] else { todo }
-}
 
 ```text
 # STM32F3DISCOVERY rev A/B - ST-LINK/V2
@@ -129,6 +151,8 @@ ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", TAG+="uaccess"
   Then reload all the udev rules with:
 ] else if lang == "de" [
   Laden Sie anschließend alle udev-Regeln neu mit:
+] else if lang == "ja" [
+  その後、全てのudevルールをリロードします。
 ] else if lang == "zh" [
   然后重新加载所有的udev规则
 ] else { todo }
@@ -142,6 +166,8 @@ sudo udevadm control --reload-rules
 ] else if lang == "de" [
   Wenn Sie die Platine an Ihren Laptop angeschlossen hatten, ziehen Sie
   den Stecker heraus und schließen Sie ihn dann erneut an.
+] else if lang == "ja" [
+  既にボードをノートPCに接続している場合、一度抜いてから、もう一度接続します。
 ] else if lang == "zh" [
   如果你已经把开发板插入到笔记本中了，请拔下它然后再插上它。
 ] else { todo }
@@ -150,6 +176,8 @@ sudo udevadm control --reload-rules
   You can check the permissions by running this command:
 ] else if lang == "de" [
   Sie können die Berechtigungen überprüfen, indem Sie diesen Befehl ausführen:
+] else if lang == "ja" [
+  これらのコマンド実行することで、パーミッションを確認できます。
 ] else if lang == "zh" [
   你可以通过运行这个命令检查权限:
 ] else { todo }
@@ -212,6 +240,9 @@ user:you:rw-
   Das angehängte „+" bei den Berechtigungen weist auf eine erweiterte
   Berechtigung hin. Der Befehl „getfacl" teilt dem Benutzer mit, dass er
   dieses Gerät verwenden darf.
+] else if lang == "ja" [
+  #todoupd("ja")
+  パーミッションに追加された`+`は、パーミッションが拡張されたことを意味しています。
 ] else if lang == "zh" [
   权限后的 `+` 指出存在一个扩展权限。`getfacl`
   命令显示，`user`也就是`你`，可以使用这个设备。
@@ -221,6 +252,8 @@ user:you:rw-
   Now, go to the #link(<verify-installation>)[next section].
 ] else if lang == "de" [
   Fahren Sie nun mit dem #link(<verify-installation>)[nächsten Abschnitt] fort.
+] else if lang == "ja" [
+  それでは、#link(<verify-installation>)[次のセクション]に進んで下さい。
 ] else if lang == "zh" [
   现在，去往#link(<verify-installation>)[下个章节].
 ] else { todo }

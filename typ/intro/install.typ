@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [Installing the tools]
   else if lang == "de" [Werkzeuge installieren]
+  else if lang == "ja" [ツールのインストール]
   else if lang == "zh" [安装工具]
   else { todo })
 
@@ -12,12 +13,15 @@
 ] else if lang == "de" [
   Diese Seite enthält betriebssystemunabhängige Installationsanleitungen für
   einige der Werkzeuge:
+] else if lang == "ja" [
+  このページには、いくつかのツールのOSに依存しないインストール手順を掲載します。
 ] else if lang == "zh" [
   这一页包含的工具安装指令与操作系统无关：
 ] else { todo }
 
 == #(if lang == "en" [Rust Toolchain]
   else if lang == "de" [Rust-Werkzeuge]
+  else if lang == "ja" [Rustツールチェイン]
   else if lang == "zh" [Rust 工具链]
   else { todo })
 
@@ -26,6 +30,8 @@
   Install rustup by following the instructions at #ln_rustup.
 ] else if lang == "de" [
   Installieren Sie rustup, indem Sie die Anweisungen unter #ln_rustup.
+] else if lang == "ja" [
+  #ln_rustup;の手順に従って、rustupをインストールします。
 ] else { todo }
 
 #if lang == "en" [
@@ -34,6 +40,9 @@
 ] else if lang == "de" [
   *HINWEIS* Stellen Sie sicher, dass Sie eine Compiler-Version verwenden, die mindestens `1.31` entspricht. Der Befehl `rustc -V`
   sollte ein Datum ausgeben, das neuer ist als das unten angegebene.
+] else if lang == "ja" [
+  *注意*
+  コンパイラのバージョンが`1.31`以上であることを確認して下さい。`rustc -v`は下記に示す日付より新しい日付を返すべきです。
 ] else if lang == "zh" [
   *注意*
   确保你的编译器版本等于或者大于`1.31`版本。`rustc -V`应该返回一个比下列日期更新的日期。
@@ -60,6 +69,11 @@ rustc 1.31.1 (b6c32da9b 2018-12-18)
   STM32F3DISCOVERY-Board, das für die Beispiele in diesem Buch verwendet wird,
   verwenden Sie das Ziel `thumbv7em-none-eabihf`.
   #link(url_find)[Finden Sie den für Sie am besten geeigneten Cortex-M.]
+] else if lang == "ja" [
+  #todoupd("ja")
+  バンド幅とディスク使用量に関する懸念から、デフォルトインストールではネイティブコンパイルのみをサポートします。
+  ARM
+  Cortex-Mアーキテクチャのクロスコンパイラを追加するために、下記のコンパイルターゲットをインストールします。
 ] else if lang == "zh" [
   #todoupd("zh")
   考虑到带宽和磁盘的使用量，默认的安装只支持主机环境的编译。为了添加对ARM
@@ -204,9 +218,11 @@ cargo install cargo-generate
   Now follow the instructions specific to the OS you are using:
 ] else if lang == "de" [
   Befolgen Sie nun die Anweisungen für das von Ihnen verwendete Betriebssystem:
+] else if lang == "ja" [
+  使用しているOSに特有の手順に従って下さい。
 ] else if lang == "zh" [
   现在根据你使用的操作系统，来执行对应的指令:
 ] else { todo }
-- #link("install/linux.html")[Linux]
-- #link("install/windows.html")[Windows]
-- #link("install/macos.html")[macOS]
+- #link(<install-linux>)[Linux]
+- #link(<install-windows>)[Windows]
+- #link(<install-macos>)[macOS]

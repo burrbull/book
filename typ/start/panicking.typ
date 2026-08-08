@@ -3,6 +3,7 @@
 #h1(offset: whole,
   if lang == "en" [Panicking]
   else if lang == "de" [In Panik geraten]
+  else if lang == "ja" [パニック]
   else if lang == "zh" [运行时恐慌(Panicking)]
   else { todo })
 <getting-started-panicking>
@@ -16,6 +17,9 @@
   Rust. Eingebaute Operationen wie der Zugriff per Index werden zur
   Laufzeit auf Speichersicherheit überprüft. Erfolgt ein Zugriff außerhalb
   der zulässigen Grenzen, führt dies zu einer Panik.
+] else if lang == "ja" [
+  パニックはRustのコア部分です。インデックス操作のような言語組込みの操作は、メモリ安全性をランタイム時に検査されます。
+  範囲外のインデックスにアクセスしようとすると、パニックが発生します。
 ] else if lang == "zh" [
   运行时恐慌是Rust语言的一个核心部分。像是索引这样的内建的操作为了存储安全性是运行时检查的。当尝试越界索引时，这会导致运行时恐慌(panic)。
 ] else { todo }
@@ -29,6 +33,9 @@
   Der Stack des betroffenen Threads wird abgewickelt (Stack Unwinding), es
   sei denn, der Benutzer hat sich für einen Programmabbruch im Falle einer
   Panik entschieden.
+] else if lang == "ja" [
+  標準ライブラリでは、パニックは定義された動作です。ユーザがパニック発生時にプログラムをアボートする選択をしない限り、
+  パニックを起こしたスレッドのスタックを巻き戻します。
 ] else if lang == "zh" [
   在标准库中，运行时恐慌的行为被定义成：展开(unwinds)恐慌的线程的栈，除非用户自己选择在恐慌时终止程序。
 ] else { todo }
@@ -48,6 +55,11 @@
   Abhängigkeitsgraphen des Programms genau _einmal_ vorkommen und
   folgende Signatur aufweisen: `fn(&PanicInfo) -> !`, wobei #ln_info
   eine Struktur ist, die Informationen über den Ort des Panic enthält.
+] else if lang == "ja" [
+  しかし、非標準のプログラムでは、パニック時の挙動は、未定義のままです。`#[panic_handler]`関数を宣言することにより、
+  挙動を選択することができます。この関数は、プログラムの依存関係グラフに、*1回だけ*現れる必要があります。
+  そして、 `fn(&PanicInfo) -> !`のシグネチャを持つ必要があります。
+  ここで、#ln_info;は、パニックした位置情報を含む構造体です。
 ] else if lang == "zh" [
   然而在没有标准库的程序中，运行时恐慌的行为是未被定义了的。通过声明一个
   `#[panic_handler]` 函数可以选择一个运行时恐慌的行为。
@@ -85,6 +97,16 @@
     Cortex-M spezifischen Peripheriekomponente.
   - #ln_sh. Die Panik-Meldung wird mithilfe der Semihosting-Technik
     auf dem Host protokolliert.
+] else if lang == "ja" [
+  組込みシステムは、ユーザとやり取りするものから、安全性が重要な（クラッシュできない）ものまであります。
+  そのため、全てのパニック時動作に対応できる唯一のものはありませんが、よく利用される挙動がたくさんあります。
+  これらの一般的な挙動が、`#[panic_handler]`関数を定義するクレートにまとめられています。
+  いくつか、例を挙げます。
+  - #ln_abort。パニックが発生すると、アボート命令を実行します。
+  - #ln_halt。パニックが発生すると、プログラム、または、現在のスレッドは、無限ループに入ることで停止します。
+  - #ln_itm。パニック発生時のメッセージは、ARM
+    Cortex-M固有のペリフェラルであるITMを使ってログ出力されます。
+  - #ln_sh。パニック発生時のメッセージは、セミホスティングを使ってログ出力されます。
 ] else if lang == "zh" [
   鉴于嵌入式系统的范围从面向用户的系统到安全关键系统，没有一个运行时恐慌行为能满足所有场景，但是有许多常用的行为。这些常用的行为已经被打包进了一些crates中，这些crates中定义了
   `#[panic_handler]`函数。比如:
@@ -106,6 +128,8 @@
 ] else if lang == "de" [
   Möglicherweise findest du noch mehr Crates, wenn du auf crates.io nach
   dem Schlüsselwort #ln_handler suchst.
+] else if lang == "ja" [
+  crates.ioで#ln_handler;をキーワードに検索することで、さらにクレートを見つけることができます。
 ] else if lang == "zh" [
   在crates.io上搜索
   #ln_handler，你甚至可以找到更多的crates。
@@ -124,6 +148,11 @@
   ausgedrückt wird, ist nicht nur als Dokumentation nützlich, sondern
   ermöglicht es auch, dieses Verhalten je nach Kompilierungsprofil
   anzupassen. Zum Beispiel:
+] else if lang == "ja" [
+  プログラムは、対応するクレートとリンクすることで、これらの挙動の中から1つを選びます。
+  パニック時の挙動がアプリケーションソースコードの中で単一行で表現されていることは、ドキュメントとして有用なだけでなく、
+  パニック時の挙動をコンパイル時のプロファイルで変更にする時にも利用できます。
+  例えば
 ] else if lang == "zh" [
   仅仅通过链接到相关的crate中，一个程序就可以简单地从这些行为中选择一个运行时恐慌行为。将运行时恐慌的行为作为一行代码放进一个应用的源码中，不仅仅是因为可以作为文档使用，而且能根据编译配置改变运行时恐慌的行为。比如:
 ] else { todo }
@@ -137,6 +166,8 @@
   } else if lang == "de" {
     "dev-Profil: einfacheres Debuggen von Panics; man kann einen Breakpoint bei 
 // `rust_begin_unwind` setzen."
+  } else if lang == "ja" {
+    "開発プロファイル：パニックのデバッグを容易にします。`rust_begin_unwind`にブレイクポイントを置くことを可能にします。"
   } else if lang == "zh" {
     "dev配置: 更容易调试运行时恐慌; 可以在 `rust_begin_unwind` 上放一个断点"
   } else { todos } + "
@@ -147,6 +178,8 @@ use panic_halt as _;
     "release profile: minimize the binary size of the application"
   } else if lang == "de" {
     "Release-Profil: Minimierung der Binaergroesse der Anwendung"
+  } else if lang == "ja" {
+    "リリースプロファイル：アプリケーションのバイナリサイズを最小化します。"
   } else if lang == "zh" {
     "release配置: 最小化应用的二进制文件的大小"
   } else { todos } + "
@@ -161,10 +194,14 @@ use panic_abort as _;
   with the dev profile (`cargo build`), but links to the `panic-abort`
   crate when built with the release profile (`cargo build --release`).
 ] else if lang == "de" [
-In diesem Beispiel verlinkt der Crate beim Bauen mit dem Dev-Profil
-(`cargo build`) auf den `panic-halt`-Crate, beim Bauen mit dem
-Release-Profil (`cargo build --release`) hingegen auf den
-`panic-abort`-Crate.
+  In diesem Beispiel verlinkt der Crate beim Bauen mit dem Dev-Profil
+  (`cargo build`) auf den `panic-halt`-Crate, beim Bauen mit dem
+  Release-Profil (`cargo build --release`) hingegen auf den
+  `panic-abort`-Crate.
+] else if lang == "ja" [
+  #todoupd("ja")
+  この例では、開発プロファイルでビルド（`cargo build`）した時は、`panic-halt`クレートとリンクします。
+  しかし、リリースプロファイルでビルド（`cargo build --release`）した時は、`panic-abort`クレートとリンクします。
 ] else if lang == "zh" [
   在这个例子里，当使用dev配置编译的时候(`cargo build`)，crate链接到
   `panic-halt`
