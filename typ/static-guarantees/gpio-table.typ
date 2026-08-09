@@ -12,95 +12,111 @@
       }
     },
     table.header(
-      if lang in ("en", "de") [Name]
-      else if lang == "zh" [名字]
-      else { todo },
-      if lang == "en" [Bit Number(s)]
-      else if lang == "de" [Bit-Nummer]
-      else if lang == "zh" [位数(s)]
-      else { todo },
-      if lang == "en" [Value]
-      else if lang == "de" [Wert]
-      else if lang == "zh" [值]
-      else { todo },
-      if lang == "en" [Meaning]
-      else if lang == "de" [Bedeutung]
-      else if lang == "zh" [含义]
-      else { todo },
-      if lang == "en" [Notes]
-      else if lang == "de" [Hinweise]
-      else if lang == "zh" [注释]
-      else { todo },
+      tr((
+        en: [Name],
+        de: [Name],
+        zh: [名字],
+      )),
+      tr((
+        en: [Bit Number(s)],
+        de: [Bit-Nummer],
+        zh: [位数(s)],
+      )),
+      tr((
+        en: [Value],
+        de: [Wert],
+        zh: [值],
+      )),
+      tr((
+        en: [Meaning],
+        de: [Bedeutung],
+        zh: [含义],
+      )),
+      tr((
+        en: [Notes],
+        de: [Hinweise],
+        zh: [注释],
+      )),
     ),
     table.cell(rowspan: 2)[enable], table.cell(rowspan: 2)[0],
     [0], [disabled],
-    if lang == "en" [Disables the GPIO]
-    else if lang == "de" [Deaktiviert den GPIO]
-    else if lang == "zh" [关闭GPIO]
-    else { todo },
+    tr((
+      en: [Disables the GPIO],
+      de: [Deaktiviert den GPIO],
+      zh: [关闭GPIO],
+    )),
 
     [1], [enabled],
-    if lang == "en" [Enables the GPIO]
-    else if lang == "de" [Aktiviert den GPIO]
-    else if lang == "zh" [使能GPIO]
-    else { todo },
+    tr((
+      en: [Enables the GPIO],
+      de: [Aktiviert den GPIO],
+      zh: [使能GPIO],
+    )),
 
     table.cell(rowspan: 2)[direction], table.cell(rowspan: 2)[1],
     [0], [input],
-    if lang == "en" [Sets the direction to Input]
-    else if lang == "de" [Legt die Richtung auf „Eingang" fest.]
-    else if lang == "zh" [方向设置成输入]
-    else { todo },
+    tr((
+      en: [Sets the direction to Input],
+      de: [Legt die Richtung auf „Eingang" fest.],
+      zh: [方向设置成输入],
+    )),
 
     [1], [output],
-    if lang == "en" [Sets the direction to Output]
-    else if lang == "de" [Legt die Richtung auf „Ausgang" fest.]
-    else if lang == "zh" [方向设置成输出]
-    else { todo },
+    tr((
+      en: [Sets the direction to Output],
+      de: [Legt die Richtung auf „Ausgang" fest.],
+      zh: [方向设置成输出],
+    )),
 
     table.cell(rowspan: 4)[input_mode], table.cell(rowspan: 4)[2..3],
     [00], [hi-z],
-    if lang == "en" [Sets the input as high resistance]
-    else if lang == "de" [Setzt den Eingang auf hochohmig.]
-    else if lang == "zh" [输入设置为高阻态]
-    else { todo },
+    tr((
+      en: [Sets the input as high resistance],
+      de: [Setzt den Eingang auf hochohmig.],
+      zh: [输入设置为高阻态],
+    )),
 
     [01], [pull-low],
-    if lang == "en" [Input pin is pulled low]
-    else if lang == "de" [Der Eingangspin wird auf Low-Pegel gezogen.]
-    else if lang == "zh" [下拉输入管脚]
-    else { todo },
+    tr((
+      en: [Input pin is pulled low],
+      de: [Der Eingangspin wird auf Low-Pegel gezogen.],
+      zh: [下拉输入管脚],
+    )),
 
     [10], [pull-high],
-    if lang == "en" [Input pin is pulled high]
-    else if lang == "de" [Der Eingangspin wird auf High-Pegel gezogen]
-    else if lang == "zh" [上拉输入管脚]
-    else { todo },
+    tr((
+      en: [Input pin is pulled high],
+      de: [Der Eingangspin wird auf High-Pegel gezogen],
+      zh: [上拉输入管脚],
+    )),
 
     [11], [n/a],
-    if lang == "en" [Invalid state. Do not set]
-    else if lang == "de" [Ungültiger Zustand. Nicht setzen.]
-    else if lang == "zh" [无效状态。不要设置]
-    else { todo },
+    tr((
+      en: [Invalid state. Do not set],
+      de: [Ungültiger Zustand. Nicht setzen.],
+      zh: [无效状态。不要设置],
+    )),
 
     table.cell(rowspan: 2)[output_mode], table.cell(rowspan: 2)[4],
     [0], [set-low],
-    if lang == "en" [Output pin is driven low]
-    else if lang == "de" [Der Ausgangspin wird auf Low-Pegel gesteuert.]
-    else if lang == "zh" [把管脚设置成低电平]
-    else { todo },
+    tr((
+      en: [Output pin is driven low],
+      de: [Der Ausgangspin wird auf Low-Pegel gesteuert.],
+      zh: [把管脚设置成低电平],
+    )),
 
     [1], [set-high],
-    if lang == "en" [Output pin is driven high]
-    else if lang == "de" [Der Ausgangspin wird auf High-Pegel gesteuert.]
-    else if lang == "zh" [把管脚设置成高电平]
-    else { todo },
+    tr((
+      en: [Output pin is driven high],
+      de: [Der Ausgangspin wird auf High-Pegel gesteuert.],
+      zh: [把管脚设置成高电平],
+    )),
 
     [input_status], [5], [x], [in-val],
-    if lang == "en" [0 if input is < 1.5v, 1 if input >= 1.5v]
-    else if lang == "de" [0, wenn der Eingang < 1,5 V ist; 1, wenn der Eingang ≥ 1,5 V ist.]
-    else if lang == "zh" [如果输入 < 1.5v 为0，如果输入
-    >= 1.5v 为1]
-    else { todo },
+    tr((
+      en: [0 if input is < 1.5v, 1 if input >= 1.5v],
+      de: [0, wenn der Eingang < 1,5 V ist; 1, wenn der Eingang ≥ 1,5 V ist.],
+      zh: [如果输入 < 1.5v 为0，如果输入 >= 1.5v 为1],
+    )),
   )
 )

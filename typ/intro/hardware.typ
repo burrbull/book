@@ -1,46 +1,58 @@
 #import "../config.typ": *
 
-#h1(offset: whole,
-  if lang == "en" [Meet Your Hardware]
-  else if lang == "de" [Lernen Sie Ihre Hardware kennen]
-  else if lang == "ja" [ハードウェアとの出会い]
-  else if lang == "uk" [Зустрічайте залізо]
-  else if lang == "zh" [熟悉你的硬件]
-  else { todo })
+#h1(offset: whole, tr((
+  en: [Meet Your Hardware],
+  de: [Lernen Sie Ihre Hardware kennen],
+  ja: [ハードウェアとの出会い],
+  uk: [Зустрічайте залізо],
+  zh: [熟悉你的硬件],
+)))
 
-#if lang == "en" [
+#tr((
+en: [
   Let's get familiar with the hardware we'll be working with.
-] else if lang == "de" [
+],
+de: [
   Machen wir uns mit der Hardware vertraut, mit der wir arbeiten werden.
-] else if lang == "ja" [
+],
+ja: [
   これから作業するハードウェアに詳しくなりましょう。
-] else if lang == "uk" [
+],
+uk: [
   Давайте ознайомимося з обладнанням, з яким ми будемо працювати.
-] else if lang == "zh" [
+],
+zh: [
   先来熟悉下我们要用的硬件。
-] else { todo }
+]))
 
 #figure(
   image("../assets/f3.jpg")
 )
 
-= #(if lang in ("en", "zh") [STM32F3DISCOVERY (the "F3")]
-  else if lang == "de" [STM32F3DISCOVERY (die "F3")]
-  else if lang == "ja" [STM32F3DISCOVERY ("F3")]
-  else if lang == "uk" [STM32F3DISCOVERY (скорочено "F3")]
-  else { todo })
+= #tr((
+  en: [STM32F3DISCOVERY (the "F3")],
+  de: [STM32F3DISCOVERY (die "F3")],
+  ja: [STM32F3DISCOVERY ("F3")],
+  uk: [STM32F3DISCOVERY (скорочено "F3")],
+  zh: [STM32F3DISCOVERY (the "F3")],
+))
 
-#if lang == "en" [
+#tr((
+en: [
   What does this board contain?
-] else if lang == "de" [
+],
+de: [
   Was beinhaltet diese Platine?
-] else if lang == "ja" [
+],
+ja: [
   私たちは、本書内でこのボードを"F3"と呼びます。
-] else if lang == "uk" [
+],
+uk: [
   Що міститься на цій платі?
-] else if lang == "zh" [
+],
+zh: [
   这个板子有什么？
-] else { todo }
+]))
 
 #let url_f303 = "https://www.st.com/en/microcontrollers/stm32f303vc.html"
 #let wiki_accelerometer = "https://en.wikipedia.org/wiki/Accelerometer"
@@ -49,7 +61,8 @@
 #let wiki_gyroscope = "https://en.wikipedia.org/wiki/Gyroscope"
 #let url_l3gd20 = "https://www.pololu.com/file/0J563/L3GD20.pdf"
 #let url_f103 = "https://www.st.com/en/microcontrollers/stm32f103cb.html"
-#if lang == "en" [
+#tr((
+en: [
   - A #link(url_f303)[STM32F303VCT6] microcontroller. This microcontroller has
     - A single-core ARM Cortex-M4F processor with hardware support for
       single-precision floating point operations and a maximum clock
@@ -69,7 +82,8 @@
   - A second microcontroller: a #link(url_f103)[STM32F103].
     This microcontroller is actually part of an on-board programmer /
     debugger and is connected to the Mini-USB port named "USB ST-LINK".
-] else if lang == "de" [
+],
+de: [
   - Ein #link(url_f303)[STM32F303VCT6]-Mikrocontroller.
     Dieser Mikrocontroller hat
     - Ein Single-Core-ARM-Cortex-M4F-Prozessor mit Hardware-Unterstützung
@@ -94,7 +108,8 @@
     Dieser Mikrocontroller ist eigentlich Teil eines
     On-Board-Programmers/Debuggers und mit dem Mini-USB-Anschluss namens
     „USB ST-LINK" verbunden.
-] else if lang == "ja" [
+],
+ja: [
   このボードには何が搭載されているか見てみましょう。
   - STM32F303VCT6マイクロコントローラが1つ。このマイクロコントローラは、次のものを搭載しています。
     - 単精度浮動小数点演算をハードウェアサポートし、最大72MHzのクロック周波数で動作するシングルコアのARM
@@ -114,7 +129,8 @@
   - "USB
     USER"というラベルが付いている第2のUSBポート。このUSBポートは、メインマイクロコントローラ
     (STM32F303VCT6)に接続されており、アプリケーションで利用できます。
-] else if lang == "uk" [
+],
+uk: [
   - Мікроконтролер #link(url_f303)[STM32F303VCT6]. Цей мікроконтролер має:
     - Одноядерний процесор ARM Cortex-M4F з апаратною підтримкою операцій
       з плаваючою комою одинарної точності і максимальною тактовою частотою 72 МГц.
@@ -130,7 +146,8 @@
   - 8 користувацьких світлодіодів, розташованих у формі компаса.
   - Другий мікроконтролер: #link(url_f103)[STM32F103].
     Цей мікроконтролер фактично є частиною програматора/відладчика, розміщеного на платі, і підключений до USB-порту з назвою "USB ST-LINK".
-] else if lang == "zh" [
+],
+zh: [
   - 一个#link(url_f303)[STM32F303VCT6]微控制器。这个微控制器包含
     - 一个单核的ARM Cortex-M4F
       处理器，支持单精度浮点运算，72MHz的最大时钟频率。
@@ -146,40 +163,48 @@
   - 一个二级微控制器:
     #link(url_f103)[STM32F103]。这个微控制器实际上是一个板载编程器/调试器的一部分，与名为"USB
     ST-LINK"的USB端口相连。
-] else { todo }
+]))
 
 #let url_f3disco = "https://www.st.com/en/evaluation-tools/stm32f3discovery.html"
-#if lang == "en" [
+#tr((
+en: [
   For a more detailed list of features and further specifications of the
   board take a look at the #link(url_f3disco)[STMicroelectronics] website.
-] else if lang == "de" [
+],
+de: [
   Eine detailliertere Liste der Funktionen und weitere technische Daten
   des Boards finden Sie auf der Website von #link(url_f3disco)[STMicroelectronics].
-] else if lang == "uk" [
+],
+uk: [
   Більш детальний перелік функцій та специфікацій плати можна знайти
   на сайті #link(url_f3disco)[STMicroelectronics].
-] else if lang == "zh" [
+],
+zh: [
   关于所列举的功能的更多细节和开发板的更多规格请查阅#link(url_f3disco)[STMicroelectronics]网站。
-] else { todo }
+]))
 
 
 #let url_f303_ds = "https://www.st.com/resource/en/datasheet/stm32f303vc.pdf"
-#if lang == "en" [
+#tr((
+en: [
   A word of caution: be careful if you want to apply external signals to
   the board. The microcontroller STM32F303VCT6 pins take a nominal voltage
   of 3.3 volts. For further information consult the
   #link(url_f303_ds)[6.2 Absolute maximum ratings section in the manual]
-] else if lang == "de" [
+],
+de: [
   Ein wichtiger Hinweis: Seien Sie vorsichtig, wenn Sie externe Signale an
   das Board anlegen möchten. Die Pins des Mikrocontrollers STM32F303VCT6
   sind für eine Nennspannung von 3,3 Volt ausgelegt. Weitere Informationen
   finden Sie im Abschnitt „6.2 Absolute maximum ratings" (Absolute
   Grenzwerte) im #link(url_f303_ds)[Datenblatt].
-] else if lang == "uk" [
+],
+uk: [
   Застереження: будьте обережні, подаючи на плату зовнішні сигнали.
   Виводи мікроконтролера STM32F303VCT6 мають номінальну напругу 3,3 вольта.
   Для отримання додаткової інформації зверніться до розділу #link(url_f303_ds)[6.2 Absolute maximum ratings section у Reference Manual]
-] else if lang == "zh" [
+],
+zh: [
   提醒一句:
   如果想要为板子提供外部信号，请小心。微控制器STM32F303VCT6管脚的标称电压是3.3伏。更多信息请查看#link(url_f303_ds)[6.2 Absolute maximum ratings section in the manual]。
-] else { todo }
+]))

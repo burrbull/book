@@ -1,13 +1,14 @@
 #import "../../config.typ": *
 
-#h1(offset: whole,
-  if lang == "en" [HAL Design Patterns]
-  else if lang == "de" [HAL-Design-Muster]
-  else if lang == "zh" [HAL设计模式]
-  else { todo })
+#h1(offset: whole, tr((
+  en: [HAL Design Patterns],
+  de: [HAL-Design-Muster],
+  zh: [HAL设计模式],
+)))
 
 #let url_quide = "https://rust-lang.github.io/api-guidelines/"
-#if lang == "en" [
+#tr((
+en: [
   This is a set of common and recommended patterns for writing hardware
   abstraction layers (HALs) for microcontrollers in Rust. These patterns
   are intended to be used in addition to the existing
@@ -18,7 +19,8 @@
   - #link(<hal-interoperability>)[Interoperability]
   - #link(<hal-predictability>)[Predictability]
   - #link(<hal-gpio>)[GPIO]
-] else if lang == "de" [
+],
+de: [
   Hierbei handelt es sich um eine Sammlung bewährter und empfohlener
   Muster für die Implementierung von Hardware-Abstraktionsschichten (HALs)
   für Mikrocontroller in Rust. Diese Muster sind als Ergänzung zu den
@@ -29,7 +31,8 @@
   - #link(<hal-interoperability>)[Interoperabilität]
   - #link(<hal-predictability>)[Vorhersehbarkeit]
   - #link(<hal-gpio>)[GPIO]
-] else if lang == "zh" [
+],
+zh: [
   这是一组关于使用Rust为微控制器写硬件抽象层的常见的和推荐的模式。当为微控制器编写HALs时，除了现有的
   #link(url_quide)[Rust API 指南]
   外，也可以使用这些模式。
@@ -38,4 +41,4 @@
   - #link(<hal-predictability>)[互用性]
   - #link(<hal-predictability>)[可预见性]
   - #link(<hal-gpio>)[GPIO]
-] else { todo }
+]))
