@@ -1,76 +1,93 @@
 #import "../config.typ": *
 
-#h1(if lang == "en" [Portability]
-  else if lang == "de" [Portabilität]
-  else if lang == "zh" [可移植性]
-  else { todo })
+#h1(tr((
+  en: [Portability],
+  de: [Portabilität],
+  zh: [可移植性],
+)))
 <portability>
 
-#if lang == "en" [
+#tr((
+en: [
   In embedded environments portability is a very important topic: Every
   vendor and even each family from a single manufacturer offers different
   peripherals and capabilities and similarly the ways to interact with the
   peripherals will vary.
-] else if lang == "de" [
+],
+de: [
   In eingebetteten Systemen ist Portabilität ein sehr wichtiges Thema:
   Jeder Hersteller und sogar jede Produktfamilie eines einzelnen
   Herstellers bietet unterschiedliche Peripheriegeräte und Funktionen an,
   und dementsprechend variieren auch die Interaktionsmöglichkeiten mit den
   Peripheriegeräten.
-] else if lang == "zh" [
+],
+zh: [
   在嵌入式环境中，可移植性是一个非常重要的主题:
   每个供应商甚至同个制造商的不同系列间，都提供了不同的外设和功能。同样地，与外设交互的方式也将会不一样。
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   A common way to equalize such differences is via a layer called Hardware
   Abstraction layer or *HAL*.
-] else if lang == "de" [
+],
+de: [
   Eine gängige Methode, diese Unterschiede auszugleichen, ist die
   sogenannte Hardware-Abstraktionsschicht (HAL).
-] else if lang == "zh" [
+],
+zh: [
   通过一个被叫做硬件抽象层或者*HAL*的层去均等化这种差异是一种常见的方法。
-] else { todo }
+]))
 
 #quote(block: true)[
-#if lang == "en" [
+#tr((
+en: [
   Hardware abstractions are sets of routines in software that emulate some
   platform-specific details, giving programs direct access to the hardware
   resources.
-] else if lang == "de" [
+],
+de: [
   Hardware-Abstraktionen sind Sammlungen von Software-Routinen, die
   bestimmte plattformspezifische Details emulieren und Programmen so
   direkten Zugriff auf die Hardwareressourcen ermöglichen.
-] else if lang == "zh" [
+],
+zh: [
   在软件中硬件抽象是一组函数，其模仿了一些平台特定的细节，让程序可以直接访问硬件资源。
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   They often allow programmers to write device-independent, high
   performance applications by providing standard operating system (OS)
   calls to hardware.
-] else if lang == "de" [
+],
+de: [
   Sie ermöglichen es Programmierern häufig, geräteunabhängige
   Hochleistungsanwendungen zu schreiben, indem sie standardisierte
   Betriebssystemaufrufe für den Hardwarezugriff bereitstellen.
-] else if lang == "zh" [
+],
+zh: [
   通过向硬件提供标准的操作系统(OS)调用，它可以让程序员编写独立于设备的高性能应用。
-] else { todo }
+]))
 
 #let url_hal = "https://en.wikipedia.org/wiki/Hardware_abstraction"
-#if lang == ("en", "de", "zh") [
-  _Wikipedia: #link(url_hal)[Hardware Abstraction Layer]_
-] else { todo }
+#tr((
+  en: [_Wikipedia: #link(url_hal)[Hardware Abstraction Layer]_],
+  de: [_Wikipedia: #link(url_hal)[Hardware Abstraction Layer]_],
+  zh: [_Wikipedia: #link(url_hal)[Hardware Abstraction Layer]_],
+))
 ]
 
-#if lang == "en" [
+#tr((
+en: [
   Embedded systems are a bit special in this regard since we typically do
   not have operating systems and user installable software but firmware
   images which are compiled as a whole as well as a number of other
   constraints. So while the traditional approach as defined by Wikipedia
   could potentially work it is likely not the most productive approach to
   ensure portability.
-] else if lang == "de" [
+],
+de: [
   Eingebettete Systeme nehmen hier eine Sonderstellung ein, da wir es
   typischerweise nicht mit Betriebssystemen und vom Benutzer
   installierbarer Software zu tun haben, sondern mit Firmware-Images, die
@@ -79,25 +96,31 @@
   beschriebene Ansatz könnte zwar theoretisch funktionieren, ist aber
   wahrscheinlich nicht der effizienteste Weg, um Portabilität zu
   gewährleisten.
-] else if lang == "zh" [
+],
+zh: [
   在这方面，嵌入式系统有点特别，因为通常没有操作系统和用户可安装的软件，而只有固件镜像，其作为一个整体被编译且伴着许多约束。因此虽然维基百科定义的传统方法可能有用，但是它不是确保可移植性最有效的方法。
-] else { todo }
+]))
 
 #let ln_hal = link("https://crates.io/crates/embedded-hal")[embedded-hal]
-#if lang == "en" [
+#tr((
+en: [
   How do we do this in Rust? Enter *#ln_hal*…
-] else if lang == "de" [
+],
+de: [
   Wie gehen wir dabei in Rust vor? Hier kommt *#ln_hal* ins Spiel…
-] else if lang == "zh" [
+],
+zh: [
   在Rust中我们要怎么实现这个目标呢?让我们进入*embedded-hal*…
-] else { todo }
+]))
 
-== #(if lang == "en" [What is #ln_hal?]
-  else if lang == "de" [Was ist #ln_hal?]
-  else if lang == "zh" [什么是embedded-hal？]
-  else { todo })
+== #tr((
+  en: [What is #ln_hal?],
+  de: [Was ist #ln_hal?],
+  zh: [什么是embedded-hal？],
+))
 
-#if lang == "en" [
+#tr((
+en: [
   In a nutshell it is a set of traits which define implementation
   contracts between *HAL implementations*, *drivers* and
   *applications (or firmwares)*. Those contracts include both
@@ -105,7 +128,8 @@
   *HAL implementation* provides a certain capability) and methods
   (i.e.~if you can construct a type implementing a trait it is guaranteed
   that you have the methods specified in the trait available).
-] else if lang == "de" [
+],
+de: [
   Kurz gesagt handelt es sich um eine Reihe von Merkmalen, die
   Implementierungsverträge zwischen *HAL-Implementierungen*,
   *Treibern* und *Anwendungen (oder Firmware)* definieren.
@@ -115,25 +139,30 @@
   Methoden (d.~h., wenn ein Typ, der ein Merkmal implementiert, erstellt
   werden kann, ist garantiert, dass die im Merkmal spezifizierten Methoden
   verfügbar sind).
-] else if lang == "zh" [
+],
+zh: [
   简而言之，它是一组traits，其定义了*HAL
   implementations*，*驱动*，*应用(或者固件)*
   之间的实现约定(implementation
   contracts)。这些约定包括功能(即约定，如果为某个类型实现了某个trait，*HAL
   implementation*就提供了某个功能)和方法(即，如果构造一个实现了某个trait的类型，约定保障类型肯定有在trait中指定的方法)。
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   A typical layering might look like this:
-] else if lang == "de" [
+],
+de: [
   Ein typischer Schichtaufbau könnte wie folgt aussehen:
-] else if lang == "zh" [
+],
+zh: [
   典型的分层可能如下所示:
-] else { todo }
+]))
 
 #box(image("../assets/rust_layers.svg"))
 
-#if lang == "en" [
+#tr((
+en: [
   Some of the defined traits in *#ln_hal* are:
   - GPIO (input and output pins)
   - Serial communication
@@ -141,7 +170,8 @@
   - SPI
   - Timers/Countdowns
   - Analog Digital Conversion
-] else if lang == "de" [
+],
+de: [
   Einige der in *#ln_hal* definierten Traits sind:
   - GPIO (Eingangs- und Ausgangspins)
   - Serielle Kommunikation
@@ -149,7 +179,8 @@
   - SPI
   - Timers/Countdowns
   - Analog-Digital-Umsetzung
-] else if lang == "zh" [
+],
+zh: [
   一些在*embedded-hal*中被定义的traits:
   - GPIO (input and output pins)
   - Serial communication
@@ -157,9 +188,10 @@
   - SPI
   - Timers/Countdowns
   - Analog Digital Conversion
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   The main reason for having the *embedded-hal* traits and crates
   implementing and using them is to keep complexity in check. If you
   consider that an application might have to implement the use of the
@@ -173,7 +205,8 @@
   traits will make the implementation complexity approach *M+N*. Of
   course there're additional benefits to be had, such as less
   trial-and-error due to a well-defined and ready-to-use APIs.
-] else if lang == "de" [
+],
+de: [
   Der Hauptgrund für die Existenz der *embedded-hal*-Traits und der
   sie implementierenden sowie nutzenden Crates liegt darin, die
   Komplexität beherrschbar zu halten. Bedenkt man, dass eine Anwendung
@@ -189,32 +222,40 @@
   hingegen *M + N* an. Natürlich ergeben sich daraus weitere
   Vorteile, wie etwa ein geringerer Aufwand durch „Trial-and-Error" dank
   wohldefinierter und sofort einsatzbereiter APIs.
-] else if lang == "zh" [
+],
+zh: [
   使用*embedded-hal*
   traits和依赖*embedded-hal*的crates的主要原因是为了控制复杂性。如果发现一个应用可能必须要实现对硬件外设的使用，以及需要实现应用程序和其它硬件组件间潜在的驱动，那么其应该很容易被看作是可复用性有限的。用数学语言来说就是，如果*M*是外设HAL
   implementations的数量，*N*是驱动的数量，那么如果我们要为每个应用重新发明轮子我们最终会有*M\*N*个实现，然而通过使用*embedded-hal*的traits提供的
   _API_ 将会使实现复杂性变成*M+N*
   。当然还有其它好处，比如由于API定义良好，开箱即用，导致试错减少。
-] else { todo }
+]))
 
-== #(if lang == "en" [Users of the #ln_hal]
-  else if lang == "de" [Nutzer von #ln_hal]
-  else if lang == "zh" [embedded-hal的用户]
-  else { todo })
+== #tr((
+  en: [Users of the #ln_hal],
+  de: [Nutzer von #ln_hal],
+  zh: [embedded-hal的用户],
+))
 
-#if lang == "en" [
+#tr((
+en: [
   As said above there are three main users of the HAL:
-] else if lang == "de" [
+],
+de: [
   Wie bereits erwähnt, gibt es drei Hauptnutzer einer HAL:
-] else if lang == "zh" [
+],
+zh: [
   像上面所说的，HAL有三个主要用户:
-] else { todo }
+]))
 
-=== #(if lang in ("en", "zh") [HAL implementation]
-  else if lang == "de" [HAL-Implementierung]
-  else { todo })
+=== #tr((
+  en: [HAL implementation],
+  de: [HAL-Implementierung],
+  zh: [HAL implementation],
+))
 
-#if lang == "en" [
+#tr((
+en: [
   A HAL implementation provides the interfacing between the hardware and
   the users of the HAL traits. Typical implementations consist of three
   parts:
@@ -223,7 +264,8 @@
     often providing various configuration options
     (speed, operation mode, use pins, etc.)
   - one or more `trait` `impl` of *#ln_hal* traits for that type
-] else if lang == "de" [
+],
+de: [
   Eine HAL-Implementierung stellt die Schnittstelle zwischen der Hardware
   und den Nutzern der HAL-Traits bereit. Typische Implementierungen
   bestehen aus drei Teilen:
@@ -233,49 +275,56 @@
     Betriebsmodus, verwendete Pins usw.) bereitstellen.
   - eine oder mehrere `trait`-Implementierungen (`impl`) von
     *#ln_hal*-Traits für diesen Typ
-] else if lang == "zh" [
+],
+zh: [
   HAL implentation提供硬件和HAL
   traits的用户之间的接口。典型的实现由三部分组成:
   - 一个或者多个硬件特定的类型
   - 生成和初始化这个类型的函数，函数经常提供不同的配置选项(速度，操作模式，使用的管脚，etc 。)
   - 与这个类型有关的一个或者多个 *embedded-hal* traits 的 `trait`
     `impl`
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   Such a *HAL implementation* can come in various flavours:
   - Via low-level hardware access, e.g.~via registers
   - Via operating system, e.g.~by using the `sysfs` under Linux
   - Via adapter, e.g.~a mock of types for unit testing
   - Via driver for hardware adapters, e.g.~I2C multiplexer or GPIO expander
-] else if lang == "de" [
+],
+de: [
   Eine solche *HAL-Implementierung* kann in verschiedenen
   Ausprägungen vorliegen:
   - Über hardwarenahen Zugriff, z. B. über Register
   - Über das Betriebssystem, z. B. durch Verwendung von `sysfs` unter Linux
   - Über einen Adapter, z. B. ein Mock von Typen für Unit-Tests
   - Via-Treiber für Hardware-Adapter, z. B. I2C-Multiplexer oder GPIO-Expander
-] else if lang == "zh" [
+],
+zh: [
   这样的一个 *HAL implementation* 可以有多个方法来实现:
   - 通过低级硬件访问，比如通过寄存器。
   - 通过操作系统，比如通过使用Linux下的 `sysfs`
   - 通过适配器，比如一个与单元测试有关的类型的仿真
   - 通过相关硬件适配器的驱动，e.g.~I2C多路复用器或者GPIO扩展器(I2C multiplexer or GPIO expander)
-] else { todo }
+]))
 
-=== #(if lang == "en" [Driver]
-  else if lang == "de" [Treiber]
-  else if lang == "zh" [驱动]
-  else { todo })
+=== #tr((
+  en: [Driver],
+  de: [Treiber],
+  zh: [驱动],
+))
 
-#if lang == "en" [
+#tr((
+en: [
   A driver implements a set of custom functionality for an internal or
   external component, connected to a peripheral implementing the
   #ln_hal traits.
   Typical examples for such drivers include various sensors (temperature,
   magnetometer, accelerometer, light), display devices (LED arrays, LCD
   displays) and actuators (motors, transmitters).
-] else if lang == "de" [
+],
+de: [
   Ein Treiber implementiert eine Reihe benutzerdefinierter Funktionen für
   eine interne oder externe Komponente, die mit einem Peripheriegerät
   verbunden ist, das die #ln_hal;-Traits
@@ -283,35 +332,41 @@
   Sensoren (Temperatur-, Magnetometer-, Beschleunigungs- und
   Lichtsensoren), Anzeigegeräte (LED-Arrays, LCD-Displays) und Aktoren
   (Motoren, Sender).
-] else if lang == "zh" [
+],
+zh: [
   驱动为一个外部或者内部组件实现了一组自定义的功能，被连接到一个实现了embedded-hal
   traits的外设上。这种驱动的典型的例子包括多种传感器(温度计，磁力计，加速度计，光照计)，显示设备(LED阵列，LCD显示屏)和执行器(电机，发送器)。
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   A driver has to be initialized with an instance of type that implements
   a certain `trait` of the #ln_hal which is
   ensured via trait bound and provides its own type instance with a custom
   set of methods allowing to interact with the driven device.
-] else if lang == "de" [
+],
+de: [
   Ein Treiber muss mit einer Instanz eines Typs initialisiert werden, der
   ein bestimmtes `Trait` von
   #ln_hal
   implementiert. Dies wird durch Trait-Bound sichergestellt. Der Treiber
   stellt eine eigene Typinstanz mit einem benutzerdefinierten Satz von
   Methoden bereit, die die Interaktion mit dem angesteuerten Gerät
-] else if lang == "zh" [
+],
+zh: [
   必须使用实现了embedded-hal的某个`trait`的类型的实例来初始化驱动，这是通过trait
   bound来确保的，驱动也提供了它自己的类型实例，这个实例具有一组自定义的方法，这些方法允许与被驱动的设备交互。
 
-] else { todo }
+]))
 
-=== #(if lang == "en" [Application]
-  else if lang == "de" [Anwendung]
-  else if lang == "zh" [应用]
-  else { todo })
+=== #tr((
+  en: [Application],
+  de: [Anwendung],
+  zh: [应用],
+))
 
-#if lang == "en" [
+#tr((
+en: [
   The application binds the various parts together and ensures that the
   desired functionality is achieved. When porting between different
   systems, this is the part which requires the most adaptation efforts,
@@ -323,7 +378,8 @@
   configuration or there are different trade-offs to be made in the use of
   internal peripherals (e.g.~multiple timers with different capabilities
   are available or peripherals conflict with others).
-] else if lang == "de" [
+],
+de: [
   Die Anwendung verknüpft die verschiedenen Komponenten miteinander und
   stellt sicher, dass die gewünschte Funktionalität erreicht wird. Bei der
   Portierung zwischen verschiedenen Systemen ist dies der Teil, der den
@@ -337,7 +393,8 @@
   Nutzung interner Peripherie getroffen werden (etwa wenn mehrere Timer
   mit unterschiedlichen Fähigkeiten zur Verfügung stehen oder Konflikte
   zwischen verschiedenen Peripherieeinheiten auftreten).
-] else if lang == "zh" [
+],
+zh: [
   应用把多个部分结合在一起并确保需要的功能被实现。当在不同的系统间移植时，这部分的适配是花费最多精力的地方，因为应用需要通过HAL
   implementation正确地初始化真实的硬件，而且不同硬件的初始化也不相同，甚至有时候差别非常大。用户的选择也在其中扮演了非常重大的角色，因为组件能被物理连接到不同的端口，硬件总线有时候需要外部硬件去匹配配置，或者用户在内部外设的使用上有不同的考量。
-] else { todo }
+]))

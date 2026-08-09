@@ -1,32 +1,33 @@
 #import "../config.typ": *
 
-#h1(offset: whole,
-  if lang == "en" [Performing math functionality with `#[no_std]`]
-  else if lang == "de" [Mathematische Funktionen mit `#[no_std]` nutzen]
-  else if lang == "zh" [在`#[no_std]`下执行数学运算]
-  else { todo })
+#h1(offset: whole, tr((
+  en: [Performing math functionality with `#[no_std]`],
+  de: [Mathematische Funktionen mit `#[no_std]` nutzen],
+  zh: [在`#[no_std]`下执行数学运算],
+)))
 
-#if lang == "en" [
+#tr((
+en: [
   If you want to perform math related functionality like calculating the
   squareroot or the exponential of a number and you have the full standard
   library available, your code might look like this:
-] else if lang == "de" [
+],
+de: [
   Wenn Sie mathematische Operationen durchführen möchten -- wie etwa die
   Berechnung der Quadratwurzel aus der Exponentialfunktion einer Zahl --
   und Ihnen die vollständige Standardbibliothek zur Verfügung steht,
   könnte Ihr Code folgendermaßen aussehen:
-] else if lang == "zh" [
+],
+zh: [
   如果你想要执行数学相关的函数，像是计算平方根或者一个数的指数并有完整的标准库支持，代码可能看起来像这样:
-] else { todo }
+]))
 
 #raw(block: true, lang: "rust",
-"//! " + if lang == "en" {
-    "Some mathematical functions with standard support available"
-  } else if lang == "de" {
-    "Einige mathematische Funktionen mit Standardunterstützung verfügbar"
-  } else if lang == "zh" {
-    "可用一些标准支持的数学函数"
-  } else { todos } + "
+"//! " + ts((
+    en: "Some mathematical functions with standard support available",
+    de: "Einige mathematische Funktionen mit Standardunterstützung verfügbar",
+    zh: "可用一些标准支持的数学函数",
+  )) + "
 
 fn main() {
     let float: f32 = 4.82832;
@@ -48,18 +49,21 @@ fn main() {
 ")
 
 #let ln_libm = link("https://crates.io/crates/libm")[`libm`]
-#if lang == "en" [
+#tr((
+en: [
   Without standard library support, these functions are not available. An
   external crate like #ln_libm can
   be used instead. The example code would then look like this:
-] else if lang == "de" [
+],
+de: [
   Ohne Unterstützung durch die Standardbibliothek stehen diese Funktionen
   nicht zur Verfügung. Stattdessen kann ein externes Crate wie
   #ln_libm verwendet werden. Der
   Beispielcode sähe dann folgendermaßen aus:
-] else if lang == "zh" [
+],
+zh: [
   没有标准库支持的时候，这些函数不可用。反而可以使用像是#ln_libm;这样一个外部库。示例的代码将会看起来像这样:
-] else { todo }
+]))
 
 #raw(block: true, lang: "rust",
 "#![no_main]
@@ -89,34 +93,35 @@ fn main() -> ! {
         exponential_of_four
     )
     .unwrap();
-    // " + if lang == "en" {
-        "exit QEMU
-    // NOTE do not run this on hardware; it can corrupt OpenOCD state"
-      } else if lang == "de" {
-        "exit QEMU
+    // " + ts((
+        en: "exit QEMU
+    // NOTE do not run this on hardware; it can corrupt OpenOCD state",
+        de: "exit QEMU
     // HINWEIS: Fuehren Sie dies nicht auf der Hardware aus; es kann den 
-    //          OpenOCD-Zustand beschaedigen."
-      } else if lang == "zh" {
-        "退出QEMU
+    //          OpenOCD-Zustand beschaedigen.",
+        zh: "退出QEMU
     // 注意不要在硬件上使用这个; 它能破坏OpenOCD的状态"
-      } else { todos } + "
+      )) + "
     // debug::exit(debug::EXIT_SUCCESS);
 
     loop {}
 }
 ")
 
-#if lang == "en" [
+#tr((
+en: [
   If you need to perform more complex operations like DSP signal
   processing or advanced linear algebra on your MCU, the following crates
   might help you
-] else if lang == "de" [
+],
+de: [
   Wenn Sie komplexere Operationen wie DSP-Signalverarbeitung oder
   fortgeschrittene lineare Algebra auf Ihrem Mikrocontroller durchführen
   müssen, könnten Ihnen die folgenden Crates weiterhelfen.
-] else if lang == "zh" [
+],
+zh: [
   如果需要在MCU上执行更复杂的操作，像是DSP信号处理或者更高级的线性代数，下列的crates可能可以帮到你
-] else { todo }
+]))
 - #link("https://github.com/jacobrosenthal/cmsis-dsp-sys")[CMSIS DSP library binding]
 - #link("https://crates.io/crates/constgebra")[`constgebra`]
 - #link("https://github.com/tarcieri/micromath")[`micromath`]

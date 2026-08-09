@@ -1,13 +1,14 @@
 #import "../config.typ": *
 
-#h1(offset: whole,
-  if lang == "en" [Peripherals as State Machines]
-  else if lang == "de" [Peripheriegeräte als Zustandsautomaten]
-  else if lang == "zh" [作为状态机的外设]
-  else { todo })
+#h1(offset: whole, tr((
+  en: [Peripherals as State Machines],
+  de: [Peripheriegeräte als Zustandsautomaten],
+  zh: [作为状态机的外设],
+)))
 
 #let url_pin = "https://en.wikipedia.org/wiki/General-purpose_input/output"
-#if lang == "en" [
+#tr((
+en: [
   The peripherals of a microcontroller can be thought of as set of state
   machines. For example, the configuration of a simplified #link(url_pin)[GPIO pin]
   could be represented as the following tree of states:
@@ -20,7 +21,8 @@
       - Input: High Resistance
       - Input: Pulled Low
       - Input: Pulled High
-] else if lang == "de" [
+],
+de: [
   Die Peripherie eines Mikrocontrollers lässt sich als eine Menge von
   Zustandsautomaten auffassen. So ließe sich beispielsweise die
   Konfiguration eines vereinfachten
@@ -35,7 +37,8 @@
       - Eingang: Hoher Widerstand
       - Eingang: Auf Low-Pegel gezogen
       - Eingang: Auf High-Pegel gezogen
-] else if lang == "zh" [
+],
+zh: [
   一个微控制器的外设可以被想成是一组状态机。比如，一个简化的#link(url_pin)[GPIO管脚]的配置可以被表达成下列的状态树:
   - 关闭
   - 使能
@@ -46,16 +49,18 @@
       - 输入: 高阻态
       - 输入: 下拉
       - 输入: 上拉
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   If the peripheral starts in the `Disabled` mode, to move to the
   `Input: High Resistance` mode, we must perform the following steps:
   + Disabled
   + Enabled
   + Configured as Input
   + Input: High Resistance
-] else if lang == "de" [
+],
+de: [
   Wenn die Peripherieeinheit im Modus `Deaktiviert` startet, müssen wir
   die folgenden Schritte ausführen, um in den Modus
   `Eingang: Hoher Widerstand` zu ​​wechseln:
@@ -63,30 +68,35 @@
   + Aktiviert
   + Als Eingang konfiguriert
   + Eingang: Hoher Widerstand
-] else if lang == "zh" [
+],
+zh: [
   如果外设开始于`关闭`模式，切换到`输入: 高阻态`模式，我们必须执行下面的步骤:
   + 关闭
   + 使能
   + 配置成输入
   + 输入: 高阻态
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   If we wanted to move from `Input: High Resistance` to
   `Input: Pulled Low`, we must perform the following steps:
   + Input: High Resistance
   + Input: Pulled Low
-] else if lang == "de" [
+],
+de: [
   Wenn wir von „Eingang: Hoher Widerstand" zu „Eingang: Auf Low-Pegel
   gezogen" wechseln möchten, müssen wir die folgenden Schritte ausführen:
   + Eingang: Hoher Widerstand 2. Eingang: Auf Low-Pegel gezogen
-] else if lang == "zh" [
+],
+zh: [
   如果我们想要从`输入: 高阻态`切换到`输入: 下拉`，我们必须执行下列的步骤:
   + 输入: 高阻抗
   + 输入: 下拉
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   Similarly, if we want to move a GPIO pin from configured as
   `Input: Pulled Low` to `Output: High`, we must perform the following
   steps:
@@ -94,7 +104,8 @@
   + Configured as Input
   + Configured as Output
   + Output: High
-] else if lang == "de" [
+],
+de: [
   Wenn wir einen GPIO-Pin von der Konfiguration „Eingang: Auf Low-Pegel
   gezogen" auf „Ausgang: High" umstellen wollen, müssen wir ebenfalls die
   folgenden Schritte ausführen:
@@ -102,56 +113,62 @@
   + Als Eingang konfiguriert
   + Als Ausgang konfiguriert
   + Ausgang: High
-] else if lang == "zh" [
+],
+zh: [
   同样地，如果我们想要把一个GPIO管脚从`输入: 下拉`切换到`输出: 高`，我们必须执行下列的步骤:
   + 输入: 下拉
   + 配置成输入
   + 配置成输出
   + 输出: 高
-] else { todo }
+]))
 
-= #(if lang == "en" [Hardware Representation]
-  else if lang == "de" [Hardware-Darstellung]
-  else if lang == "zh" [硬件表征(Hardware Representation)]
-  else { todo })
+= #tr((
+  en: [Hardware Representation],
+  de: [Hardware-Darstellung],
+  zh: [硬件表征(Hardware Representation)],
+))
 
-#if lang == "en" [
+#tr((
+en: [
   Typically the states listed above are set by writing values to given
   registers mapped to a GPIO peripheral. Let's define an imaginary GPIO
   Configuration Register to illustrate this:
-] else if lang == "de" [
+],
+de: [
   Typischerweise werden die oben aufgeführten Zustände eingestellt, indem
   Werte in bestimmte Register geschrieben werden, die einer
   GPIO-Peripherieeinheit zugeordnet sind. Definieren wir zur
   Veranschaulichung ein fiktives GPIO-Konfigurationsregister:
-] else if lang == "zh" [
+],
+zh: [
   通常，通过向映射到GPIO外设上的指定的寄存器中写入值可以配置上面列出的状态。让我们定义一个假想的GPIO配置寄存器来解释下它:
-] else { todo }
+]))
 
 #include "gpio-table.typ"
 
-#if lang == "en" [
+#tr((
+en: [
   We _could_ expose the following structure in Rust to control this GPIO:
-] else if lang == "de" [
+],
+de: [
   Wir _könnten_ die folgende Struktur in Rust bereitstellen, um diesen GPIO zu steuern:
-] else if lang == "zh" [
+],
+zh: [
   _可以_ 在Rust中暴露下列的结构体来控制这个GPIO:
-] else { todo }
+]))
 
 #raw(block: true, lang: "rust",
-"/// " + if lang in ("en", "de") {
-    "GPIO interface"
-  } else if lang == "zh" {
-    "GPIO接口"
-  } else { todos } + "
+"/// " + ts((
+    en: "GPIO interface",
+    de: "GPIO interface",
+    zh: "GPIO接口",
+  )) + "
 struct GpioConfig {
-    /// " + if lang == "en" {
-        "GPIO Configuration structure generated by svd2rust"
-      } else if lang == "de" {
-        "Von svd2rust generierte GPIO-Konfigurationsstruktur"
-      } else if lang == "zh" {
-        "由svd2rust生成的GPIO配置结构体"
-      } else { todos } + "
+    /// " + ts((
+        en: "GPIO Configuration structure generated by svd2rust",
+        de: "Von svd2rust generierte GPIO-Konfigurationsstruktur",
+        zh: "由svd2rust生成的GPIO配置结构体",
+      )) + "
     periph: GPIO_CONFIG,
 }
 
@@ -186,41 +203,50 @@ impl GpioConfig {
 }
 ")
 
-#if lang == "en" [
+#tr((
+en: [
   However, this would allow us to modify certain registers that do not
   make sense. For example, what happens if we set the `output_mode` field
   when our GPIO is configured as an input?
-] else if lang == "de" [
+],
+de: [
   Dies würde uns jedoch erlauben, bestimmte Register zu verändern, was
   keinen Sinn ergibt. Was passiert beispielsweise, wenn wir das Feld
   `output_mode` setzen, während unser GPIO als Eingang konfiguriert ist?
-] else if lang == "zh" [
+],
+zh: [
   然而，这会允许我们修改某些没有意义的寄存器。比如，如果当我们的GPIO被配置为输入时我们设置`output_mode`字段，将会发生什么？
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   In general, use of this structure would allow us to reach states not
   defined by our state machine above: e.g.~an output that is pulled low,
   or an input that is set high. For some hardware, this may not matter. On
   other hardware, it could cause unexpected or undefined behavior!
-] else if lang == "de" [
+],
+de: [
   Im Allgemeinen würde die Verwendung dieser Struktur es uns ermöglichen,
   Zustände zu erreichen, die nicht durch unsere obige Zustandsmaschine
   definiert sind: z. B. einen Ausgang, der auf LOW gesetzt wird, oder
   einen Eingang, der auf HIGH gesetzt wird. Bei mancher Hardware mag dies
   keine Rolle spielen. Bei anderer Hardware könnte es jedoch zu
   unerwartetem oder undefiniertem Verhalten führen!
-] else if lang == "zh" [
+],
+zh: [
   通常使用这个结构体会允许我们访问到上面的状态机没有定义的状态：比如，一个被上拉的输出，或者一个被拉高的输入。对于一些硬件，这并没有关系。对另外一些硬件来说，这将会导致不可预期或者没有定义的行为！
-] else { todo }
+]))
 
-#if lang == "en" [
+#tr((
+en: [
   Although this interface is convenient to write, it doesn't enforce the
   design contracts set out by our hardware implementation.
-] else if lang == "de" [
+],
+de: [
   Obwohl diese Schnittstelle bequem zu implementieren ist, erzwingt sie
   nicht die in unserer Hardware-Implementierung festgelegten
   Designvorgaben.
-] else if lang == "zh" [
+],
+zh: [
   虽然这个接口很方便写入，但是它没有强制我们遵守硬件实现所设的设计约定。
-] else { todo }
+]))
