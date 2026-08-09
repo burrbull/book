@@ -8,12 +8,11 @@
 ).at(lang, default: todo))
 <getting-started-hardware>
 
-#(
-en: [
+#tr([
   By now you should be somewhat familiar with the tooling and the
   development process. In this section we'll switch to real hardware; the
   process will remain largely the same. Let's dive in.
-],
+], (
 de: [
   Mittlerweile sollten Sie mit den Werkzeugen und dem Entwicklungsprozess
   einigermaßen vertraut sein. In diesem Abschnitt wechseln wir zur echten
@@ -26,14 +25,13 @@ ja: [
 zh: [
   现在你应该有点熟悉工具和开发过程了。在这部分我们将切换到真正的硬件上；步骤非常相似。让我们深入下去。
 ],
-).at(lang, default: todo)
+))
 
-= #(
-  en: [Know your hardware],
+= #tr([Know your hardware], (
   de: [Kennen Sie Ihre Hardware],
   ja: [ハードウェアを知る],
   zh: [认识你的硬件]
-).at(lang, default: todo)
+))
 
 #(
 en: [
@@ -76,11 +74,10 @@ zh: [
 ],
 ).at(lang, default: todo)
 
-#(
-en: [
+#tr([
   You can find this information in the data sheet or the reference manual
   of your device.
-],
+], (
 de: [
   Diese Informationen finden Sie im Datenblatt oder im Referenzhandbuch
   Ihres/Ihrer Microcontrollers/Microcontrollerplatine.
@@ -91,7 +88,7 @@ ja: [
 zh: [
   你可以在你的设备的数据手册和参考手册上找到这些信息。
 ],
-).at(lang, default: todo)
+))
 
 #(
 en: [

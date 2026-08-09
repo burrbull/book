@@ -1,5 +1,6 @@
 #let default_lang = sys.inputs.at("default-lang", default: "en")
 #let lang = sys.inputs.at("lang", default: default_lang)
+#let goal = sys.inputs.at("goal", default: "publish")
 #let languages = (
   "en": [English],
   "de": [German],
@@ -39,6 +40,25 @@
   fill: orange,
   todoupds(l)
 )
+
+// content: use in other places
+#let tr(main, translations, default: todo) = {
+  if translations == none or translations == () {
+    translations = dictionary(())
+  }
+  if lang == default_lang {
+    main
+  } else {
+    translations.at(
+      lang,
+      default: if goal == "publish" {main}
+      else { default }
+    )
+  }
+}
+
+// str: use in code blocks
+#let ts = tr.with(default: todos)
 
 #let book_title = "The Embedded Rust Book"
 
