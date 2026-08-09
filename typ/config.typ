@@ -11,12 +11,15 @@
 #let whole = int(tgt == "pdf")
 
 // str: use in code blocks
-#let todos = (if lang == "de" { "unübersetzt" }
-  else if lang == "ja" { "未翻訳" }
-  else if lang == "uk" { "не перекладено" }
-  else if lang == "zh" { "未翻译" }
-  else { "untranslated" }
-)
+#let todos = {
+  (
+    en: "untranslated",
+    de: "unübersetzt",
+    ja: "未翻訳",
+    uk: "не перекладено",
+    zh: "未翻译",
+  ).at(lang)
+}
 // content: use in other places
 #let todo = text(
   fill: red,
@@ -24,12 +27,13 @@
 )
 // str: use in code blocks
 #let todoupds(l) = {
-  assert(l in languages, message: "add language name")
-  if lang == "de" { "die Übersetzung ist veraltet" }
-  else if lang == "ja" { "翻訳が古くなっています。" }
-  else if lang == "uk" { "переклад застарів" }
-  else if lang == "zh" { "翻译已过时" }
-  else { "translation is outdated" }
+  (
+    en: "translation is outdated",
+    de: "die Übersetzung ist veraltet",
+    ja: "翻訳が古くなっています",
+    uk: "переклад застарів",
+    zh: "翻译已过时",
+  ).at(lang)
 } // content: use in other places
 #let todoupd(l) = text(
   fill: orange,
