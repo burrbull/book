@@ -42,19 +42,12 @@
 )
 
 // content: use in other places
-#let tr(main, translations, default: todo) = {
-  if translations == none or translations == () {
-    translations = dictionary(())
-  }
-  if lang == default_lang {
-    main
-  } else {
-    translations.at(
-      lang,
-      default: if goal == "publish" {main}
-      else { default }
-    )
-  }
+#let tr(dict, default: todo) = {
+  dict.at(
+    lang,
+    default: if goal == "publish" { dict.at(default_lang) }
+    else { default }
+  )
 }
 
 // str: use in code blocks
