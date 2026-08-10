@@ -1,11 +1,10 @@
 #import "../config.typ": *
 
-#h1(tr((
-  en: [Getting Started],
+#h1((en: [Getting Started],
   de: [Erste Schritte],
   ja: [入門],
   zh: [开始],
-)))
+))
 <getting-started>
 
 #let ln_f3 = link("http://www.st.com/en/evaluation-tools/stm32f3discovery.html")[STM32F3DISCOVERY]

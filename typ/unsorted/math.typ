@@ -1,10 +1,9 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Performing math functionality with `#[no_std]`],
+#h1((en: [Performing math functionality with `#[no_std]`],
   de: [Mathematische Funktionen mit `#[no_std]` nutzen],
   zh: [在`#[no_std]`下执行数学运算],
-)))
+), offset: whole)
 
 #tr((
 en: [

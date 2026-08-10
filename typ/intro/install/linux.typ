@@ -1,7 +1,7 @@
 #import "../../config.typ": *
 
-#h1(offset: whole*2,
-  [Linux])
+#h1([Linux],
+  offset: whole*2)
 <install-linux>
 
 #tr((

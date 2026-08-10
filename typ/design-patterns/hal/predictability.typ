@@ -1,10 +1,9 @@
 #import "../../config.typ": *
 
-#h1(offset: whole*2, tr((
-  en: [Predictability],
+#h1((en: [Predictability],
   de: [Vorhersehbarkeit],
   zh: [可预见性],
-)))
+), offset: whole*2)
 <hal-predictability>
 
 = #tr((

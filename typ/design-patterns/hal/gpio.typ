@@ -1,10 +1,9 @@
 #import "../../config.typ": *
 
-#h1(offset: whole*2, tr((
-  en: [Recommendations for GPIO Interfaces],
+#h1((en: [Recommendations for GPIO Interfaces],
   de: [Empfehlungen für GPIO-Schnittstellen],
   zh: [关于GPIO接口的建议],
-)))
+), offset: whole*2)
 <hal-gpio>
 
 = #tr((

@@ -1,10 +1,10 @@
 #import "../config.typ": *
 
-#h1(tr((
-  en: [Interoperability],
+#h1((en: [Interoperability],
   de: [Interoperabilität],
+  ja: [相互運用性],
   zh: [互操性],
-)))
+))
 
 #let ln_ffi = link("https://doc.rust-lang.org/std/ffi/index.html")[`std::ffi`]
 #tr((
@@ -17,6 +17,12 @@ de: [
   Die Interoperabilität zwischen Rust- und C-Code hängt stets von der
   Umwandlung von Daten zwischen den beiden Sprachen ab. Hierfür gibt es in
   der Standardbibliothek (`stdlib`) ein spezielles Modul namens #ln_ffi.
+],
+ja: [
+  #todoupd("ja")
+  RustとCとの相互運用性は、常に2つの言語間のデータ変換に依存しています。
+  そこで、2つの専用モジュールが`stdlib`内にあります。
+  #ln_ffi;と呼ばれるものです。
 ],
 zh: [
   Rust和C代码之间的互操性始终依赖于数据在两个语言间的转换．为了互操性，在`stdlib`中有一个专用的模块，叫作 #ln_ffi.
@@ -72,16 +78,19 @@ zh: [
       tr((
         en: [Rust type],
         de: [Rusttyp],
+        ja: [Rustの型],
         zh: [Rust类型],
       )),
       tr((
         en: [Intermediate],
         de: [Dazwischenliegend],
+        ja: [中間表現],
         zh: [间接],
       )),
       tr((
         en: [C type],
         de: [C-Typ],
+        ja: [Cの型],
         zh: [C类型],
       )),
     ),
@@ -91,12 +100,14 @@ zh: [
     tr((
       en: [`u32` or `u64`],
       de: [`u32` or `u64`],
+      ja: [`u32` or `u64`],
     )),
     )),
     `c_uint`, `unsigned int`,
     tr((
       en: [etc],
       de: [usw.],
+      ja: [他],
     )),
     […], […],
   )
@@ -131,6 +142,7 @@ fn foo(num: u32) {
 == #tr((
   en: [Interoperability with other build systems],
   de: [Interoperabilität mit anderen Build-Systemen],
+  ja: [他のビルドシステムとの相互運用性],
   zh: [与其它编译系统的互用性],
 ))
 
@@ -143,6 +155,9 @@ de: [
   Eine häufige Voraussetzung für die Einbindung von Rust in
   Embedded-Projekte ist die Kombination von Cargo mit Ihrem bestehenden
   Build-System, beispielsweise Make oder CMake.
+],
+ja: [
+  組込みプロジェクトにRustを組み込むための共通の要件は、Cargoとmakeやcmakeのような既存のビルドシステムとを組み合わせることです。
 ],
 zh: [
   在嵌入式项目中引入Rust的一个常见需求是，把Cargo结合进你现存的编译系统中，比如make或者cmake。
@@ -158,6 +173,9 @@ de: [
   Wir sammeln Beispiele und Anwendungsfälle hierzu in unserem
   Problem-Verfolgungswerkzeug unter #link(url_issue61)[Issue \#61].
 ],
+ja: [
+  #link(url_issue61)[issue \#61]でこれに関する事例とユースケースを集めています。
+],
 zh: [
   在#link(url_issue61)[issue \#61]的issue
   tracker上，我们正在为这个需求收集例子和用例。
@@ -166,6 +184,7 @@ zh: [
 == #tr((
   en: [Interoperability with RTOSs],
   de: [Interoperabilität mit RTOS],
+  ja: [RTOSとの相互運用性],
   zh: [与RTOSs的互操性],
 ))
 
@@ -179,6 +198,10 @@ de: [
   Die Integration von Rust in ein RTOS wie FreeRTOS oder ChibiOS befindet
   sich noch in der Entwicklung; insbesondere der Aufruf von
   RTOS-Funktionen aus Rust heraus kann sich als schwierig erweisen.
+],
+ja: [
+  RustをFreeRTOSやChibiOSといったRTOSに統合することは、まだ作業を進めている状態です。
+  特に、RTOSの関数をRustから呼び出すことはトリッキーです。
 ],
 zh: [
   将Rust和一个RTOS集成在一起，比如FreeRTOS或者ChibiOS仍然在进行中;
@@ -209,7 +232,10 @@ de: [
   Problem-Verfolgungswerkzeug unter
   #link(url_issue62)[Issue \#62].
 ],
+ja: [
+  #link(url_issue62)[issue \#62]でこれに関する事例とユースケースを集めています。
+],
 zh: [
-  在#link("https://github.com/rust-embedded/book/issues/62")[issue \#62]的issue
+  在#link(url_issue62)[issue \#62]的issue
   tracker上，我们正为这件事收集例子和用例。
 ]))

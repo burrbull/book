@@ -1,10 +1,9 @@
 #import "../config.typ": *
 
-#h1(tr((
-  en: [Design Patterns],
+#h1((en: [Design Patterns],
   de: [Design-Muster],
   zh: [设计模式],
-)))
+))
 
 #tr((
 en: [

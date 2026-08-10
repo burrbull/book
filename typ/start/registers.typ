@@ -1,10 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Memory Mapped Registers],
+#h1((en: [Memory Mapped Registers],
   de: [Im Speicher abgebildete Register],
+  ja: [メモリマップドレジスタ],
   zh: [存储映射的寄存器(Memory-Mapped Registers)],
-)))
+), offset: whole, )
 <memory-mapped-registers>
 
 #tr((
@@ -25,6 +25,11 @@ de: [
   externen Peripheriekomponente über einen Bus --, müssen wir uns mit der
   Welt der Peripherieeinheiten und deren „im Speicher abgebildeten
   Registern" (memory-mapped registers) befassen.
+],
+ja: [
+  組込みシステムでは、通常のRustコードを実行し、データをRAM内で移動させるだけではたいしたことはできません。
+  LEDの点滅やボタンの押下検出、もしくは、バス上のオフチップペリフェラルとの通信など、
+  システムが情報を入出力するには、ペリフェラルとその「メモリマップドレジスタ」の世界に足を踏み入れる必要があります。
 ],
 zh: [
   嵌入式系统想要继续执行下去，只有通过执行常规的Rust代码并在RAM间移动数据才行。如果我们想要获取或者发出信息(点亮一个LED，发现一个按钮按下或者在总线上与芯片外设通信)，我们不得不深入了解外设和它们的"存储映射的寄存器"。
@@ -69,6 +74,23 @@ en: [
     pre-configuring various peripherals and GPIO pins to suit the specific
     developer kit or board you are using, such as #ln_f3
     for the STM32F3DISCOVERY board.
+],
+ja: [
+  マイクロコントローラのペリフェラルにアクセスするためのコードが、次のいずれかのレベルで、既に書かれています。
+  - マイクロアーキテクチャクレート。この種のクレートは、マイクロコントローラに搭載されているプロセッサコアで共通となる便利なルーチンを扱っています。
+    また、特定のプロセッサコアを使用する全てのマイクロコントローラに共通のペリフェラルも取り扱います。
+    例えば、#ln_cortex;クレートは、割り込みの有効化と無効化を行う関数を提供しています。これは全てのCortex-Mベースマイクロコントローラで同じものです。
+    #ln_cortex;クレートは、「SysTick」ペリフェラルへのアクセスも提供しています。このペリフェラルは、全てのCortex-Mベースマイクロコントローラに搭載されています。
+  - ペリフェラルアクセスクレート（PAC）。この種のクレートは、薄いラッパーです。特定の型番のマイクロコントローラに対して定義されている、
+    様々なメモリマップドレジスタのラッパーを提供します。例えば、テキサスインスツルメンツのTiva-C
+    TM4C123シリーズ向けの#ln_tm4c123x;クレートや、
+    STマイクロのSTM32F30xシリーズ向けの#ln_f30x;クレートです。マイクロコントローラのテクニカルリファレンスマニュアルに記載されている各ペリフェラルの操作手順に従って、
+    レジスタと直接やり取りします。
+  - HALクレート。これらのクレートは、特定のプロセッサに対して、よりユーザフレンドリなAPIを提供しています。#ln_hal;で定義されている共通のトレイトを使って実装されていることが多いです。
+    例えば、このクレートは、`Serial`構造体を提供しているでしょう。そのコンストラクタは、適切なGPIOピンの一式とボーレートを引数に取ります。そして、データを送信するための`write_byte`関数一式を提供します。
+    #ln_hal;に関する詳細は、#link(<portability>)[移植性]の章を参照して下さい。
+  - ボードクレート。これらのクレートは、HALクレートのさらに一歩先を進んでいます。これらは、STM32F3DISCOVERYボード向けの#ln_f3;のように、
+    特定の開発キットやボード向けに、様々なペリフェラルとGPIOピンを事前に設定してあります。
 ],
 de: [
   Möglicherweise stellen Sie fest, dass der für den Zugriff auf die
@@ -212,13 +234,17 @@ de: [
   Cortex-M-Basis gemeinsam ist. Im #ln_cortex;-Crate finden wir
   eine recht hardwarenahe API, die sich folgendermaßen verwenden lässt:
 ],
+ja: [
+  全てのCortex-Mマイクロコントローラで共通のSysTickペリフェラルから見ていきましょう。
+  #ln_cortex;クレートにはかなり低レベルなAPIがあり、次のように使うことができます。
+],
 zh: [
   让我们看一下SysTick外设，SysTick外设存在于所有的Cortex-M微控制器中。我们能在#ln_cortex
   crate中找到一个相当底层的API，我们能像这样使用它：
 ]))
 
-```rust
-#![no_std]
+#raw(block: true, lang: "rust",
+"#![no_std]
 #![no_main]
 use cortex_m::peripheral::{syst, Peripherals};
 use cortex_m_rt::entry;
@@ -233,12 +259,15 @@ fn main() -> ! {
     systick.clear_current();
     systick.enable_counter();
     while !systick.has_wrapped() {
-        // Loop
+        // " + ts((
+          en: "Loop",
+          ja: "ループ",
+        )) + "
     }
 
     loop {}
 }
-```
+")
 
 #tr((
 en: [
@@ -264,6 +293,12 @@ de: [
   existiert. Weitere Informationen dazu finden Sie im Abschnitt
   "#link(<peripherals>)[Peripherien]".
 ],
+ja: [
+  `SYST`構造体の関数は、ARMテクニカルリファレンスマニュアルにおいて、このペリフェラルに定義されている機能と非常によく似ています。
+  「Xミリ秒遅延」といった具合のAPIはありません。`while`ループを使って愚直に実装する必要があります。`Peripherals::take()`を呼び出すまでは、
+  `SYST`構造体にアクセスできないことに注意して下さい。これは、プログラム全体で唯一の`SYST`構造体が存在することを保証する特別な手順です。
+  詳しくは、#link(<peripherals>)[ペリフェラル]セクションをご覧下さい。
+],
 zh: [
   `SYST`结构体上的功能，相当接近ARM技术手册为这个外设定义的功能。在这个API中没有关于
   '延迟X毫秒' 的功能 - 我们不得不通过使用一个 `while`
@@ -274,6 +309,7 @@ zh: [
 = #tr((
   en: [Using a Peripheral Access Crate (PAC)],
   de: [Verwendung eines Peripheral Access Crate (PAC)],
+  ja: [ペリフェラルアクセスクレート（PAC）の使用],
   zh: [使用一个外设访问Crate (PAC)],
 ))
 
@@ -297,6 +333,13 @@ de: [
   Flash-Speicher. Um diesen Chip nutzen zu können, binden wir das
   #ln_tm4c123x;-Crate ein.
 ],
+ja: [
+  全てのCortex−Mに搭載されている基本的なペリフェラルのみに限定するのであれば、組込みソフトウェア開発はあまり進まないでしょう。
+  どこかの時点で、使用している特定のマイクロコントローラ固有のコードを書く必要があります。今回の例では、テキサスインスツルメンツのTM4C123があるとしましょう。
+  TM4C123はミドルレンジのマイクロコントローラで、80MHzのCortex-M4と256
+  KiBのフラッシュメモリが搭載されています。
+  このチップを利用するために、#ln_tm4c123x;クレートを取得します。
+],
 zh: [
   如果我们把自己只局限于每个Cortex-M拥有的基本外设，那我们的嵌入式软件开发将不会走得太远。我们准备需要写一些特定于我们正在使用的微控制器的代码。在这个例子里，让我们假设我们有一个TI的TM4C123
   - 一个有256KiB
@@ -304,11 +347,14 @@ zh: [
   crate去使用这个芯片。
 ]))
 
-```rust
-#![no_std]
+#raw(block: true, lang: "rust",
+"#![no_std]
 #![no_main]
 
-use panic_halt as _; // panic handler
+use panic_halt as _; // " + ts((
+                        en: "panic handler",
+                        ja: "パニックハンドラ",
+                      )) + "
 
 use cortex_m_rt::entry;
 use tm4c123x;
@@ -320,15 +366,21 @@ pub fn init() -> (Delay, Leds) {
 
     let pwm = p.PWM0;
     pwm.ctl.write(|w| w.globalsync0().clear_bit());
-    // Mode = 1 => Count up/down mode
+    // " + ts((
+        en: "Mode = 1 => Count up/down mode",
+        ja: "モード1は カウントアップ/ダウンモード",
+      )) + "
     pwm._2_ctl.write(|w| w.enable().set_bit().mode().set_bit());
     pwm._2_gena.write(|w| w.actcmpau().zero().actcmpad().one());
-    // 528 cycles (264 up and down) = 4 loops per video line (2112 cycles)
+    // " + ts((
+        en: "528 cycles (264 up and down) = 4 loops per video line (2112 cycles)",
+        ja: "528サイクル（264カウントアップとカウントダウン）は、ビデオラインごとに4ループ（2112サイクル）",
+      )) + "
     pwm._2_load.write(|w| unsafe { w.load().bits(263) });
     pwm._2_cmpa.write(|w| unsafe { w.compa().bits(64) });
     pwm.enable.write(|w| w.pwm4en().set_bit());
 }
-```
+")
 
 #let ln_svd2rust = link("https://crates.io/crates/svd2rust")[svd2rust]
 #tr((
@@ -366,6 +418,14 @@ de: [
   Dies lässt sich im obigen Beispiel beim Setzen der Unterfelder `load`
   und `compa` mittels der Funktion `bits()` beobachten.
 ],
+ja: [
+  先ほど`SYST`にアクセスした時と全く同じ方法で、`PWM0`ペリフェラルにアクセスします。違う点は、`tm4c123x::Peripherals::take()`を呼ぶことです。
+  このクレートは、#link("https://crates.io/crates/svd2rust")[svd2rust]を使って自動生成されたものです。レジスタフィールドのアクセス関数は、数値の引数ではなく、クロージャを取ります。
+  このコードは量が多いように見えますが、Rustコンパイラは一連のチェックを実行し、手書きのアセンブラに近いマシンコードを生成します。
+  自動生成されたコードが、特定のアクセサ関数への全引数が有効であることを判断できない場合、その関数は`unsafe`とマークされます。
+  例えば、SVDがレジスタを32ビットと定義しているが、それらの32ビット値の一部が特別な意味を持つかどうか、記述していない場合です。
+  上記の例では、`bits()`関数を使って`load`と`compa`サブフィールドを設定する時に、`unsafe`をマークしています。
+],
 zh: [
   我们访问 `PWM0` 外设的方法和我们之前访问 `SYST`
   的方法一样，除了我们调用的是 `tm4c123x::Peripherals::take()`
@@ -376,6 +436,7 @@ zh: [
 == #tr((
   en: [Reading],
   de: [Lesen],
+  ja: [読み込み],
   zh: [Reading],
 ))
 
@@ -398,6 +459,10 @@ de: [
   verfügbaren Funktionen finden Sie in der
   #link(url_struct_r)[tm4c123x-Dokumentation].
 ],
+ja: [
+  `read()`関数は、メーカーのSVDファイルで定義されている通り、レジスタ内の様々なサブフィールドに対して、読み込み専用のアクセスオブジェクトを返します。
+  特定チップ上にある、特定ペリフェラルの、特定レジスタに対して、固有の返り値`R`型があり、このR型で使える全ての関数は、#link(url_struct_r)[tm4c123xドキュメント]で見ることができます。
+],
 zh: [
   `read()`
   函数返回一个对象，这个对象提供了对这个寄存器中不同子域的只读访问，由厂商提供的这个芯片的SVD文件定义。在
@@ -411,6 +476,7 @@ zh: [
     // " + ts((
         en: "Do a thing",
         de: "Tu etwas",
+        ja: "処理をする",
       )) + "
 }
 ")
@@ -418,6 +484,7 @@ zh: [
 == #tr((
   en: [Writing],
   de: [Schreiben],
+  ja: [書き込み],
   zh: [Writing],
 ))
 
@@ -447,6 +514,12 @@ de: [
   automatisch auf einen Standardwert gesetzt werden; bereits vorhandene
   Inhalte des Registers gehen dabei verloren.
 ],
+ja: [
+  `write()`関数は、単一引数のクロージャを取ります。通常は、この引数を`w`と呼びます。
+  この引数は、チップメーカーがSVDファイルで定義している通り、様々なレジスタのサブフィールドへの読み書きアクセスを許可します。
+  特定チップ上にある、特定ペリフェラルの、特定レジスタに対して、`w`型で使える全ての関数も、#link(url_struct_w)[tm4c123xドキュメント]で見ることができます。
+  設定していない全てのサブフィールドは、デフォルト値に設定されます。レジスタの既存の内容は失われます。
+],
 zh: [
   `write()`函数使用一个只有一个参数的闭包。通常我们把这个参数叫做
   `w`。然后这个参数提供对这个寄存器中不同的子域的读写访问，由厂商关于这个芯片的SVD文件提供。再一次，在
@@ -463,6 +536,7 @@ pwm.ctl.write(|w| w.globalsync0().clear_bit());
 == #tr((
   en: [Modifying],
   de: [Ändern],
+  ja: [修正],
   zh: [Modifying],
 ))
 
@@ -484,6 +558,11 @@ de: [
   Argument `r` dient dazu, den aktuellen Inhalt des Registers zu
   betrachten, während das Argument `w` genutzt werden kann, um den
   Registerinhalt zu ändern.
+],
+ja: [
+  レジスタの特定のサブフィールドだけを変更して、残りのサブフィールドは変更したくない場合、`modify`関数を使えます。この関数は2引数のクロージャを取ります。
+  1つは読み込み用で、もう1つは書き込み用です。通常、これらの引数をそれぞれ、`r`と`w`と呼びます。
+  `r`引数は、レジスタの現在の内容を調べるために使用されます。そして、`w`引数は、レジスタの内容を修正するために使用されます。
 ],
 zh: [
   如果我们希望只改变这个寄存器中某个特定的子域而让其它子域不变，我们能使用`modify`函数。这个函数使用一个具有两个参数的闭包
@@ -508,6 +587,10 @@ de: [
   Wert anschließend wieder zurückschreiben. Dies birgt ein erhebliches
   Fehlerpotenzial:
 ],
+ja: [
+  `modify`関数は、クロージャの本領を発揮します。C言語では、一時変数に読み込み、正しいビットを修正してから、その値を書き戻す必要があります。
+  これは、エラーが発生するかなりの余地があることを示しています。
+],
 zh: [
   `modify`
   函数在这里真正展示了闭包的能量。在C中，我们经常需要读取一些临时值，修改成正确的比特，然后再把值写回。这意味着出现错误的范围非常大。
@@ -521,6 +604,7 @@ uint32_t temp2 = pwm0.enable.read();
 temp2 |= PWM0_ENABLE_PWM4EN;
 pwm0.enable.write(temp); // " + ts((
                             en: "Uh oh! Wrong variable!",
+                            ja: "ああ！間違った変数です！",
                             zh: "哦 不! 错误的变量!",
                           )) + "
 ")
@@ -528,6 +612,7 @@ pwm0.enable.write(temp); // " + ts((
 = #tr((
   en: [Using a HAL crate],
   de: [Verwendung eines HAL-Crates],
+  ja: [HALクレートの使用],
   zh: [使用一个HAL crate],
 ))
 
@@ -571,6 +656,18 @@ de: [
   passenden Modus für alternative Funktionen), bevor er ihn an die
   Peripherieeinheit übergibt. Und das alles ohne Laufzeitkosten!
 ],
+ja: [
+  あるチップ用のHALクレートは、典型的には、PACによって公開されている生の構造体に対して、カスタムトレイトを実装することで機能しています。
+  大抵、このトレイトは、単独のペリフェラルには`constrain()`関数を定義し、複数ピンを利用するGPIOポートのようなものには`split()`関数を定義します。
+  この関数は、下層の生のペリフェラル構造体オブジェクトを消費し、より高レベルなAPIを備える新しいオブジェクトを返します。
+  このAPIは、シリアルポートの`new`関数が、`Clock`構造体オブジェクトの借用を必要とするようなことをするかもしれません。Clock構造体オブジェクトは、
+  PLLと全てのクロック周波数とを設定する関数呼び出しによってのみ、生成することが可能です。この方法では、最初にクロックレートを設定しないでシリアルポートオブジェクトを作成したり、
+  シリアルポートオブジェクトがボーレートをクロック数に誤って変換するようなことは、静的に起こり得ません。
+  一部のクレートでは、各GPIOが取り得る状態のための特別なトレイトを定義することさえあります。このトレイトは、ペリフェラルにピンを渡す前に、
+  ユーザがピンを正しい状態（例えば、適切なAlternate
+  Functionモードを選択することによって）にすることを求めます。
+  これらは全て、ランタイムのコストを必要としません。
+],
 zh: [
   一个芯片的HAL
   crate是通过为PAC暴露的基础结构体们实现一个自定义Trait来发挥作用的。经常这个trait将会为某个外设定义一个被称作
@@ -590,6 +687,9 @@ en: [
 ],
 de: [
   Schauen wir uns ein Beispiel an:
+],
+ja: [
+  例を見てみましょう。
 ],
 zh: [
   让我们看一个例子:
@@ -616,12 +716,14 @@ fn main() -> ! {
         en: "Wrap up the SYSCTL struct into an object with a higher-layer API",
         de: "Kapseln Sie die SYSCTL-Struktur in einem Objekt mit einer API auf 
     // hoeherer Ebene.",
+        ja: "SYSCTL構造体をより高レイヤなAPIオブジェクトでラップします",
         zh: "将SYSCTL结构体封装成一个有更高抽象API的对象",
       )) + "
     let mut sc = p.SYSCTL.constrain();
     // " + ts((
         en: "Pick our oscillation settings",
         de: "Waehlen Sie unsere Oszillationseinstellungen aus.",
+        ja: "オシレータの設定値を選択します",
         zh: "选择我们的晶振配置",
       )) + "
     sc.clock_setup.oscillator = sysctl::Oscillator::Main(
@@ -631,6 +733,7 @@ fn main() -> ! {
     // " + ts((
         en: "Configure the PLL with those settings",
         de: "Konfigurieren Sie die PLL mit diesen Einstellungen.",
+        ja: "PLLをそれらの設定値で設定します",
         zh: "设置PLL",
       )) + "
     let clocks = sc.clock_setup.freeze();
@@ -643,6 +746,9 @@ fn main() -> ! {
     // hoeheren Ebene.
     // Beachten Sie, dass es `sc.power_control` nutzen muss, um die 
     // Stromversorgung der GPIO-Peripherie automatisch zu aktivieren.",
+        ja: "GPIO_PORTA構造体をより高レイヤなAPIオブジェクトでラップします。
+    // GPIOペリフェラルに自動的に電源を入れるために、
+    // `sc.power_control`の借用が必要なことに留意して下さい。",
         zh: "把GPIO_PORTA结构体封装成一个有更高抽象API的对象
     // 注意它需要借用 `sc.power_control` 因此它能自动开启GPIO外设。",
       )) + "
@@ -651,6 +757,7 @@ fn main() -> ! {
     // " + ts((
         en: "Activate the UART.",
         de: "Aktivieren Sie den UART.",
+        ja: "UARTを起動します。",
         zh: "激活UART",
       )) + "
     let uart = Serial::uart0(
@@ -658,6 +765,7 @@ fn main() -> ! {
         // " + ts((
             en: "The transmit pin",
             de: "Der Sende-Pin",
+            ja: "送信ピン",
             zh: "激活UART",
           )) + "
         porta
@@ -666,6 +774,7 @@ fn main() -> ! {
         // " + ts((
             en: "The receive pin",
             de: "Der Empfangs-Pin",
+            ja: "受信ピン",
             zh: "接收管脚"
           )) + "
         porta
@@ -674,6 +783,7 @@ fn main() -> ! {
         // " + ts((
             en: "No RTS or CTS required",
             de: "Kein RTS oder CTS erforderlich",
+            ja: "RTSとCTSは必要としません",
             zh: "不需要RTS或者CTS"
           )) + "
         (),
@@ -681,12 +791,14 @@ fn main() -> ! {
         // " + ts((
             en: "The baud rate",
             de: "Die Baudrate",
+            ja: "ボーレート",
             zh: "波特率",
           )) + "
         115200_u32.bps(),
         // " + ts((
             en: "Output handling",
             de: "Ausgabeverarbeitung",
+            ja: "出力制御",
             zh: "输出处理",
           )) + "
         NewlineMode::SwapLFtoCRLF,
@@ -694,12 +806,14 @@ fn main() -> ! {
             en: "We need the clock rates to calculate the baud rate divisors",
             de: "Wir benoetigen die Taktfrequenzen, um die Baudraten-Teiler zu 
         // berechnen.",
+            ja: "ボーレートの除数を計算するためにクロックレートが必要です",
             zh: "我们需要时钟频率去计算波特率除法器(divisors)",
           )) + "
         &clocks,
         // " + ts((
             en: "We need this to power up the UART peripheral",
             de: "Wir benoetigen dies, um die UART-Peripherie zu aktivieren.",
+            ja: "UARTペリフェラルの電源を入れるために必要です",
             zh: "我们需要这个去启动UART外设",
           )) + "
         &sc.power_control,

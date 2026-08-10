@@ -1,10 +1,9 @@
 #import "../config.typ": *
 
-#h1(tr((
-  en: [Appendix A: Glossary],
+#h1((en: [Appendix A: Glossary],
   de: [Anhang A: Glossar],
   zh: [附录A: 词汇表],
-)))
+))
 
 #tr((
 en: [

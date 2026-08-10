@@ -1,12 +1,11 @@
 #import "../config.typ": *
 
-#h1(tr((
-  en: [Introduction],
+#h1((en: [Introduction],
   de: [Einleitung],
   ja: [導入],
   uk: [Вступ],
   zh: [引言],
-)))
+))
 #set heading(offset: whole*2)
 
 #tr((
@@ -440,35 +439,35 @@ zh: [
   zh: [翻译],
 ))
 
-#let jp_ln = "https://tomoyuki-nakabayashi.github.io/book/"
-#let jp_rep = "https://github.com/tomoyuki-nakabayashi/book"
-#let cn_ln = "https://xxchang.github.io/book/"
-#let cn_rep = "https://github.com/XxChang/book"
+#let url_ja = "https://tomoyuki-nakabayashi.github.io/book/"
+#let url_ja_rep = "https://github.com/tomoyuki-nakabayashi/book"
+#let url_zh = "https://xxchang.github.io/book/"
+#let url_zh_rep = "https://github.com/XxChang/book"
 #tr((
 en: [
   This book has been translated by generous volunteers. If you would like
   your translation listed here, please open a PR to add it.
-  - #link(jp_ln)[Japanese] (#link(jp_rep)[repository])
-  - #link(cn_ln)[Chinese] (#link(cn_rep)[repository])
+  - #link(url_ja)[Japanese] (#link(url_ja_rep)[repository])
+  - #link(url_zh)[Chinese] (#link(url_zh_rep)[repository])
 ],
 de: [
   Dieses Buch wurde von großzügigen Freiwilligen übersetzt. Wenn Ihre
   Übersetzung hier aufgeführt werden soll, erstellen Sie bitte einen Pull
   Request, um sie hinzuzufügen.
-  - #link(jp_ln)[Japanisch] (#link(jp_rep)[repository])
-  - #link(cn_ln)[Chinesisch] (#link(cn_rep)[repository])
+  - #link(url_ja)[Japanisch] (#link(url_ja_rep)[repository])
+  - #link(url_zh)[Chinesisch] (#link(url_zh_rep)[repository])
 ],
 uk: [
   Цю книгу перекладено волонтерами.
   Якщо ви хочете, щоб ваш переклад був тут, будь ласка,
   відкрийте запит на злиття, щоб додати його.
-  - #link(jp_ln)[Японською] (#link(jp_rep)[репозиторій])
-  - #link(cn_ln)[Китайською] (#link(cn_rep)[репозиторій])
+  - #link(url_ja)[Японською] (#link(url_ja_rep)[репозиторій])
+  - #link(url_zh)[Китайською] (#link(url_zh_rep)[репозиторій])
 ],
 zh: [
   这本书是已经被一些慷慨的志愿者们翻译了。如果你想要将你的翻译列在这里，请打开一个PR去添加它。
-  - #link(jp_ln)[日文] (#link(jp_rep)[repository])
-  - #link(cn_ln)[中文] (#link(cn_rep)[repository])
+  - #link(url_ja)[日文] (#link(url_ja_rep)[repository])
+  - #link(url_zh)[中文] (#link(url_zh_rep)[repository])
 ]))
 
 == #tr((

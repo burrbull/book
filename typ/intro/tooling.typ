@@ -1,11 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Tooling],
+#h1((en: [Tooling],
   de: [Werkzeuge],
   ja: [ツール],
   zh: [工具],
-)))
+), offset: whole)
 
 #tr((
 en: [
@@ -233,11 +232,10 @@ zh: [
   QEMU是一个仿真器。在这个例子里，我们使用能完全仿真ARM系统的改良版QEMU。我们使用QEMU在主机上运行嵌入式程序。多亏了它，你可以在没有任何硬件的情况下，尝试这本书的部分示例。
 ]))
 
-#h1(offset: whole, tr((
-  en: [Tooling for Embedded Rust Debugging],
+#h1((en: [Tooling for Embedded Rust Debugging],
   de: [Werkzeuge für das Debugging von Embedded Rust],
   zh: [用于调试嵌入式Rust的工具],
-)))
+), offset: whole)
 
 = #tr((
   en: [Overview],

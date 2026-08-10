@@ -1,11 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Exceptions],
+#h1((en: [Exceptions],
   de: [Ausnahmen (Exceptions)],
   ja: [例外],
   zh: [异常],
-)))
+), offset: whole)
 <getting-started-exceptions>
 
 #tr((

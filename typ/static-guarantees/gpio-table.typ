@@ -15,26 +15,31 @@
       tr((
         en: [Name],
         de: [Name],
+        ja: [名前],
         zh: [名字],
       )),
       tr((
         en: [Bit Number(s)],
         de: [Bit-Nummer],
+        ja: [ビットフィールド],
         zh: [位数(s)],
       )),
       tr((
         en: [Value],
         de: [Wert],
+        ja: [値],
         zh: [值],
       )),
       tr((
         en: [Meaning],
         de: [Bedeutung],
+        ja: [意味],
         zh: [含义],
       )),
       tr((
         en: [Notes],
         de: [Hinweise],
+        ja: [説明],
         zh: [注释],
       )),
     ),
@@ -43,6 +48,7 @@
     tr((
       en: [Disables the GPIO],
       de: [Deaktiviert den GPIO],
+      ja: [GPIOを無効にする],
       zh: [关闭GPIO],
     )),
 
@@ -50,6 +56,7 @@
     tr((
       en: [Enables the GPIO],
       de: [Aktiviert den GPIO],
+      ja: [GPIOを有効にする],
       zh: [使能GPIO],
     )),
 
@@ -58,6 +65,7 @@
     tr((
       en: [Sets the direction to Input],
       de: [Legt die Richtung auf „Eingang" fest.],
+      ja: [方向を入力に設定する],
       zh: [方向设置成输入],
     )),
 
@@ -65,6 +73,7 @@
     tr((
       en: [Sets the direction to Output],
       de: [Legt die Richtung auf „Ausgang" fest.],
+      ja: [方向を出力に設定する],
       zh: [方向设置成输出],
     )),
 
@@ -73,6 +82,7 @@
     tr((
       en: [Sets the input as high resistance],
       de: [Setzt den Eingang auf hochohmig.],
+      ja: [入力を高抵抗に設定する],
       zh: [输入设置为高阻态],
     )),
 
@@ -80,6 +90,7 @@
     tr((
       en: [Input pin is pulled low],
       de: [Der Eingangspin wird auf Low-Pegel gezogen.],
+      ja: [入力ピンはプルダウンになる],
       zh: [下拉输入管脚],
     )),
 
@@ -87,6 +98,7 @@
     tr((
       en: [Input pin is pulled high],
       de: [Der Eingangspin wird auf High-Pegel gezogen],
+      ja: [入力ピンはプルアップになる],
       zh: [上拉输入管脚],
     )),
 
@@ -94,6 +106,7 @@
     tr((
       en: [Invalid state. Do not set],
       de: [Ungültiger Zustand. Nicht setzen.],
+      ja: [無効な状態。設定しないこと。],
       zh: [无效状态。不要设置],
     )),
 
@@ -102,6 +115,7 @@
     tr((
       en: [Output pin is driven low],
       de: [Der Ausgangspin wird auf Low-Pegel gesteuert.],
+      ja: [出力ピンをローにする],
       zh: [把管脚设置成低电平],
     )),
 
@@ -109,6 +123,7 @@
     tr((
       en: [Output pin is driven high],
       de: [Der Ausgangspin wird auf High-Pegel gesteuert.],
+      ja: [出力ピンをハイにする],
       zh: [把管脚设置成高电平],
     )),
 
@@ -116,6 +131,7 @@
     tr((
       en: [0 if input is < 1.5v, 1 if input >= 1.5v],
       de: [0, wenn der Eingang < 1,5 V ist; 1, wenn der Eingang ≥ 1,5 V ist.],
+      ja: [入力が1.5Vより低ければ0、1.5V以上であれば1],
       zh: [如果输入 < 1.5v 为0，如果输入 >= 1.5v 为1],
     )),
   )

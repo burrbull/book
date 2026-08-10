@@ -1,7 +1,7 @@
 #import "../config.typ": *
 
-#h1(offset: whole,
-  [QEMU])
+#h1([QEMU],
+  offset: whole)
 <getting-started-qemu>
 
 // TODO: check
@@ -45,11 +45,11 @@
   (Stand 2026).
 ]
 
-#let lm3s6965 = link("http://www.ti.com/product/LM3S6965")[LM3S6965]
+#let ln_lm3s6965 = link("http://www.ti.com/product/LM3S6965")[LM3S6965]
 #let url_qemu = "https://wiki.qemu.org/Documentation/Platforms/ARM#Supported_in_qemu-system-arm"
 #tr((
 en: [
-  We'll start writing a program for the #lm3s6965, a Cortex-M3
+  We'll start writing a program for the #ln_lm3s6965, a Cortex-M3
   microcontroller. We have chosen this as our initial target because it
   #link(url_qemu)[can be emulated]
   using QEMU so you don't need to fiddle with hardware in this section and
@@ -57,7 +57,7 @@ en: [
 ],
 de: [
   Wir beginnen mit der Entwicklung eines Programms für den
-  #lm3s6965, einen ARM
+  #ln_lm3s6965, einen ARM
   Cortex-M3-Mikrocontroller. Wir haben diesen als unser erstes Ziel
   ausgewählt, da er mit QEMU
   #link(url_qemu)[emuliert werden kann],
@@ -65,8 +65,13 @@ de: [
   müssen und wir uns auf die Werkzeuge und den Entwicklungsprozess
   konzentrieren können.
 ],
+ja: [
+  Cortex-M3マイクロコントローラの#ln_lm3s6965;用にプログラムを書くところから始めましょう。
+  このLM3S6965を最初のターゲットとして選んだ理由は、QEMUを使ってエミュレーションできるからです。
+  このセクションでは、ハードウェアをいじる必要がなく、ツールと開発プロセスに集中できます。
+],
 zh: [
-  我们将开始为#lm3s6965;编写程序，一个Cortex-M3微控制器。因为它能使用#link("https://wiki.qemu.org/Documentation/Platforms/ARM#Supported_in_qemu-system-arm")[QEMU仿真]，所以我们选择它作为我们的第一个目标，本节中，不需要使用硬件，我们注意力可以集中在工具和开发过程上。
+  我们将开始为#ln_lm3s6965;编写程序，一个Cortex-M3微控制器。因为它能使用#link("https://wiki.qemu.org/Documentation/Platforms/ARM#Supported_in_qemu-system-arm")[QEMU仿真]，所以我们选择它作为我们的第一个目标，本节中，不需要使用硬件，我们注意力可以集中在工具和开发过程上。
 ]))
 
 #tr((
@@ -91,6 +96,7 @@ zh: [
 = #tr((
   en: [Creating a non standard Rust program],
   de: [Erstellen eines nicht standardmäßigen Rust-Programms],
+  ja: [標準ライブラリを使わないRustプログラム],
   zh: [生成一个非标准的 Rust program],
 ))
 
@@ -294,7 +300,7 @@ fn main() -> ! {
         // " + ts((
             en: "your code goes here",
             de: "Hier kommt Ihr Code hin.",
-            zh: "your code goes here",
+            ja: "あなたのコードはここに書きます",
           )) + "
     }
 }
@@ -1086,6 +1092,7 @@ head -n3 .cargo/config.toml
 # " + ts((
     en: "uncomment this to make `cargo run` execute programs on QEMU",
     de: "Entferne den Kommentar hier, damit `cargo run` Programme auf QEMU ausfuehrt",
+    ja: "`cargo run`で、プログラムをQEMUで実行するため、コメントアウトを外して下さい。",
   )) + "
 runner = \"qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel\"
 ")
@@ -1100,6 +1107,10 @@ de: [
   Dieser Runner gilt nur für das Ziel `thumbv7m-none-eabi`, das unser
   Standard-Kompilierungsziel ist. Nun kompiliert `cargo run` das Programm
   und führt es auf QEMU aus:
+],
+ja: [
+  このランナーは、デフォルトのコンパイルターゲットである`thumbv7m-none-eabi`のみに適用されます。
+  これで、`cargo run`はプログラムをコンパイルしてQEMUで実行します。
 ],
 zh: [
   这个运行器只会应用于 `thumbv7m-none-eabi`
@@ -1123,6 +1134,7 @@ Hello, world!
 = #tr((
   en: [Debugging],
   de: [Fehlerbehebung (Debugging)],
+  ja: [デバッグ],
   zh: [调试],
 ))
 
@@ -1133,6 +1145,9 @@ en: [
 de: [
   Das Debuggen ist für die Embedded-Entwicklung von entscheidender
   Bedeutung. Schauen wir uns einmal an, wie es funktioniert.
+],
+ja: [
+  デバッグは組込み開発にとって非常に重要です。どのように行うのか、見てみましょう。
 ],
 zh: [
   对于嵌入式开发来说，调试非常重要。让我们来看下如何调试它。
@@ -1148,6 +1163,10 @@ de: [
   Das Debuggen eines Embedded-Geräts erfolgt _remote_, da das
   Programm, das wir debuggen möchten, nicht auf dem Rechner läuft, auf dem
   das Debugger-Programm (GDB oder LLDB) ausgeführt wird.
+],
+ja: [
+  組込みデバイスのデバッグは、_リモート_デバッグを伴います。デバッグしたいプログラムは、
+  デバッガプログラム（GDBまたはLLDB）を実行しているマシン上で実行されないためです。
 ],
 zh: [
   因为我们想要调试的程序所运行的机器上并没有运行一个调试器程序(GDB或者LLDB)，所以调试一个嵌入式设备就涉及到了
@@ -1165,6 +1184,10 @@ de: [
   QEMU-Umgebung ist der Client ein GDB- (oder LLDB-)Prozess und der Server
   der QEMU-Prozess, auf dem auch das eingebettete Programm läuft.
 ],
+ja: [
+  リモートデバッグは、クライアントとサーバからなります。QEMUのセットアップで、
+  クライアントはGDB（またはLLDB）プロセスとなり、サーバは組込みプログラムを実行しているQEMUプロセスとなります。
+],
 zh: [
   远程调试涉及一个客户端和一个服务器。在QEMU的情况中，客户端将是一个GDB(或者LLDM)进程且服务器将会是运行着嵌入式程序的QEMU进程。
 
@@ -1177,6 +1200,9 @@ en: [
 de: [
   In diesem Abschnitt verwenden wir das bereits kompilierte Beispiel `hello`.
 ],
+ja: [
+  このセクションでは、コンパイル済みの`hello`の例を使用します。
+],
 zh: [
   在这部分，我们要使用我们已经编译的 `hello` 示例。
 ]))
@@ -1187,6 +1213,9 @@ en: [
 ],
 de: [
   Der erste Schritt beim Debuggen besteht darin, QEMU im Debugging-Modus zu starten:
+],
+ja: [
+  最初のデバッグステップは、QEMUをデバッグモードで起動することです。
 ],
 zh: [
   调试的第一步是在调试模式中启动QEMU：
@@ -1223,6 +1252,13 @@ de: [
     Funktion `main` erreicht, bevor wir die Gelegenheit gehabt hätten, den
     Debugger zu starten!
 ],
+ja: [
+  このコマンドは、コンソールに何も表示せず、端末をブロックします。
+  ここでは2つの追加フラグを渡しています。
+  - `-gdb tcp::3333`。QEMUがTCPポート3333番で、GDBコネクションを待つようにします。
+  - `-S`。QEMUが、起動時に、マシンをフリーズします。このフラグがないと、
+    デバッガを起動する前に、プログラムがmain関数の終わりに到達してしまいます。
+],
 zh: [
   这个命令将不打印任何东西到调试台上，且将会阻塞住终端。此刻我们还传递了两个额外的标志。
   - `-gdb tcp::3333`。这告诉QEMU在3333的TCP端口上等待一个GDB连接。
@@ -1237,6 +1273,9 @@ en: [
 de: [
   Als Nächstes starten wir GDB in einem anderen Terminal und weisen es an,
   die Debug-Symbole des Beispiels zu laden:
+],
+ja: [
+  次に別の端末でGDBを起動し、`hello`の例のデバッグシンボルをロードします。
 ],
 zh: [
   接下来我们在另一个终端启动GDB，且告诉它去加载示例的调试符号。
@@ -1434,6 +1473,10 @@ de: [
   Wir sind nun fast bei dem Code angelangt, der „Hello, world!" ausgibt.
   Machen wir weiter mit dem Befehl `next`.
 ],
+ja: [
+  「Hello, world!」を表示するコードに近づいてきました。
+  `next`コマンドを使って、先へ進みましょう。
+],
 zh: [
   我们现在靠近打印"Hello, world!"的代码。让我们使用`next`命令继续前进。
 ]))
@@ -1455,6 +1498,10 @@ de: [
   An dieser Stelle sollte auf dem Terminal, auf dem `qemu-system-arm`
   läuft, „Hello, world!" angezeigt werden.
 ],
+ja: [
+  この時点で、`qemu-system-arm`を実行している端末に「Hello,
+  world」が表示されるはずです。
+],
 zh: [
   在这里，你应该看到 "Hello, world!" 被打印到正在运行 `qemu-system-arm` 的终端上。
 ]))
@@ -1470,6 +1517,9 @@ en: [
 ],
 de: [
   Ein erneuter Aufruf von `next` beendet den QEMU-Prozess.
+],
+ja: [
+  もう1度`next`を実行すると、QEMUプロセスが終了します。
 ],
 zh: [
   再次调用`next`将会终止QEMU进程。
@@ -1489,6 +1539,9 @@ en: [
 ],
 de: [
   Sie können die GDB-Sitzung nun beenden.
+],
+ja: [
+  これでGDBセッションを終了できます。
 ],
 zh: [
   你现在能退出GDB的会话了。

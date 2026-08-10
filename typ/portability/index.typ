@@ -1,10 +1,10 @@
 #import "../config.typ": *
 
-#h1(tr((
-  en: [Portability],
+#h1((en: [Portability],
   de: [Portabilität],
+  ja: [移植性],
   zh: [可移植性],
-)))
+))
 <portability>
 
 #tr((
@@ -21,6 +21,10 @@ de: [
   und dementsprechend variieren auch die Interaktionsmöglichkeiten mit den
   Peripheriegeräten.
 ],
+ja: [
+  組込み環境においては、移植性は非常に重要なトピックです。1つのメーカから、それぞれのベンダや各プロダクトファミリが、異なるペリフェラルや機能を提供します、
+  異なるペリフェラルでは、ペリフェラルとやり取りする方法も異なります。
+],
 zh: [
   在嵌入式环境中，可移植性是一个非常重要的主题:
   每个供应商甚至同个制造商的不同系列间，都提供了不同的外设和功能。同样地，与外设交互的方式也将会不一样。
@@ -34,6 +38,9 @@ en: [
 de: [
   Eine gängige Methode, diese Unterschiede auszugleichen, ist die
   sogenannte Hardware-Abstraktionsschicht (HAL).
+],
+ja: [
+  このような違いを吸収する一般的な方法は、ハードウェア抽象化レイヤまたは*HAL*と呼ばれるレイヤを導入することです。
 ],
 zh: [
   通过一个被叫做硬件抽象层或者*HAL*的层去均等化这种差异是一种常见的方法。
@@ -51,6 +58,9 @@ de: [
   bestimmte plattformspezifische Details emulieren und Programmen so
   direkten Zugriff auf die Hardwareressourcen ermöglichen.
 ],
+ja: [
+  ハードウェア抽象化は、プラットフォーム固有の細部をエミュレーションして、プログラムにハードウェアリソースへ直接アクセスする方法を提供する、ソフトウェアの一連のルーチンです。
+],
 zh: [
   在软件中硬件抽象是一组函数，其模仿了一些平台特定的细节，让程序可以直接访问硬件资源。
 ]))
@@ -66,6 +76,9 @@ de: [
   Hochleistungsanwendungen zu schreiben, indem sie standardisierte
   Betriebssystemaufrufe für den Hardwarezugriff bereitstellen.
 ],
+ja: [
+  それらのルーチンがハードウェアへのオペレーティングシステム（OS）コールを提供することで、プログラマは、デイバスに依存せず、高性能なアプリケーションを書くことができます。
+],
 zh: [
   通过向硬件提供标准的操作系统(OS)调用，它可以让程序员编写独立于设备的高性能应用。
 ]))
@@ -74,6 +87,7 @@ zh: [
 #tr((
   en: [_Wikipedia: #link(url_hal)[Hardware Abstraction Layer]_],
   de: [_Wikipedia: #link(url_hal)[Hardware Abstraction Layer]_],
+  ja: [_Wikipedia: #link(url_hal)[ハードウェア抽象化レイヤ]_],
   zh: [_Wikipedia: #link(url_hal)[Hardware Abstraction Layer]_],
 ))
 ]
@@ -97,6 +111,11 @@ de: [
   wahrscheinlich nicht der effizienteste Weg, um Portabilität zu
   gewährleisten.
 ],
+ja: [
+  組込みシステムは、通常オペレーティングシステムを使わず、ユーザがインストールできるソフトウェアもありません。
+  全体として1つにコンパイルされたファームウェアイメージであり、様々な制約を持つ、という点が特殊です。
+  そのため、Wikipediaで定義されている従来のアプローチでもうまく機能する可能性はありますが、移植性を確保するための最も有効なアプローチではない可能性があります。
+],
 zh: [
   在这方面，嵌入式系统有点特别，因为通常没有操作系统和用户可安装的软件，而只有固件镜像，其作为一个整体被编译且伴着许多约束。因此虽然维基百科定义的传统方法可能有用，但是它不是确保可移植性最有效的方法。
 ]))
@@ -109,6 +128,9 @@ en: [
 de: [
   Wie gehen wir dabei in Rust vor? Hier kommt *#ln_hal* ins Spiel…
 ],
+ja: [
+  Rustではどうするのでしょうか？*embedded-hal*を見ていきましょう。
+],
 zh: [
   在Rust中我们要怎么实现这个目标呢?让我们进入*embedded-hal*…
 ]))
@@ -116,6 +138,7 @@ zh: [
 == #tr((
   en: [What is #ln_hal?],
   de: [Was ist #ln_hal?],
+  ja: [embedded-halとは？],
   zh: [什么是embedded-hal？],
 ))
 
@@ -140,6 +163,10 @@ de: [
   werden kann, ist garantiert, dass die im Merkmal spezifizierten Methoden
   verfügbar sind).
 ],
+ja: [
+  一言で言えば、*HAL実装*、*ドライバ*、*アプリケーションまたはファームウェア*間の実装規約を定義するトレイトの集まりのことです。
+  それらの規約は、機能（ある型にトレイトが実装されていれば、*HAL実装*はそのトレイトの機能を提供します）とメソッド（あるトレイトを実装している型のオブジェクトを作成できれば、そのトレイトに含まれるメソッドが利用可能であることが保証されます）を含んでいます。
+],
 zh: [
   简而言之，它是一组traits，其定义了*HAL
   implementations*，*驱动*，*应用(或者固件)*
@@ -154,6 +181,9 @@ en: [
 ],
 de: [
   Ein typischer Schichtaufbau könnte wie folgt aussehen:
+],
+ja: [
+  典型的なレイヤ構造は、次のようになります。
 ],
 zh: [
   典型的分层可能如下所示:
@@ -179,6 +209,15 @@ de: [
   - SPI
   - Timers/Countdowns
   - Analog-Digital-Umsetzung
+],
+ja: [
+  *embedded-hal*で定義されているいくつかのトレイトを示します。
+  - GPIO（入出力ピン）
+  - シリアル通信
+  - I2C
+  - SPI
+  - タイマ/カウントダウン
+  - アナログデジタル変換
 ],
 zh: [
   一些在*embedded-hal*中被定义的traits:
@@ -223,6 +262,14 @@ de: [
   Vorteile, wie etwa ein geringerer Aufwand durch „Trial-and-Error" dank
   wohldefinierter und sofort einsatzbereiter APIs.
 ],
+ja: [
+  *embedded-hal*トレイトと、それらを実装して使用するクレートを持つ主な理由は、複雑さを抑えることです。
+  アプリケーションがハードウェアのペリフェラルを使うコードだけでなく、追加するハードウェアコンポーネントのドライバを実装しなければならない場合を考えると、再利用性は非常に制限されます。
+  数学的に表現すると、*M*がペリフェラルHAL実装の数で、*N*がドライバの数とするならば、全てのアプリケーションで車輪の再発明を行うことになります。
+  その結果、*M\*N*の実装が必要になります。
+  一方、*embedded-hal*トレイトで提供されるAPIを使うことで、実装の複雑さは*M+N*になるでしょう。
+  もちろん、明確に定義されたすぐに利用可能なAPIによって試行錯誤を減らすなど、他にも利点があります。
+],
 zh: [
   使用*embedded-hal*
   traits和依赖*embedded-hal*的crates的主要原因是为了控制复杂性。如果发现一个应用可能必须要实现对硬件外设的使用，以及需要实现应用程序和其它硬件组件间潜在的驱动，那么其应该很容易被看作是可复用性有限的。用数学语言来说就是，如果*M*是外设HAL
@@ -234,6 +281,7 @@ zh: [
 == #tr((
   en: [Users of the #ln_hal],
   de: [Nutzer von #ln_hal],
+  ja: [embedded-halのユーザ],
   zh: [embedded-hal的用户],
 ))
 
@@ -244,6 +292,9 @@ en: [
 de: [
   Wie bereits erwähnt, gibt es drei Hauptnutzer einer HAL:
 ],
+ja: [
+  上記のように、HALには主に3つのユーザがいます。
+],
 zh: [
   像上面所说的，HAL有三个主要用户:
 ]))
@@ -251,6 +302,7 @@ zh: [
 === #tr((
   en: [HAL implementation],
   de: [HAL-Implementierung],
+  ja: [HAL実装],
   zh: [HAL implementation],
 ))
 
@@ -275,6 +327,12 @@ de: [
     Betriebsmodus, verwendete Pins usw.) bereitstellen.
   - eine oder mehrere `trait`-Implementierungen (`impl`) von
     *#ln_hal*-Traits für diesen Typ
+],
+ja: [
+  HAL実装は、ハードウェアとHALトレイトのユーザとの間のインタフェースを実装します。典型的な実装では、3つの部分から構成されます。
+  - 1つ以上のハードウェア固有の型
+  - そのような型のオブジェクトを作成し、初期化する関数。多くの場合、様々な設定オプションを提供しています（速度、動作モード、使用ピンなど）
+  - 1つ以上のその型に対する*embedded-hal*の`trait` `impl`
 ],
 zh: [
   HAL implentation提供硬件和HAL
@@ -301,6 +359,13 @@ de: [
   - Über einen Adapter, z. B. ein Mock von Typen für Unit-Tests
   - Via-Treiber für Hardware-Adapter, z. B. I2C-Multiplexer oder GPIO-Expander
 ],
+ja: [
+  このような*HAL実装*は、様々な種類があります。
+  - 低レベルのハードウェアアクセスによるもの、例えばレジスタ
+  - オペレーティングシステムによるもの、例えばLinuxの`sysfs`の使用
+  - アダプタによるもの、例えばユニットテストのための型のモック
+  - ハードウェアアダプタ用のドライバによるもの、例えばI2CマルチプレクサやGPIOエキスパンダ
+],
 zh: [
   这样的一个 *HAL implementation* 可以有多个方法来实现:
   - 通过低级硬件访问，比如通过寄存器。
@@ -312,6 +377,7 @@ zh: [
 === #tr((
   en: [Driver],
   de: [Treiber],
+  ja: [ドライバ],
   zh: [驱动],
 ))
 
@@ -333,6 +399,10 @@ de: [
   Lichtsensoren), Anzeigegeräte (LED-Arrays, LCD-Displays) und Aktoren
   (Motoren, Sender).
 ],
+ja: [
+  ドライバは、embedded-halトレイトを実装しているペリフェラルに接続されている、内部または外部コンポーネントに対するカスタム機能を実装します。
+  そのようなドライバの典型的な例は、様々なセンサ（温度、磁気、加速度、輝度）、ディスプレイデバイス（LEDアレイ、LCDディスプレイ）や、アクチュエータ（モータ、トランスミッタ）を含みます。
+],
 zh: [
   驱动为一个外部或者内部组件实现了一组自定义的功能，被连接到一个实现了embedded-hal
   traits的外设上。这种驱动的典型的例子包括多种传感器(温度计，磁力计，加速度计，光照计)，显示设备(LED阵列，LCD显示屏)和执行器(电机，发送器)。
@@ -353,6 +423,10 @@ de: [
   stellt eine eigene Typinstanz mit einem benutzerdefinierten Satz von
   Methoden bereit, die die Interaktion mit dem angesteuerten Gerät
 ],
+ja: [
+  ドライバは、embedded-halの特定のトレイトを実装する型のインスタンスと共に初期化する必要があります。
+  そのトレイトは、トレイト境界により保証され、駆動するデバイスとやり取りできるインスタンスをカスタムメソッドと共に提供します。
+],
 zh: [
   必须使用实现了embedded-hal的某个`trait`的类型的实例来初始化驱动，这是通过trait
   bound来确保的，驱动也提供了它自己的类型实例，这个实例具有一组自定义的方法，这些方法允许与被驱动的设备交互。
@@ -362,6 +436,7 @@ zh: [
 === #tr((
   en: [Application],
   de: [Anwendung],
+  ja: [アプリケーション],
   zh: [应用],
 ))
 
@@ -393,6 +468,13 @@ de: [
   Nutzung interner Peripherie getroffen werden (etwa wenn mehrere Timer
   mit unterschiedlichen Fähigkeiten zur Verfügung stehen oder Konflikte
   zwischen verschiedenen Peripherieeinheiten auftreten).
+],
+ja: [
+  アプリケーションは、様々な部品を結合し、必要な機能が確実に実現できるようにします。
+  別システムに移植する際、アプリケーションは最も適合作業が求められる部分です。アプリケーションは、HAL実装を通じて、実際のハードウェアを初期化する必要があるからです。
+  異なるハードウェアの初期化は、極端に異なる場合があります。
+  ユーザの選択は、多くの場合、大きな影響があります。
+  コンポーネントが別の端子に物理的に接続されたり、ハードウェアバスが機器構成を満たすために外部ハードウェアを必要とする場合があったり、内部ペリフェラルを使えるようにするための異なるトレードオフがあったりします。例えば、異なる機能を持つ複数のタイマが利用可能であること、や、ペリフェラルが他のペリフェラルと競合すること、です。
 ],
 zh: [
   应用把多个部分结合在一起并确保需要的功能被实现。当在不同的系统间移植时，这部分的适配是花费最多精力的地方，因为应用需要通过HAL

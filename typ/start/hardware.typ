@@ -1,11 +1,10 @@
 #import "../config.typ": *
 
-#h1(tr((
-  en: [Hardware],
+#h1((en: [Hardware],
   de: [Hardware],
   ja: [ハードウェア],
   zh: [硬件],
-)))
+))
 <getting-started-hardware>
 
 #tr((
@@ -301,7 +300,7 @@ zh: [
 fn main() -> ! {
     hprintln!(\"Hello, world!\").unwrap();
 
-    // " + (
+    // " + ts((
         en: "exit QEMU
     // NOTE do not run this on hardware; it can corrupt OpenOCD state
     // debug::exit(debug::EXIT_SUCCESS);",
@@ -314,7 +313,7 @@ fn main() -> ! {
     // debug::exit(debug::EXIT_SUCCESS);",
         zh: "退出 QEMU
     // 注意 不要在硬件上运行这个；它会打破OpenOCD的状态",
-      ).at(lang, default: todos) + "
+      )) + "
 
     loop {}
 }

@@ -61,8 +61,17 @@
 
 #let book_title = "The Embedded Rust Book"
 
-#let h1(it, offset: 0) = if tgt == "pdf" {
-  heading(it, depth: 1, offset: offset)
-} else {
-  title(it)
+#let h1(it, offset: 0) = {
+  if type(it) == dictionary {
+    it = tr(it)
+  }
+  if tgt == "pdf" {
+    heading(it, depth: 1, offset: offset)
+  } else {
+    title(it)
+  }
+  /*show title: it => {
+    heading(it.body, depth: 1, offset: offset)
+  }
+  title(it)*/
 }

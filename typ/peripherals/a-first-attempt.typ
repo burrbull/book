@@ -1,14 +1,15 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [A First Attempt],
+#h1((en: [A First Attempt],
   de: [Ein erster Versuch in Rust],
+  ja: [最初の試み],
   zh: [Rust尝鲜],
-)))
+), offset: whole)
 
 = #tr((
   en: [The Registers],
   de: [Die Register],
+  ja: [レジスタ],
   zh: [寄存器],
 ))
 
@@ -31,11 +32,23 @@ de: [
   #link(url_arm)[ARM-Referenzhandbuch].
   Wir sehen, dass es vier Register gibt:
 ],
+ja: [
+  `SysTick` ペリフェラルを見ていきましょう。 `SysTick`
+  はCortex-Mプロセッサ・コアに搭載されているシンプルなタイマーです。
+  通常は、チップメーカーのデータシートや_テクニカルリファレンスマニュアル_でこれらのペリフェラルの情報を調べることができるのですが、この例においては全てのARM
+  Cortex-Mコアで共通のものですので、今回は#link("http://infocenter.arm.com/help/topic/com.arm.doc.dui0553a/Babieigh.html")[ARMリファレンスマニュアル]を見てみましょう。
+  そこには4つのレジスタが載っています。
+],
 zh: [
   让我们看下 'SysTick' 外设 -
   一个简单的计时器，它存在于每个Cortex-M处理器内核中。通常你能在芯片厂商的数据手册或者_技术参考手册_中看到它们，但是下面的例子对所有ARM
   Cortex-M核心都是通用的，让我们看下#link(url_arm)[ARM参考手册]。我们能看到这里有四个寄存器:
 ]))
+
+#let _32bits = tr((
+  en: [32 bits],
+  ja: [32ビット],
+), default: [32 bits])
 
 #figure(
   kind: table,
@@ -46,21 +59,25 @@ zh: [
       tr((
         en: [Offset],
         de: [Offset],
+        ja: [オフセット],
         zh: [Offset],
       )),
       tr((
         en: [Name],
         de: [Name],
+        ja: [名前],
         zh: [Name],
       )),
       tr((
         en: [Description],
         de: [Beschreibung],
+        ja: [説明],
         zh: [Description],
       )),
       tr((
         en: [Width],
         de: [Breite],
+        ja: [幅],
         zh: [Width],
       )),
     ),
@@ -68,36 +85,41 @@ zh: [
     tr((
       en: [Control and Status Register],
       de: [Steuerung und Status Register],
+      ja: [制御およびステータスレジスタ],
       zh: [控制和状态寄存器],
     )),
-    [32 bits],
+    _32bits,
     [0x04], [SYST_RVR],
     tr((
       en: [Reload Value Register],
       de: [Wert-Register neu laden],
+      ja: [リロード値レジスタ],
       zh: [重装载值寄存器],
     )),
-    [32 bits],
+    _32bits,
     [0x08], [SYST_CVR],
     tr((
       en: [Current Value Register],
       de: [Register für den aktuellen Wert],
+      ja: [現在値レジスタ],
       zh: [当前值寄存器],
     )),
-    [32 bits],
+    _32bits,
     [0x0C], [SYST_CALIB],
     tr((
       en: [Calibration Value Register],
       de: [Kalibrierwert-Register],
+      ja: [キャリブレーション値レジスタ],
       zh: [校准值寄存器],
     )),
-    [32 bits],
+    _32bits,
   )
 )
 
 = #tr((
   en: [The C Approach],
   de: [Der C-Ansatz],
+  ja: [Cアプローチ],
   zh: [C语言风格的方法(The C Approach)],
 ))
 
@@ -109,6 +131,9 @@ en: [
 de: [
   In Rust können wir eine Sammlung von Registern auf genau dieselbe Weise
   darstellen wie in C -- mit einem `struct`.
+],
+ja: [
+  Rustでも、`struct`を使ってCと同じ方法でレジスタの集合を正確に表現することができます。
 ],
 zh: [
   在Rust中，我们可以像C语言一样，用一个 `struct` 表示一组寄存器。
@@ -144,6 +169,13 @@ de: [
   obigen Tabelle entsprechen. Aber diese „Struktur" allein nützt natürlich
   nichts -- wir brauchen eine Variable.
 ],
+ja: [
+  `#[repr(C)]`修飾子はRustコンパイラ対して、この構造体をCコンパイラと同じようにメモリにレイアウトするように指示します。
+  これはとても重要なことです。なぜならRustでは、Cにおいては行われない構造体のフィールドの並び替えが許されているためです。
+  コンパイラによって暗黙のうちに構造体のフィールドが並び替えられることにより、デバッグをするはめになることは想像できるでしょう！
+  この修飾子を置くことで、4つの32ビットの各フィールドは上記のテーブルに対応付けられます。
+  ただしもちろん、この`struct`はそれ自体では何の役にも立ちません。次のように変数として使う必要があります。
+],
 zh: [
   告诉Rust编译器像C编译器一样去布局这个结构体。这非常重要，因为Rust允许结构体字段被重新排序，而C语言不允许。你可以想象下如果这些字段被编译器悄悄地重新排了序，在调试时会给我们带来多大的麻烦！有了这个限定符，我们就有了与上表对应的四个32位的字段。但当然，这个
   `struct` 本身没什么用处 - 我们需要一个变量。
@@ -157,6 +189,7 @@ let time = unsafe { (*systick).cvr };
 = #tr((
   en: [Volatile Accesses],
   de: [Volatile-Zugriffe],
+  ja: [volatileアクセス],
   zh: [volatile访问(Volatile Accesses)],
 ))
 
@@ -179,6 +212,13 @@ de: [
   + Jeder Code-Abschnitt an beliebiger Stelle Ihres Programms könnte über
     diese Struktur auf die Hardware zugreifen.
   + Vor allem aber funktioniert es eigentlich nicht …
+],
+ja: [
+  上記のやり方には、いくつか問題があります。
+  + ペリフェラルにアクセスするためには毎回アンセーフを使わなくてはなりません。
+  + どのレジスタが読み取り専用でどのレジスタが読み書き可能かを指定する方法がありません。
+  + プログラム内のどのコードからでもこの構造体を通してハードウェアにアクセスできてしまいます。
+  + 最も大事なことは、このコードは実際には動作しないということです…
 ],
 zh: [
   现在，上面的方法有一堆问题。
@@ -205,6 +245,12 @@ de: [
   wie vorgesehen ausgeführt wird. In Rust hingegen kennzeichnen wir die
   _Zugriffe_ als volatile, nicht die Variable.
 ],
+ja: [
+  ここで問題となるのは、コンパイラが賢いということです。
+  同じRAMに相次いで２回書き込むと、コンパイラはこれに気づき、最初の書き込みを完全にスキップします。
+  Cでは、全ての読み書きが意図した通りに行われることを保証するために、`volatile`型修飾子を変数につけることができます。
+  Rustでは、変数ではなく_アクセス_に対してvolatileをつけます。
+],
 zh: [
   现在的问题是编译器很聪明。如果你往RAM同个地方写两次，一个接着一个，编译器会注意到这个行为，且完全跳过第一个写入操作。在C语言中，我们能标记变量为`volatile`去确保每个读或写操作按所想的那样发生。在Rust中，我们将_访问_操作标记为易变的(volatile)，而不是将变量标记为volatile。
 ]))
@@ -225,10 +271,14 @@ de: [
   noch mehr `unsafe`-Code! Glücklicherweise gibt es ein Crate eines
   Drittanbieters, das hierbei helfen kann -- #ln_volatile.
 ],
+ja: [
+  これで4つの問題のうち1つを直せました。しかし、さらに`unsafe`なコードがあります！
+  幸いなことに、これに対処できるサードパーティ製のクレート#ln_volatile;があります。
+],
 zh: [
   这样，我们已经修复了一个问题，但是现在我们有了更多的 `unsafe`
   代码!幸运的是，有个第三方的crate可以帮助到我们 -
-  #link("https://crates.io/crates/volatile_register")[`volatile_register`]
+  #ln_volatile
 ]))
 
 ```rust
@@ -268,6 +318,10 @@ de: [
   diese Schreibvorgänge tatsächlich sicher sind; daher ist dies eine
   sinnvolle Standardeinstellung.
 ],
+ja: [
+  これで`read`と`write`メソッドを通してvolatileアクセスが自動的に行われるようになりました。
+  書き込みを実行するのはまだ`unsafe`です。しかし、公平を期するために言うと、ハードウェアは変更可能な状態の集まりであるため、それらへの書き込みが実際に安全なのかどうか、をコンパイラが知る方法はないのです。そのため、これは基本姿勢としては悪くないでしょう。
+],
 zh: [
   现在通过`read`和`write`方法，volatile
   accesses可以被自动执行。执行写操作仍然是 `unsafe`
@@ -277,6 +331,7 @@ zh: [
 = #tr((
   en: [The Rusty Wrapper],
   de: [Der Rusty Wrapper],
+  ja: [Rustのラッパ],
   zh: [Rust风格的封装],
 ))
 
@@ -296,6 +351,10 @@ de: [
   kümmern müssen (vorausgesetzt, sie vertrauen darauf, dass wir alles
   richtig gemacht haben!).
 ],
+ja: [
+  ユーザが安全に呼び出せるように、この`struct`を高レイヤーのAPIでラップする必要があります。
+  ドライバの作者として、アンセーフなコードが正しいことを手動で検証し、ユーザがそのドライバを使用する上で心配することがないように安全なAPIとして提供します。（ユーザは提供されたものが正しいと信頼しています！）
+],
 zh: [
   我们需要把这个`struct`封装进一个更高抽象的API中，这个API对于用户来说，可以安全地调用。作为驱动的作者，我们亲手验证不安全的代码是否正确，然后为我们的用户提供一个safe的API，因此用户们不必担心它(让他们相信我们不会出错!)。
 ]))
@@ -306,6 +365,9 @@ en: [
 ],
 de: [
   Ein Beispiel hierfür wäre:
+],
+ja: [
+  一例を挙げます。
 ],
 zh: [
   有可能可以这样写:
@@ -358,6 +420,9 @@ de: [
   Das Problem bei diesem Ansatz ist nun, dass der folgende Code für den
   Compiler völlig zulässig ist:
 ],
+ja: [
+  このやり方の問題は、次のコードがコンパイラに完全に受け入れられることです。
+],
 zh: [
   现在，这种方法带来的问题是，下列的代码完全可以被编译器接受:
 ]))
@@ -395,6 +460,10 @@ de: [
   „doppelten" Treiberinstanzen zu erkennen; sobald sich der Code jedoch
   über mehrere Module, Treiber, Entwickler und Zeiträume hinweg erstreckt,
   schleichen sich derartige Fehler immer leichter ein.
+],
+ja: [
+  `set_reload`関数に`&mut self`引数を渡すことで、_その_インスタンスの`SystemTimer`構造体に対する他の参照がないことを確認しますが、全く同じペリフェラルを指す２つ目の`SystemTimer`構造体をユーザが作ることは止められません！
+  このように書かれたコードは、作者がこれらの「重複した」ドライバのインスタンスを全て見つけるのに十分に熱心であれば動作するでしょうが、一度コードが複数のモジュール、ドライバ、開発者、そして日に渡って分散すると、この種の間違いがどんどん入り込みやすくなっていきます。
 ],
 zh: [
   虽然 `set_reload` 函数的 `&mut self`
