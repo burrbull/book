@@ -1,10 +1,9 @@
 #import "../../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [HAL Design Patterns],
+#h1((en: [HAL Design Patterns],
   de: [HAL-Design-Muster],
   zh: [HAL设计模式],
-)))
+), offset: whole)
 
 #let url_quide = "https://rust-lang.github.io/api-guidelines/"
 #tr((

@@ -1,10 +1,9 @@
 #import "../../config.typ": *
 
-#h1(offset: whole*2, tr((
-  en: [HAL Design Patterns Checklist],
+#h1((en: [HAL Design Patterns Checklist],
   de: [Checkliste HAL-Design-Muster],
   zh: [HAL设计检查清单],
-)))
+), offset: whole*2)
 <hal-checklist>
 
 #tr((

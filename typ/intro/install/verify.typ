@@ -1,11 +1,10 @@
 #import "../../config.typ": *
 
-#h1(offset: whole*2, tr((
-  en: [Verify Installation],
+#h1((en: [Verify Installation],
   de: [Die Installation überprüfen],
   ja: [インストールの確認],
   zh: [安装验证],
-)))
+), offset: whole*2)
 <verify-installation>
 
 #tr((

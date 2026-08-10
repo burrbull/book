@@ -1,11 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Installing the tools],
+#h1((en: [Installing the tools],
   de: [Werkzeuge installieren],
   ja: [ツールのインストール],
   zh: [安装工具],
-)))
+), offset: whole)
 
 #tr((
 en: [

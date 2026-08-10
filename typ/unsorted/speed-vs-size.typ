@@ -1,10 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Optimizations: the speed size tradeoff],
+#h1((en: [Optimizations: the speed size tradeoff],
   de: [Optimierungen: Der Kompromiss zwischen Geschwindigkeit und Größe],
+  ja: [最適化：速度とサイズのトレードオフ],
   zh: [优化: 速度与大小之间的博弈],
-)))
+), offset: whole)
 
 #tr((
 en: [
@@ -20,6 +20,10 @@ de: [
   `rustc` und deren Auswirkungen auf die Ausführungszeit sowie die Größe
   der Binärdatei eines Programms.
 ],
+ja: [
+  誰もがプログラムを超高速で超小さくしたいと願いますが、両方の特性を最大化することはできません。
+  このセクションは、`rustc`が提供する異なる最適化レベルについて、どのようにプログラムの実行時間とバイナリサイズに影響するかを説明します。
+],
 zh: [
   每个人都想要程序变得即快又小，但是同时满足这两个条件是不可能的。这部分讨论`rustc`提供的不同的优化等级，和它们是如何影响执行时间和一个程序的二进制项的大小。
 ]))
@@ -27,6 +31,7 @@ zh: [
 = #tr((
   en: [No optimizations],
   de: [Keine Optimierungen],
+  ja: [最適化なし],
   zh: [无优化],
 ))
 
@@ -43,6 +48,11 @@ de: [
   dieses Profil für das Debugging optimiert ist, werden
   Debug-Informationen aktiviert, jedoch _keinerlei_ Optimierungen
   vorgenommen; es wird also `-C opt-level=0` verwendet.
+],
+ja: [
+  これはデフォルトです。`cargo build`を実行する場合、開発（別名`dev`）プロファイルを使います。
+  このプロファイルはデバッグに最適化されています。そのため、デバッグ情報が有効化されており、最適化は一切有効化されて_いません_。
+  つまり、`-C opt-level = 0`を使用します。
 ],
 zh: [
   这是默认的。当你调用`cargo build`时，你使用的是development(又叫`dev`)配置。这个配置优化的目的是为了调试，因此它使能了调试信息且_关闭_了所有优化，i.e.~它使用
@@ -64,6 +74,11 @@ de: [
   Dies ermöglicht Ihnen die Verwendung von Breakpoints beim Debuggen von
   Release-Builds.
 ],
+ja: [
+  少なくともベアメタルの開発では、デバッグ情報はある意味ゼロコストです。
+  デバッグ情報は、Flash/ROMの容量を使いません。そのため、リリースプロファイルで、デフォルトで無効化されているデバッグ情報を有効化することをお勧めします。
+  これにより、リリースビルドをデバッグする時、ブレイクポイントを使うことができます。
+],
 zh: [
   至少对于裸机开发来说，调试信息不会占用Flash/ROM中的空间，意味着在这种情况下，调试信息是零开销的，因此实际上我们推荐你在release配置中使能调试信息
   -- 默认它被关闭了。那会让你调试release版本的固件时可以使用断点。
@@ -74,6 +89,7 @@ zh: [
 # " + ts((
     en: "symbols are nice and they don't increase the size on Flash",
     de: "Symbole sind praktisch und vergroessern die Dateigroesse im Flash nicht",
+    ja: "シンボルは素晴らしく、Flashのサイズを増やしません",
     zh: "调试符号很好且它们不会增加Flash上的大小",
   )) + "
 debug = true
@@ -95,6 +111,11 @@ de: [
   führt der Versuch, Variablen auszugeben, hingegen zur Meldung
   `$0 = <value optimized out>`.
 ],
+ja: [
+  最適化しないことはデバッグでは重要です。コードをステップ実行する時、プログラムをステートメントごとに実行しているように感じられるからです。
+  さらに、スタックの変数や関数の引数をGDBで`print`することができます。
+  コードが最適化されると、変数を表示しようとしても、`$0 = <value optimized out>`と表示されます。
+],
 zh: [
   无优化对于调试来说是最好的选择，因为单步调试代码感觉像是你正在逐条语句地执行程序，且你能在GDB中`print`栈变量和函数参数。当代码被优化了，尝试打印变量会导致`$0 = <value optimized out>`被打印出来。
 ]))
@@ -115,6 +136,11 @@ de: [
   womöglich gar nicht verfügt. Die Folge: Die nicht optimierte Binärdatei
   passt nicht auf das Gerät!
 ],
+ja: [
+  `dev`プロファイルの最大の欠点は、バイナリが大きく、遅いことです。
+  バイナリサイズは通常、より問題となります。最適化されていないバイナリは数十KiBもFlashを専有するからです。
+  ターゲットデバイスは、数十KiBものFlashを持っていないかもしれず、最適化されていないバイナリは、デバイス内に納まりません。
+],
 zh: [
   `dev`配置最大的缺点就是最终的二进制项将会变得巨大且缓慢。大小通常是一个更大的问题，因为未优化的二进制项会占据大量KiB的Flash，你的目标设备可能没这么多Flash
   -- 结果: 你未优化的二进制项无法烧录进你的设备中！
@@ -128,6 +154,9 @@ de: [
   Gibt es eine Möglichkeit, kleinere und dennoch für das Debugging
   geeignete Binärdateien zu erhalten? Ja, es gibt einen Trick.
 ],
+ja: [
+  デバッガで扱いやすい、小さなバイナリを作ることができるのでしょうか？できます。良いやり方があります。
+],
 zh: [
   我们可以有更小的，调试友好的二进制项吗?是的，这里有一个技巧。
 ]))
@@ -135,6 +164,7 @@ zh: [
 == #tr((
   en: [Optimizing dependencies],
   de: [Optimierung der Abhängigkeiten],
+  ja: [依存関係の最適化],
   zh: [优化依赖],
 ))
 
@@ -152,6 +182,10 @@ de: [
   überschreiben können. So lassen sich alle Abhängigkeiten hinsichtlich
   ihrer Größe optimieren, während die oberste Crate unoptimiert und
   debuggfreundlich bleibt.
+],
+ja: [
+  nightlyでは、#link(url_overrides)[`profile-overrides`]と呼ばれるCargoフィーチャがあります。これは、依存関係の最適化レベルをオーバーライドします。
+  このフィーチャを使って、全ての依存クレートのサイズを最適化しながら、トップクレートを最適化しないでデバッガで扱いやすくすることができます。。
 ],
 zh: [
   这里有个名为#link(url_overrides)[`profile-overrides`]的Cargo
@@ -186,6 +220,9 @@ en: [
 de: [
   Hier ist ein Beispiel:
 ],
+ja: [
+  例を示します。
+],
 zh: [
   这是一个示例:
 ]))
@@ -206,6 +243,9 @@ en: [
 ],
 de: [
   Ohne die Überschreibung:
+],
+ja: [
+  オーバーライドなしでは、次の通りです。
 ],
 zh: [
   没有覆盖:
@@ -228,6 +268,9 @@ en: [
 ],
 de: [
   Mit der Überschreibung
+],
+ja: [
+  オーバーライドをすると、以下のようになります。
 ],
 zh: [
   有覆盖:
@@ -264,6 +307,13 @@ de: [
   `profile-overrides` nutzen, um diese spezifische Abhängigkeit von der
   Optimierung auszunehmen. Siehe dazu das folgende Beispiel:
 ],
+ja: [
+  トップクレートのデバッグ性を失うことなしに、Flash使用量を6KiB減らしています。
+  依存クレートの中に足を踏み入れると、`<value optimized out>`のメッセージを目にするでしょう。
+  しかし、依存クレートではなく、トップクレートをデバッグしたい場合がほとんどでしょう。
+  依存クレートをデバッグする必要が_ある_場合、特定の依存クレートを最適化から除外するために、`profile-overrides`フィーチャを使えます。
+  例えば、以下のようになります。
+],
 zh: [
   在Flash的使用上减少了6KiB，而不会损害顶层crate的可调试性。如果你步进一个依赖项，然后你将开始再次看到那些`<value optimized out>`信息，但是通常的情况下你只想调试顶层的crate而不是依赖项。如果你
   _需要_ 调试一个依赖项，那么你可以使用`profile-overrides`
@@ -276,6 +326,7 @@ zh: [
 # " + ts((
     en: "don't optimize the `cortex-m-rt` crate",
     de: "Optimiere das `cortex-m-rt`-Crate nicht",
+    ja: "`cortex-m-rt`クレートは最適化しません",
     zh: "不要优化`cortex-m-rt` crate",
   )) + "
 [profile.dev.package.cortex-m-rt] # +
@@ -284,6 +335,7 @@ opt-level = 0 # +
 # " + ts((
     en: "but do optimize all the other dependencies",
     de: "optimieren Sie jedoch alle anderen Abhaengigkeiten",
+    ja: "しかし、他の依存クレートは最適化します",
     zh: "但是优化所有其它依赖项",
   )) + "
 [profile.dev.package.\"*\"]
@@ -300,6 +352,9 @@ en: [
 de: [
   Jetzt sind das Top-Level-Crate und `cortex-m-rt` debuggerfreundlich!
 ],
+ja: [
+  これで、トップクレートと`cortex-m-rt`クレートはデバッガで扱いやすくなります！
+],
 zh: [
   现在顶层的crate和`cortex-m-rt`对调试器很友好！
 ]))
@@ -307,6 +362,7 @@ zh: [
 = #tr((
   en: [Optimize for speed],
   de: [Auf Geschwindigkeit optimieren],
+  ja: [速度の最適化],
   zh: [优化速度],
 ))
 
@@ -321,6 +377,10 @@ de: [
   Geschwindigkeitsoptimierung: `opt-level = 1`, `2` und `3`. Beim
   Ausführen von `cargo build --release` wird das Release-Profil verwendet,
   das standardmäßig auf `opt-level = 3` eingestellt ist.
+],
+ja: [
+  2018-09-18の`rustc`は、3つの「速度最適化」を提供しています。`opt-level = 1`、`2`と`3`です。
+  `cargo build --release`を実行した時、デフォルトでは`opt-level = 3`のリリースプロファイルを使います。
 ],
 zh: [
   自2018-09-18开始 `rustc` 支持三个 "优化速度" 的等级: `opt-level = 1`,
@@ -349,6 +409,12 @@ de: [
   geeigneten Bedingungen (etwa bei einer ausreichend hohen Anzahl von
   Iterationen) die Ausführungszeit halbieren.
 ],
+ja: [
+  `opt-level = 2`と`3`は、バイナリサイズを犠牲にして、速度を最適化します。レベル`3`はレベル`2`より、ベクトル化とインライン化を行います。
+  特に、`opt-level`が`2`以上の場合、LLVMがループを展開するのがわかるでしょう。
+  ループ展開は、Flash/ROMの観点からはよりコストが高いです（例えば、配列のループをゼロにする場合、26バイトから194バイトまで増加します）。
+  しかし、適切な条件では、実行時間が半分になります（例えば、イテレーションの回数が十分大きい場合）。
+],
 zh: [
   `opt-level = 2` 和 `3`
   都以二进制项大小为代价优化速度，但是等级`3`比等级`2`做了更多的向量化和内联。特别是，你将看到在`opt-level`等于或者大于`2`时LLVM将展开循环。循环展开在
@@ -368,6 +434,10 @@ de: [
   Speicheraufwand also nicht leisten können, sollten Sie Ihr Programm
   stattdessen auf eine geringe Größe hin optimieren.
 ],
+ja: [
+  現在、`opt-level = 2`と`3`でループ展開を無効化する方法はありません。
+  ループ展開のコストを払うことができない場合、プログラムサイズの最適化をするべきです。
+],
 zh: [
   现在还没有办法在`opt-level = 2`和`3`的情况下关闭循环展开，因此如果你不能接受它的开销，你应该选择优化你的程序的大小。
 ]))
@@ -375,6 +445,7 @@ zh: [
 = #tr((
   en: [Optimize for size],
   de: [Nach Größe optimieren],
+  ja: [サイズの最適化],
   zh: [优化大小],
 ))
 
@@ -392,6 +463,11 @@ de: [
   aussagekräftig; allerdings soll das `"z"` signalisieren, dass damit
   kleinere Binärdateien erzeugt werden als mit `"s"`.
 ],
+ja: [
+  2018-09-18の`rustc`は、2つの`サイズ最適化`を提供しています。`opt-level = "s"`と`"z"`です。
+  これらの名前は、clang / LLVMから受け継いでおり、意味がわかりにくいです。
+  `"z"`は、`"s"`より小さなバイナリを作る意図を意味します。
+],
 zh: [
   自2018-09-18开始`rustc`支持两个"优化大小"的等级: `opt-level = "s"` 和
   `"z"` 。这些名字传承自 clang / LLVM
@@ -408,6 +484,9 @@ de: [
   sollen, ändern Sie die Einstellung `profile.release.opt-level` in der
   Datei `Cargo.toml` wie unten dargestellt.
 ],
+ja: [
+  リリースバイナリのサイズを最適化したい場合、`Cargo.toml`の`profile.release.opt-level`設定を下記の通り変更します。
+],
 zh: [
   如果你想要发布一个优化了大小的二进制项，那么改变下面展示的`Cargo.toml`中的`profile.release.opt-level`配置。
 ]))
@@ -417,6 +496,7 @@ zh: [
 # " + ts((
     en: "or \"z\"",
     de: "oder \"z\"",
+    ja: "または\"z\"",
   )) + "
 opt-level = \"s\"
 ")
@@ -443,6 +523,15 @@ de: [
   Optimierungsmöglichkeiten verpasst (etwa das Entfernen von nicht
   erreichbaren Programmzweigen oder das Inlinen von Closure-Aufrufen).
 ],
+ja: [
+  これらの2つの最適化レベルは、LLVMのインラインしきい値を大幅に減らします。
+  インラインしきい値は、関数をインライン化するか否かを決めるために使われる基準値です。
+  Rustの原則の1つは、ゼロコスト抽象化です。
+  これらの抽象化は、不変条件を保持するため、多くの新しい型と小さな関数を使う傾向にあります
+  （例えば、`deref`や`as_ref`のような内部の値を借用するための関数）。
+  そのため、インラインしきい値を低くすると、LLVMが最適化の機会を失います
+  （例えば、不要な分岐を削除したり、クロージャをインライン呼び出しにする、など）。
+],
 zh: [
   这两个优化等级极大地减小了LLVM的内联阈值，一个用来决定是否内联或者不内联一个函数的度量。Rust其中一个概念是零成本抽象；这些抽象趋向于去使用许多新类型和小函数去保持不变量(e.g.~像是`deref`，`as_ref`这样借用内部值的函数)因此一个低内联阈值会使LLVM失去优化的机会(e.g.~去掉死分支(dead
   branches)，内联对闭包的调用)。
@@ -463,6 +552,10 @@ de: [
   dieses Schwellenwerts besteht darin, das Flag `-C inline-threshold` zu
   den übrigen `rustflags` in der Datei `.cargo/config.toml` hinzuzufügen.
 ],
+ja: [
+  サイズの最適化を行っている時、バイナリサイズに影響があるかどうかを見るために、インラインしきい値を増やしたいかもしれません。
+  インラインしきい値を変更するお勧めの方法は、`.cargo/config`内のrustflagsに`-C inline-threshold`フラグを追加することです。
+],
 zh: [
   当优化大小时，你可能想要尝试增加内联阈值去观察是否会对你的二进制项的大小有影响。推荐的改变内联阈值的方法是在`.cargo/config.toml`中往其它rustflags后插入`-C inline-threshold`
 ]))
@@ -472,6 +565,7 @@ zh: [
 # " + ts((
     en: "this assumes that you are using the cortex-m-quickstart template",
     de: "Dies setzt voraus, dass Sie die cortex-m-quickstart-Vorlage verwenden",
+    ja: "cortex-m-quickstartテンプレートを使っていることを想定しています",
     zh: "这里假设你正在使用cortex-m-quickstart模板",
   )) + "
 [target.'cfg(all(target_arch = \"arm\", target_os = \"none\"))']
@@ -499,6 +593,14 @@ de: [
   - `opt-level = "s"` verwendet 75
   - `opt-level = "z"` verwendet 25
 ],
+ja: [
+  この値は何に使われるのでしょうか？
+  #link(url_opt_lvls)[1.29.0では、下記の値は、異なる最適化レベルで使われるインラインしきい値です]
+  - `opt-level = 3`は275を使います
+  - `opt-level = 2`は225を使います
+  - `opt-level = "s"`は75を使います
+  - `opt-level = "z"`は25を使います
+],
 zh: [
   用什么值?#link(url_opt_lvls)[从1.29.0开始，这些是不同优化级别使用的内联阈值]:
   - `opt-level = 3` 使用 275
@@ -514,6 +616,9 @@ en: [
 de: [
   Du solltest `225` und `275` ausprobieren, wenn du auf die Größe
   optimierst.
+],
+ja: [
+  サイズの最適化をするときは、`225`と`275`を試してみるべきです。
 ],
 zh: [
   当优化大小时，你应该尝试`225`和`275` 。

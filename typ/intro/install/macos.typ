@@ -1,7 +1,7 @@
 #import "../../config.typ": *
 
-#h1(offset: whole*2,
-  [macOS])
+#h1([macOS],
+  offset: whole*2)
 <install-macos>
 
 #let brew_ln = link("http://brew.sh/")[Homebrew]

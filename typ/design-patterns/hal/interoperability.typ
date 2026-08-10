@@ -1,10 +1,9 @@
 #import "../../config.typ": *
 
-#h1(offset: whole*2, tr((
-  en: [Interoperability],
+#h1((en: [Interoperability],
   de: [Interoperabilität],
   zh: [互用性],
-)))
+), offset: whole*2)
 <hal-interoperability>
 
 = #tr((

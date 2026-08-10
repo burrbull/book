@@ -52,12 +52,16 @@ jobs:
         run: |
           typst compile typ/book.typ --input lang=de --input target=html book --features bundle,html -f bundle
           typst compile typ/book.typ --input lang=de --input target=pdf book/book_de.pdf
+          typst compile typ/book.typ --input lang=de --input target=pdf book/book_de_tr.pdf --input goal=translation
           typst compile typ/book.typ --input lang=ja --input target=html book --features bundle,html -f bundle
           typst compile typ/book.typ --input lang=ja --input target=pdf book/book_ja.pdf
+          typst compile typ/book.typ --input lang=ja --input target=pdf book/book_ja_tr.pdf --input goal=translation
           typst compile typ/book.typ --input lang=uk --input target=html book --features bundle,html -f bundle
           typst compile typ/book.typ --input lang=uk --input target=pdf book/book_uk.pdf
+          typst compile typ/book.typ --input lang=uk --input target=pdf book/book_uk_tr.pdf --input goal=translation
           typst compile typ/book.typ --input lang=zh --input target=html book --features bundle,html -f bundle
           typst compile typ/book.typ --input lang=zh --input target=pdf book/book_zh.pdf
+          typst compile typ/book.typ --input lang=zh --input target=pdf book/book_zh_tr.pdf --input goal=translation
  
       - name: Check links
         run: linkchecker book

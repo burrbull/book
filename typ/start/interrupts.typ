@@ -1,11 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Interrupts],
+#h1((en: [Interrupts],
   de: [Interrupts],
   ja: [割り込み],
   zh: [中断],
-)))
+), offset: whole)
 
 #tr((
 en: [

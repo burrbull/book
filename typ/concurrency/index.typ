@@ -1,10 +1,10 @@
 #import "../config.typ": *
 
-#h1(tr((
-  en: [Concurrency],
+#h1((en: [Concurrency],
   de: [Nebenläufigkeit],
+  ja: [並行性],
   zh: [并发],
-)))
+))
 <concurrency>
 
 #tr((
@@ -33,6 +33,13 @@ de: [
     Kern gleichzeitig und unabhängig voneinander einen anderen Teil Ihres
     Programms ausführen kann.
 ],
+ja: [
+  プログラムの異なる部分が様々なタイミングで実行されたり、アウトオブオーダに実行されると、並行性が発生します。
+  組込みでは、次のものが該当します。
+  - 割り込みが発生するたびに実行される割り込みハンドラ
+  - マイクロプロセッサがプログラムの一部を定期的にスワップする様々な形式のマルチスレッド
+  - システムによっては、各コアがプログラムの異なる部分を同時に独立して実行できるマルチコアマイクロプロセッサ
+],
 zh: [
   当程序的不同部分有可能会在不同的时刻被执行或者不按顺序地被执行时，那并发就出现了。在一个嵌入式环境中，这包括:
   - 中断处理函数，一旦相关的中断发生时，中断处理函数就会运行，
@@ -54,6 +61,11 @@ de: [
   Glücklicherweise bietet Rust eine Reihe von Abstraktionen und
   Sicherheitsgarantien, die uns dabei helfen, korrekten Code zu schreiben.
 ],
+ja: [
+  多くの組込みプログラムは割り込みを処理する必要があるため、早かれ遅かれ、並行性は発生します。
+  割り込みは、捉えにくく、難しいバグが数多く発生し得る場所でもあります。
+  幸運なことに、Rustは正しいコードを書く助けになる抽象化と安全性保証とを、いくつか提供しています。
+],
 zh: [
   因为许多嵌入式程序需要处理中断，因此并发迟早会出现，这也是许多微妙和困难的bugs会出现的地方。幸运地是，Rust提供了许多抽象和安全保障去帮助我们写正确的代码。
 ]))
@@ -61,6 +73,7 @@ zh: [
 == #tr((
   en: [No Concurrency],
   de: [Keine Nebenläufigkeit],
+  ja: [並行性なし],
   zh: [没有并发],
 ))
 
@@ -80,6 +93,11 @@ de: [
   die vorliegende Aufgabenstellung ideal! Typischerweise liest die
   Schleife Eingabewerte ein, führt Berechnungen oder Verarbeitungen durch
   und gibt Ergebnisse aus.
+],
+ja: [
+  組込みプログラムの最も簡単な並行性は、並行性がないことです。ソフトウェアは1つの動作し続けるメインループからなり、割り込みも発生しません。
+  時には、これが手元の問題の最適解かもしれません。
+  通常、ループは何か入力を受け付け、何らかの処理を行い、何かを出力します。
 ],
 zh: [
   对于一个嵌入式程序来说最简单的并发是没有并发:
@@ -112,6 +130,10 @@ de: [
   die Synchronisierung des Zugriffs auf Peripheriegeräte machen. Wenn ein
   solch einfacher Ansatz ausreicht, kann dies eine hervorragende Lösung sein.
 ],
+ja: [
+  並行性がないため、プログラム間でのデータ共有や、ペリフェラルへのアクセス同期に悩む必要はありません。
+  このような単純なアプローチに逃れることができるのであれば、素晴らしい解決策かもしれません。
+],
 zh: [
   因为这里没有并发，因此不需要担心程序不同部分间的共享数据或者同步对外设的访问。如果可以使用一个简单的方法来解决问题，这种方法是个不错的选择。
 ]))
@@ -119,6 +141,7 @@ zh: [
 == #tr((
   en: [Global Mutable Data],
   de: [Globale veränderliche Daten],
+  ja: [グローバルでミュータブルなデータ],
   zh: [全局可变数据],
 ))
 
@@ -143,6 +166,13 @@ de: [
   müssen, auf den sowohl der Interrupt-Handler als auch der
   Hauptprogrammcode zugreifen können.
 ],
+ja: [
+  組込みでないRustと異なり、通常、ヒープ領域を作成し、そのデータへの参照を新しく作成したスレッドに渡す、というような贅沢はできません。
+  代わりに、割り込みハンドラはいつでも呼び出される可能性があり、使用する共有メモリにアクセスする方法を知っていなければなりません。
+  最も低いレベルでは、 _静的に割り当てられた_
+  ミュータブルなメモリを持つ必要があることを意味します。
+  このメモリは、割り込みハンドラとメインコードの両方が参照できます。
+],
 zh: [
   不像非嵌入式Rust，我们通常不会奢侈地在堆上分配数据，并将对该数据的引用传递到新创建的线程中。相反，我们的中断处理函数随时可能被调用，且必须知道如何访问我们正在使用的共享内存。从最底层看来，这意味着我们必须有
   _静态分配的_ 可变的内存，中断处理函数和main代码都可以引用这块内存。
@@ -166,6 +196,11 @@ de: [
   Vorgang durch einen Interrupt unterbrochen, der seinerseits ebenfalls
   auf diese Variable zugreift.
 ],
+ja: [
+  Rustでは、このような#ln_staticmut;変数への読み書きは、常にアンセーフです。
+  特別な注意を払わないと、レースコンディションを引き起こす可能性があります。
+  つまり、その変数へのアクセスが、さらにその変数にアクセスする割り込みによって、中断されるということです。
+],
 zh: [
   在Rust中，#ln_staticmut;这样的变量读取或者写入总是unsafe的，因为不特别关注它们的话，可能会触发一个竞态条件，对变量的访问在中途就被一个也访问那个变量的中断打断了。
 ]))
@@ -181,6 +216,10 @@ de: [
   Code verursachen kann, betrachten Sie ein eingebettetes Programm, das
   die steigenden Flanken eines Eingangssignals innerhalb jedes
   Ein-Sekunden-Intervalls zählt (einen Frequenzzähler):
+],
+ja: [
+  この動作によって、コード内に分かりにくいエラーが発生する可能性があります。
+  例えば、1秒毎に入力信号の立ち上がりエッジをカウントする組込みプログラム（周波数カウンタ）を考えてみましょう。
 ],
 zh: [
   为了举例这种行为如何在代码中导致了微妙的错误，思考一个嵌入式程序，这个程序在每一秒的周期内计数一些输入信号的上升沿(一个频率计数器):
@@ -200,6 +239,7 @@ fn main() -> ! {
                 en: "DANGER - Not actually safe! Could cause data races.",
                 de: "GEFAHR – Nicht wirklich sicher! Koennte zu Datenwettlaeufen 
             //          fuehren.",
+                ja: "危険。実際に安全ではありません。データ競合を引き起こす可能性があります。",
                 zh: "危险 - 实际不安全! 可能导致数据竞争。",
               )) + "
             unsafe { COUNTER += 1 };
@@ -243,6 +283,17 @@ de: [
   Interrupt verloren -- und wir würden für diesen Zeitraum doppelt so
   viele Signalwechsel zählen.
 ],
+ja: [
+  毎秒、タイマ割り込みはカウンタを0に戻します。同時に、メインループは信号を継続的に測定し、信号がローからハイに変わった時にカウンタをインクリメントします。
+  `static mut`な`COUNTER`にアクセスするためには、`unsafe`を使う必要があります。
+  これは、未定義動作を引き起こさないことを、コンパイラに約束するということです。
+  レースコンディションがどこにあるかわかりますか？
+  `COUNTER`のインクリメントは、アトミックであることが保証されて
+  _いません_ 。
+  実際、ほとんどの組込みプラットフォームにおいて、この操作は、ロードし、インクリメントし、ストアする、という動作に分割されます。
+  割り込みがロードの後からストアの前に発生した場合、0に戻すリセットは、割り込みから復帰した後に無視されます。
+  そして、その期間では、2倍の遷移をカウントすることになります。
+],
 zh: [
   每秒计时器中断会把计数器设置回0。这期间，main循环连续地测量信号，且当看到从低电平到高电平的变化时，增加计数器的值。因为它是`static mut`的，我们不得不使用`unsafe`去访问`COUNTER`，意思是我们向编译器保证我们的操作不会导致任何未定义的行为。你能发现竞态条件吗？`COUNTER`上的增加并不一定是原子的 -
   事实上，在大多数嵌入式平台上，它将被分开成一个读取操作，然后是增加，然后是写回。如果中断在计数器被读取之后但是在被写回之前被激活，在中断返回后，重置回0的操作会被忽略掉 - 那期间，我们会算出两倍的转换次数。
@@ -251,6 +302,7 @@ zh: [
 == #tr((
   en: [Critical Sections],
   de: [Kritische Abschnitte],
+  ja: [クリティカルセクション],
   zh: [临界区(Critical Sections)],
 ))
 
@@ -269,6 +321,13 @@ de: [
   `COUNTER` in der Funktion `main` in einen kritischen Abschnitt
   einbetten, stellen wir sicher, dass der Timer-Interrupt erst ausgelöst
   wird, nachdem wir das Inkrementieren von `COUNTER` abgeschlossen haben:
+],
+ja: [
+  それでは、データ競合についてどうすれば良いのでしょうか。
+  単純な方法は、割り込みが無効なコンテキストである
+  _クリティカルセクション_ を使うことです。
+  `main`中の`COUNTER`へのアクセスを、クリティカルセクションでラッピングします。
+  そうすることで、`COUNTER`のインクリメントが完了するまで、タイマ割り込みが発生しないようにできます。
 ],
 zh: [
   因此，关于数据竞争可以做些什么？一个简单的方法是使用
@@ -290,6 +349,7 @@ fn main() -> ! {
                 en: "New critical section ensures synchronised access to COUNTER",
                 de: "Ein neuer kritischer Abschnitt gewaehrleistet den 
             // synchronisierten Zugriff auf COUNTER.",
+                ja: "新しいクリティカルセクションは、COUNTERへの同期アクセスを保証します",
                 zh: "新的临界区确保对COUNTER的同步访问",
               )) + "
             cortex_m::interrupt::free(|_| {
@@ -320,6 +380,10 @@ de: [
   Deaktivieren von Interrupts, der Ausführung von Code und dem
   anschließenden erneuten Aktivieren der Interrupts.
 ],
+ja: [
+  この例では`cortex_m::interrupt::free`を使いました。他のプラットフォームでもクリティカルセクションのコードを実行するための、類似の方法があります。
+  これは、割り込みを無効にして、コードを実行し、再び割り込みを有効にすることと同じです。
+],
 zh: [
   在这个例子里，我们使用
   `cortex_m::interrupt::free`，但是其它平台将会有更简单的机制在一个临界区中执行代码。它们都有一样的逻辑，关闭中断，运行一些代码，然后重新使能中断。
@@ -339,6 +403,11 @@ de: [
     betroffen sein, da wir den Wert nicht lesen.
   - Es wird ohnehin niemals vom `main`-Thread unterbrochen werden.
 ],
+ja: [
+  タイマ割り込み内クリティカルセクションを置く必要がないことに注意して下さい。これは次の2つの理由からです。
+  - 読み込みをしないため、`COUNTER`に0を書くことは、競合の影響を受けません
+  - いずれにせよ、`main`スレッドによって割り込まれることはありえません
+],
 zh: [
   注意，有两个理由，不需要把一个临界区放进计时器中断中:
   - 向`COUNTER`写入0不会被一个竞争影响，因为我们不需要读取它
@@ -355,6 +424,11 @@ de: [
   Wenn `COUNTER` von mehreren Interrupt-Handlern gemeinsam genutzt würde,
   die sich gegenseitig _unterbrechen_ könnten, müsste jeder von ihnen
   ebenfalls einen kritischen Abschnitt verwenden.
+],
+ja: [
+  `COUNTER`がお互いに _プリエンプション_
+  する複数の割り込みハンドラから共有される場合、
+  それぞれにクリティカルセクションが必要になるでしょう。
 ],
 zh: [
   如果`COUNTER`被多个可能相互 _抢占_
@@ -384,6 +458,10 @@ de: [
   hängt vom jeweiligen System ab, doch im Allgemeinen sollten wir dies
   vermeiden.
 ],
+ja: [
+  クリティカルセクションは、当面の問題を解決しますが、慎重に検討しなければならない`unsafe`なコードをまだたくさん書いています。
+  その結果、必要以上にクリティカルセクションを使用することになり、オーバーヘッドと割り込みレイテンシおよびジッタをもたらします。
+],
 zh: [
   这解决了我们眼前的问题，但是我们仍然要编写许多unsafe的代码，我们需要仔细推敲这些代码，有些我们可能不需要使用临界区。因为每个临界区暂时暂停了中断处理，就会带来一些相关的成本，一些额外的代码大小，更高的中断延迟和抖动(中断可能花费很长时间去处理，等待被处理的时间变化非常大)。这是否是个问题取决于你的系统，但是通常，我们想要避免它。
 ]))
@@ -404,6 +482,12 @@ de: [
   zugreifen wie Ihr eigener Kern. Wenn Sie mehrere Rechenkerne nutzen,
   benötigen Sie daher leistungsfähigere Synchronisationsmechanismen.
 ],
+ja: [
+  注目すべき点は、クリティカルセクションでは、割り込みが発生しないことが保証されますが、
+  マルチコアシステムでは、排他性の保証は提供されないことです。
+  他のコアは、割り込みでなくても、とあるコアと同じメモリにアクセスできてしまいます。
+  マルチコアを使う場合、より強力な同期プリミティブが必要になります。
+],
 zh: [
   值得注意的是，虽然一个临界区保障了不会发生中断，但是它在多核系统上不提供一个排他性保证(exclusivity
   guarantee)！其它核可能很开心地访问与你的核一样的内存区域，即使没有中断。如果你正在使用多核，你将需要更强的同步原语(synchronisation primitives)。
@@ -412,6 +496,7 @@ zh: [
 == #tr((
   en: [Atomic Access],
   de: [Atomarer Zugriff],
+  ja: [アトミックアクセス],
   zh: [原子访问],
 ))
 
@@ -440,6 +525,13 @@ de: [
   auftreten, wird der gesamte Vorgang automatisch erneut versucht. Diese
   atomaren Operationen sind auch in Mehrkernsystemen sicher.
 ],
+ja: [
+  プラットフォームによっては、アトミック命令が利用できます。アトミック命令は、リードモディファイライト操作の保証を提供します。
+  特にCortex-Mの場合、`thumbv6`（Cortex-M0）はアトミック命令を提供しませんが、`thumbv7`（Cortex-M3以上）は提供します。
+  これらの命令は、全ての割り込みを無効化する手荒な方法の代替手段を提供します。
+  インクリメントを試みる時、ほとんどの場合は成功しますが、割り込まれた場合はインクリメント操作全体を自動的にやり直します。
+  このようなアトミック操作は、複数のコアにまたがっても安全です。
+],
 zh: [
   在一些平台上，可以使用特定的原子指令，它保障了读取-修改-写回操作。针对Cortex-M:
   `thumbv6`\(Cortex-M0，Cortex-M0+)只提供原子读取和存取指令，而`thumv7`\(Cortex-M3及以上)提供完整的比较和交换(CAS)指令。这些CAS指令可以替代过重的禁用所有中断的方法:
@@ -461,6 +553,7 @@ fn main() -> ! {
             // " + ts((
                 en: "Use `fetch_add` to atomically add 1 to COUNTER",
                 de: "Verwenden Sie `fetch_add`, um 1 atomar zu COUNTER zu addieren.",
+                ja: "自動的にCOUNTERに1を加えるために`fetch_add`を使います",
                 zh: "使用 `fetch_add` 原子性地给 COUNTER 加一",
               )) + "
             COUNTER.fetch_add(1, Ordering::Relaxed);
@@ -474,6 +567,7 @@ fn timer() {
     // " + ts((
           en: "Use `store` to write 0 directly to COUNTER",
           de: "Verwenden Sie `store`, um 0 direkt in COUNTER zu schreiben.",
+          ja: "COUNTERに直接0を書くために`store`を使います",
           zh: "使用 `store` 将 0 直接写入 COUNTER",
         )) + "
     COUNTER.store(0, Ordering::Relaxed)
@@ -494,6 +588,11 @@ de: [
   Hauptthread aus sicher geändert werden, ohne Interrupts zu deaktivieren.
   Wenn möglich, ist dies die bessere Lösung -- wird aber möglicherweise
   von Ihrer Plattform nicht unterstützt.
+],
+ja: [
+  ここで、`COUNTER`は安全な`static`変数です。`AtomicUsize`のおかげで`COUNTER`の型は、割り込みを無効化することなく、
+  割り込みハンドラとメインスレッドの両方から安全に修正できます。
+  可能であれば、これはより良い解決方法です。しかし、あなたのプラットフォームではサポートされていないかもしれません。
 ],
 zh: [
   这时，`COUNTER`是一个safe的`static`变量。多亏了`AtomicUsize`类型，不需要禁用中断，`COUNTER`能从中断处理函数和main线程被安全地修改。当可以这么做时，这是一个更好的解决方案 - 然而平台上可能不支持这么做。
@@ -523,6 +622,13 @@ de: [
   möglicherweise nicht. Die genauen Details des atomaren Modells sind
   komplex und werden am besten an anderer Stelle beschrieben.
 ],
+ja: [
+  #link("https://doc.rust-lang.org/core/sync/atomic/enum.Ordering.html")[`Ordering`]の注釈：これは、コンパイラとハードウェアがどのように命令の順番を入れ替えるか、に影響を与えます。
+  また、キャッシュの可視性にも影響します。ターゲットがシングルコアプラットフォームだと仮定すると、`Relaxed`で十分であり、このケースでは最も効率の良い選択です。
+  より厳密なオーダリングでは、コンパイラはアトミック操作の前後にメモリバリアを発行します。
+  使用するアトミック操作によって、必要かもしれませんし、必要でないかもしれません！
+  アトミックモデルの正確な詳細は複雑であり、他の文書内でしっかりと説明されています。
+],
 zh: [
   关于#ln_ordering;的提醒:
   它可能影响编译器和硬件如何重新排序指令，也会影响缓存可见性。假设目标是个单核平台，在这个案例里`Relaxed`是充足的和最有效的选择。更严格的排序将导致编译器在原子操作周围产生内存屏障(Memory
@@ -539,6 +645,9 @@ de: [
   Weitere Informationen zu atomaren Operationen und deren Reihenfolge
   finden Sie im #link(url_atomics)[nomicon].
 ],
+ja: [
+  詳細は、#link(url_atomics)[ノミコン]のアトミックとオーダリングを参照して下さい。
+],
 zh: [
   关于原子操作和排序的更多细节，可以看这里#link(url_atomics)[nomicon]。
 ]))
@@ -546,6 +655,7 @@ zh: [
 == #tr((
   en: [Abstractions, Send, and Sync],
   de: [Abstraktionen, Send und Sync],
+  ja: [抽象化、SendとSync],
   zh: [抽象，Send和Sync],
 ))
 
@@ -559,6 +669,11 @@ de: [
   Keine der oben genannten Lösungen ist wirklich zufriedenstellend. Sie
   erfordern unsichere Blöcke, die sehr sorgfältig geprüft werden müssen
   und nicht ergonomisch sind. In Rust geht das doch bestimmt besser!
+],
+ja: [
+  上記の解決方法のいずれも、これと言って満足いくものではありません。
+  どの解決方法も`unsafe`ブロックを必要とし、非常に注意深くチェックしなければならず、人間工学的ではありません。
+  Rustではもっとうまくやれるはずです！
 ],
 zh: [
   上面的解决方案都不是特别令人满意。它们需要`unsafe`块，`unsafe`块必须要被十分小心地检查且不符合人体工程学。确实，我们在Rust中可以做得更好！
@@ -577,6 +692,10 @@ de: [
   verwenden wir den Zähler für kritische Abschnitte, aber mit atomaren
   Operationen ließe sich etwas sehr Ähnliches realisieren.
 ],
+ja: [
+  カウンタを、コード内のどこからでも安全に使えるインタフェースに抽象化することができます。
+  次の例では、クリティカルセクションカウンタを使いますが、アトミックと非常に良く似たことが実現できます。
+],
 zh: [
   我们可以把我们的计数器抽象进一个安全的接口中，它可以在代码的其它地方被安全地使用。在这个例子里，我们将使用临界区的(cirtical-section)计数器，但是你可以用原子操作做一些非常类似的事情。
 ]))
@@ -594,6 +713,9 @@ use cortex_m::interrupt;
 // der „Interior Mutability“ in Rust. Dank dieses Konzepts können wir `COUNTER` 
 // als `static` statt als `static mut` definieren und dennoch den Zaehlerwert 
 // veraendern.",
+    ja: "カウンタはUnsafeCell<u32>の単なるラッパです。UnsafeCellはRustの内部可変性の重要要素です。
+// 内部可変性を使用することで、COUNTERを`static mut`の代わりに`static`として持つことができます。
+// しかし、依然として、カウンタの値は変更することができます。",
     zh: "我们的计数器只是包围UnsafeCell<u32>的一个封装，它是Rust中内部可变性
 // (interior mutability)的关键。通过使用内部可变性，我们能让COUNTER
 // 变成`static`而不是`static mut`，但是仍能改变它的计数器值。"
@@ -612,6 +734,9 @@ impl CSCounter {
         // wir, dass wir uns innerhalb einer `CriticalSection` befinden; daher 
         // koennen wir bedenkenlos diesen `unsafe`-Block verwenden (der für den 
         // Aufruf von `UnsafeCell::get` erforderlich ist).",
+            ja: "クリティカルセクションを引数として要求することで、クリティカルセクション内で
+        // 実行されなければならないことがわかります。そのため、このアンセーフブロックを
+        // 自信を持って使用できます（UnsafeCell::getの呼び出しに必要です）。",
             zh: "通过要求一个CriticalSection被传递进来，我们知道我们肯定正在一个
         // CriticalSection中操作，且因此可以自信地使用这个unsafe块(调用UnsafeCell::get的前提)。",
           )) + "
@@ -627,6 +752,7 @@ impl CSCounter {
     en: "Required to allow static CSCounter. See explanation below.",
     de: "Erforderlich, um ein statisches CSCounter zu ermoeglichen. Siehe Erlaeuterung 
 // unten.",
+    ja: "静的なCSCounterを許可するために必要です。以下の説明を参照して下さい。",
     zh: "允许静态CSCounter的前提。看下面的解释。"
   )) + "
 unsafe impl Sync for CSCounter {}
@@ -636,6 +762,8 @@ unsafe impl Sync for CSCounter {}
 // therefore it also no longer requires unsafe blocks to access.",
     de: "COUNTER ist nicht mehr `mut`, da es „Interior Mutability“ verwendet; daher 
 // sind fuer den Zugriff auch keine `unsafe`-Bloecke mehr erforderlich.",
+    ja: "内部可変性を使用するため、COUNTERは、もはや`mut`ではありません。
+// 従って、アクセスの際に、アンセーフなブロックも必要なくなりました。",
     zh: "COUNTER不再是`mut`的因为它使用内部可变性;
 // 因此访问它也不再需要unsafe块。"
   )) + "
@@ -650,6 +778,7 @@ fn main() -> ! {
         if state && !last_state {
             // " + ts((
                 en: "No unsafe here!",
+                ja: "アンセーフはここでは必要ありません！",
                 zh: "这里不用unsafe!",
               )) + "
             interrupt::free(|cs| COUNTER.increment(cs));
@@ -667,6 +796,8 @@ fn timer() {
         de: "Wir muessen hier tatsaechlich einen kritischen Abschnitt betreten, nur um 
     // ein gueltiges CS-Token zu erhalten, auch wenn wir wissen, dass kein 
     // anderer Interrupt diesen unterbrechen koennte.",
+        ja: "有効なcsトークンを得るため、ここでクリティカルセクションに入る必要があります。
+    // 他の割り込みがプリエンプションを起こさないと分かっていても必要です。",
         zh: "这里我们需要进入一个临界区，只是为了传递进一个有效的cs token，尽管我们知道
     // 没有其它中断可以抢占这个中断。"
       )) + "
@@ -678,6 +809,8 @@ fn timer() {
         de: "Wir koennten „unsicheren“ Code (unsafe code) verwenden, um eine 
     // gefaelschte CriticalSection zu erzeugen, falls wir das wirklich wollten, 
     // und so den Overhead vermeiden:",
+        ja: "オーバーヘッドを避けるために、本当に必要であれば、偽のクリティカルセクションを生成する
+    // アンセーフなコードを使うことができます。",
         zh: "如果我们真的需要，我们可以使用unsafe代码去生成一个假CriticalSection，
     // 避免开销:"
       )) + "
@@ -695,6 +828,10 @@ de: [
   Wir haben unseren `unsafe`-Code in unsere sorgfältig entworfene
   Abstraktion verlagert; nun enthält unser Anwendungscode keine
   `unsafe`-Blöcke mehr.
+],
+ja: [
+  `unsafe`コードを慎重に検討された抽象の内側に移動しました。
+  そして、アプリケーションコードは、`unsafe`ブロックを含んでいません。
 ],
 zh: [
   我们已经把我们的`unsafe`代码移进了精心安排的抽象中，现在我们的应用代码不包含任何`unsafe`块。
@@ -721,6 +858,13 @@ de: [
   entsteht also kein Laufzeit-Overhead durch `cs`. Hätten wir mehrere
   Zähler, könnten diese alle dasselbe `cs` verwenden, ohne dass mehrere
   verschachtelte kritische Abschnitte erforderlich wären.
+],
+ja: [
+  この設計は、アプリケーションが`CriticalSection`トークンを渡すことを要求します。
+  トークンは、`interrupt::free`によってのみ、安全に生成することができます。
+  そのため、このトークンが渡されることを要求することで、自分自身でロックを実際にかけることなしに、クリティカルセクション内で動作していることを保証します。
+  この保証は、静的にコンパイラによって提供されます。`cs`による実行時のオーバーヘッドはありません。
+  カウンタが複数ある場合、複数の入れ子になったクリティカルセクションなしに、同じ`cs`を与えることができます。
 ],
 zh: [
   这个设计要求应用传递一个`CriticalSection` token进来:
@@ -752,6 +896,14 @@ de: [
   Variablen, auf die sowohl ein Interrupt als auch der Hauptcode zugreift,
   `Sync` implementieren.
 ],
+ja: [
+  これは、Rustの並行性についても重要なトピックを提起します。#link(url_sendsync)[`Send`と`Sync`]トレイトです。
+  the Rust
+  bookを要約すると、安全に別のスレッドに移動できるとき、型はSendです。
+  一方、複数のスレッド間で安全に共有できるとき、型はSyncです。
+  組込みでは、割り込みがアプリケーションコードとは異なるスレッドで動作すると考えます。
+  そのため、割り込みとメインコードとの両方からアクセスされる変数は、Syncでなければなりません。
+],
 zh: [
   这也带来了Rust中关于并发的一个重要主题:
   #link(url_sendsync)[`Send` and `Sync`]
@@ -775,6 +927,11 @@ de: [
   `static CSCounter` definieren, denn `static`-Variablen _müssen_
   `Sync` sein, da von mehreren Threads aus auf sie zugegriffen werden kann.
 ],
+ja: [
+  Rustのほとんどの型では、コンパイラによってSendとSyncの両方のトレイトが自動的に継承されます。
+  しかし、`CSCounter`は#ln_unsafecell;を含んでいるため、Syncではありません。
+  従って、`static CSCounter`を作ることはできません。`static`変数は、複数のスレッドからアクセスされるため、Syncでなければなりません。
+],
 zh: [
   在Rust中的大多数类型，这两个traits都会由你的编译器为你自动地产生。然而，因为`CSCounter`包含了一个#ln_unsafecell，它不是Sync，因此我们不能使用一个`static CSCounter`:
   `static` 变量 _必须_ 是Sync，因此它们能被多个线程访问。
@@ -796,6 +953,11 @@ de: [
   Single-Core-Plattformen sicher; bei mehreren Kernen wäre ein deutlich
   höherer Aufwand erforderlich, um die Sicherheit zu gewährleisten.
 ],
+ja: [
+  `CSCounter`が実はスレッド間で共有しても安全なように処理していることを、コンパイラに伝えるため、Syncトレイトを明示的に実装します。
+  これまでのクリティカルセクションの使用と同様に、シングルコアのプラットフォームでのみ安全です。
+  マルチコアのプラットフォームでは、安全性を確保するためにさらなる取り組みが必要です。
+],
 zh: [
   为了告诉编译器我们已经注意到`CSCounter`事实上在线程间共享是安全的，我们显式地实现了Sync
   trait。与之前使用的临界区一样，这只在单核平台上是安全的:
@@ -805,6 +967,7 @@ zh: [
 == #tr((
   en: [Mutexes],
   de: [Mutexe],
+  ja: [ミューテックス],
   zh: [互斥量(Mutexs)],
 ))
 
@@ -817,6 +980,9 @@ de: [
   Wir haben eine nützliche, speziell auf unser Zählerproblem
   zugeschnittene Abstraktion entwickelt; es gibt jedoch viele gängige
   Abstraktionen für Nebenläufigkeit.
+],
+ja: [
+  カウンタの問題に特有の便利な抽象化を行いましたが、並行性のために利用されるいくつかの抽象化が存在します。
 ],
 zh: [
   我们已经为我们的计数器问题创造了一个有用的抽象，但是关于并发这里还存在许多通用的抽象。
@@ -852,6 +1018,20 @@ de: [
   implementieren; so ist sichergestellt, dass der Mutex immer freigegeben
   wird, sobald er den Gültigkeitsbereich (Scope) verlässt.
 ],
+ja: [
+  そのような _同期プリミティブ_
+  の1つはミューテックス（mutex）です。mutexはmutual exclusionの略です。
+  ミューテックスは、私達のカウンタのような変数への排他アクセスを保証します。
+  あるスレッドは、ミューテックスの _ロック_（または
+  _獲得_）を試みます。
+  すると、すぐに成功するか、ロックが獲得されるのを待ってブロックするか、ミューテックスをロックできなかったエラーを返します。
+  そのスレッドがロックを保持している間、保護されたデータへのアクセスが許可されます。
+  そのスレッドが実行を完了すると、ミューテックスを
+  _アンロック_（または
+  _解放_）することで、他のスレッドがミューテックスをロックできるようにします。
+  Rustでは、通常、アンロックを実装するために#ln_drop;トレイトを使用します。
+  これは、ミューテックスがスコープの外に到達すると、常に解放されることを保証するためです。
+],
 zh: [
   一个互斥量(mutex)，互斥(mutual exclusion)的缩写，就是这样的一个
   _同步原语_
@@ -883,6 +1063,13 @@ de: [
   Deadlock gilt nicht als „unsicher" (unsafe): Er ist selbst in sicherem
   Rust möglich.
 ],
+ja: [
+  割り込みハンドラでミューテックスを使用するのはトリッキーです。割り込みハンドラ内でブロックすることは、通常、好ましくありません。
+  割り込みハンドラ内で、メインスレッドがロックを解放するのを待ってブロックすると、特に悲惨です。
+  なぜならば。_デッドロック_
+  になるからです。（割り込みハンドラ内に実行がとどまるため、メインスレッドがロックを解放することは決してありません）
+  デッドロックはアンセーフとは考えられていません。安全なRustでも発生する可能性があります。
+],
 zh: [
   将中断处理函数与一个互斥量一起使用可能有点棘手:
   阻塞中断处理函数通常是不可接受的，如果它阻塞等待main线程去释放一个锁，那将是一场灾难。因为我们会
@@ -907,6 +1094,11 @@ de: [
   exklusiven Zugriff auf die gekapselte Variable haben, ohne den
   Sperrstatus des Mutex explizit nachverfolgen zu müssen.
 ],
+ja: [
+  この動作を完全に避けるため、カウンタの例で示すように、ロックのためにクリティカルセクションを必要とするミューテックスを実装できます。
+  クリティカルセクションがロックしている間続く限り、ミューテックスのロック/アンロックの状態を追跡することなしに、
+  ラップされた変数に排他的にアクセスできます。
+],
 zh: [
   为了完全避免这个行为，我们可以实现一个要求临界区的互斥量去锁住，就像我们的计数器例子一样。临界区的存在时间必须和锁存在的时间一样长，我们能确保我们对被封装的变量有排他式访问，甚至不需要跟踪互斥量的
   lock/unlock 状态。
@@ -921,9 +1113,11 @@ de: [
   Genau dies wird uns bereits durch die `cortex_m`-Crate abgenommen! Wir
   hätten unseren Zähler auch unter Verwendung dieser Crate implementieren können:
 ],
+ja: [
+  これは実際に`cortex_m`クレートで行われています！ それを使ってカウンタを書くことができます。
+],
 zh: [
-  实际上我们在 `cortex_m`
-  crate中就是这么做的！我们可以用它来写入我们的计数器:
+  实际上我们在 `cortex_m` crate中就是这么做的！我们可以用它来写入我们的计数器:
 ]))
 
 #raw(block: true, lang: "rust",
@@ -952,6 +1146,7 @@ fn timer() {
         en: "We still need to enter a critical section here to satisfy the Mutex.",
         de: "Wir muessen hier noch einen kritischen Abschnitt betreten, um die 
     // Mutex-Bedingung zu erfuellen.",
+        ja: "ミューテックスを満たすために、ここでもクリティカルセクションに入る必要があります。",
         zh: "这里我们仍然需要进入一个临界区去满足互斥量。",
       )) + "
     interrupt::free(|cs| COUNTER.borrow(cs).set(0));
@@ -988,8 +1183,17 @@ de: [
   `static`-Variablen einsetzen, da `static`-Elemente die Eigenschaft
   `Sync` erfüllen müssen.
 ],
+ja: [
+  今回は#ln_cell;を使っています。これは、`RefCell`の同類で安全な内部可変性を提供するために使用されます。
+  既に、`UnsafeCell`が、Rustの内部可変性の最下層であることを見てきました。
+  UnsafeCellは、値への複数のミュータブル参照の取得を可能としますが、アンセーフなコードでのみ使用できます。
+  `Cell`は`UnsafeCell`と似ていますが、安全なインタフェースを提供します。
+  Cellは参照を取得せず、現在値のコピーを取得するか、置き換えることだけを許可します。
+  CellはSyncでないため、スレッド間で共有できません。
+  これらの制約は安全に使えることを意味しますが、`static`変数として直接使用できません。`static`はSyncである必要があるからです。
+],
 zh: [
-  我们现在使用了#link("https://doc.rust-lang.org/core/cell/struct.Cell.html")[`Cell`]，它与它的兄弟`RefCell`一起被用于提供safe的内部可变性。我们已经见过`UnsafeCell`了，在Rust中它是内部可变性的底层:
+  我们现在使用了#ln_cell，它与它的兄弟`RefCell`一起被用于提供safe的内部可变性。我们已经见过`UnsafeCell`了，在Rust中它是内部可变性的底层:
   它允许你去获得对某个值的多个可变引用，但是只能与不安全的代码一起工作。一个`Cell`像一个`UnsafeCell`一样但是它提供了一个安全的接口:
   它只允许拷贝现在的值或者替换它，不允许获取一个引用，因此它不是Sync，它不能被在线程间共享。这些限制意味着它用起来是safe的，但是我们不能直接将它用于`static`变量因为一个`static`必须是Sync。
 ]))
@@ -1007,6 +1211,11 @@ de: [
   Dies ist sicher möglich, da der Zugriff auf den Inhalt nur während eines
   kritischen Abschnitts gewährt wird. Dadurch erhalten wir einen sicheren
   Zähler ohne jeglichen unsicheren Code!
+],
+ja: [
+  では、なぜ上記の例はうまく動くのでしょうか？`Mutex<T>`は、`Cell`のようなSendな`T`に対してSyncを実装します。
+  このことが、Cellをstaticで使うことを安全にします。なぜなら、クリティカルセクションの間だけ、その中身へのアクセスを提供するからです。
+  従って、全くアンセーフなコードなしに、安全なカウンタを手に入れることができます。
 ],
 zh: [
   因此为什么上面的例子可以工作?`Mutex<T>`对于任何是Send的`T`实现了Sync -
@@ -1026,6 +1235,11 @@ de: [
   Beispiel in eingebetteten Systemen ist eine Peripheriestruktur, die in
   der Regel nicht `Copy` ist. Für diesen Fall können wir `RefCell` verwenden.
 ],
+ja: [
+  この方法は、カウンタの`u32`のような単純な型に適しています。しかし、もっと複雑なCopyでない型についてはどうでしょうか？
+  組込みにおいて非常に一般的な例は、ペリフェラル構造体です。これは、通常Copyではありません。
+  そのためには、`RefCell`に頼ることができます。
+],
 zh: [
   对于我们的简单类型，像是我们的计数器的`u32`来说是很棒的，但是对于更复杂的不能拷贝的类型呢？在一个嵌入式上下文中一个极度常见的例子是一个外设结构体，通常它们不是Copy。针对那种情况，我们可以使用`RefCell`。
 ]))
@@ -1033,6 +1247,7 @@ zh: [
 == #tr((
   en: [Sharing Peripherals],
   de: [Gemeinsame Nutzung von Peripheriegeräten],
+  ja: [ペリフェラルの共有],
   zh: [共享外设],
 ))
 
@@ -1052,6 +1267,11 @@ de: [
   die Sicherheit, erschwert jedoch den gleichzeitigen Zugriff auf eine
   Peripheriekomponente sowohl aus dem Haupt-Thread als auch aus einem
   Interrupt-Handler heraus.
+],
+ja: [
+  `svd2rust`および同様の抽象化を使って生成されるデバイスクレートは、ペリフェラルへの安全なアクセスを提供します。
+  これは、同時に1つのペリフェラル構造体インスタンスしか存在できないように強制することによって、もたらされます。
+  このことは、安全性を保証しますが、メインスレッドと割り込みハンドとの両方からペリフェラルにアクセスすることを難しくします。
 ],
 zh: [
   使用`svd2rust`生成的设备crates和相似的抽象，通过强制要求同时只能存在一个外设结构体的实例，提供了对外设的安全的访问。这个确保了安全性，但是使得它很难从main线程和一个中断处理函数一起访问一个外设。
@@ -1078,6 +1298,12 @@ de: [
   müssen wir sicherstellen, dass zu jedem Zeitpunkt nur eine einzige
   Referenz existiert.
 ],
+ja: [
+  ペリフェラルアクセスを安全に共有するため、上で見たように`Mutex`を使うことができます。
+  また、#ln_refcell;も必要です。RefCellは、実行時チェックを使って、同時に1つのペリフェラルへの参照だけが渡されるようにします。
+  実行時チェックは、普通の`Cell`よりもオーバーヘッドが大きくなりますが、
+  コピーではなく参照を受け渡しするため、同時に存在するのが1つだけであることを確認する必要があります。
+],
 zh: [
   为了安全地共享对外设的访问，我们能使用我们之前看到的`Mutex`。我们也将需要使用#ln_refcell，它使用一个运行时检查去确保对一个外设每次只有一个引用被给出。这个比纯`Cell`消耗更多，但是因为我们正给出引用而不是拷贝，我们必须确保每次只有一个引用存在。
 ]))
@@ -1095,6 +1321,10 @@ de: [
   werden kann, nachdem sie im Hauptcode initialisiert wurde. Hierfür
   können wir den Typ `Option` verwenden, der zunächst mit `None`
   initialisiert und später auf die Instanz der Peripheriekomponente gesetzt wird.
+],
+ja: [
+  最後に、メインコード内でペリフェラルを初期化した後、なんとかしてペリフェラルを共有変数に移動する方法が必要です。
+  これを実現するために、`Option`型を使います。`None`で初期化し、後でペリフェラルのインスタンスを設定します。
 ],
 zh: [
   最终，我们也必须考虑在main代码中初始化外设后，如何将外设移到共享变量中。为了做这个，我们使用`Option`类型，初始成`None`，之后设置成外设的实例。
@@ -1117,6 +1347,9 @@ fn main() -> ! {
         de: "Die Peripherie-Singletons abrufen und konfigurieren.
     // Dieses Beispiel stammt aus einer mit svd2rust erstellten Crate, die 
     // meisten Crates für eingebettete Geräte sind jedoch ähnlich.",
+        ja: "ペリフェラルのシングルトンを取得し、設定します。
+    // この例は、svd2rustで生成されたクレートから持ってきたものですが、
+    // ほとんどの組込みデバイスクレートは同様になります。",
         zh: "获得外设的单例并配置它。这个例子来自一个svd2rust生成的crate，
     // 但是大多数的嵌入式设备crates都相似。",
       )) + "
@@ -1129,6 +1362,8 @@ fn main() -> ! {
         de: "Eine Art Konfigurationsfunktion.
     // Gehen wir davon aus, dass es PA0 als Eingang und PA1 als Ausgang 
     // konfiguriert.",
+        ja: "一連の設定をする関数です。
+    // PA0を入力、PA1を出力に設定すると仮定して下さい。",
         zh: "某个配置函数。假设它把PA0设置成一个输入和把PA1设置成一个输出。",
       )) + "
     configure_gpio(gpioa);
@@ -1136,6 +1371,7 @@ fn main() -> ! {
     // " + ts((
         en: "Store the GPIOA in the mutex, moving it.",
         de: "Speichere GPIOA im Mutex und verschiebe es dabei.",
+        ja: "GPIOAをミューテックスに格納し、ムーブします。",
         zh: "把GPIOA存进互斥量中，移动它。",
       )) + "
     interrupt::free(|cs| MY_GPIO.borrow(cs).replace(Some(dp.GPIOA)));
@@ -1154,6 +1390,12 @@ fn main() -> ! {
     // Andernfalls koennte der Interrupt ausgeloest werden, solange MY_GPIO 
     // noch None enthaelt, was – wie implementiert (mit `unwrap()`) – zu einer 
     // Panic fuehren wuerde.",
+        ja: "もはや`gpioa`や`dp.GPIOA`は使いません。
+    // 代わりに、ミューテックス経由でアクセスする必要があります。
+
+    // MY_GPIOを設定した後にのみ、割り込みを有効にするように注意して下さい。
+    // そうしなければ、まだNoneが含まれている間に、割り込みが発生する可能性があります。
+    // （`unwrap()`を使用して）書き込まれると、パニックになるでしょう。",
         zh: "我可以不再用`gpioa`或者`dp.GPIOA`，反而必须通过互斥量访问它。
 
     // 请注意，只有在设置MY_GPIO后才能使能中断: 要不然当MY_GPIO还是包含None的时候，
@@ -1165,6 +1407,7 @@ fn main() -> ! {
         // " + ts((
             en: "We'll now read state as a digital input, via the mutex",
             de: "Wir lesen den Status nun als digitalen Eingang ueber den Mutex aus.",
+            ja: "ミューテックス経由で、デジタル入力としての状態を読み込みます。",
             zh: "我们现在将通过互斥量，读取其作为数字输入时的状态。",
           )) + "
         let state = interrupt::free(|cs| {
@@ -1177,6 +1420,7 @@ fn main() -> ! {
                 en: "Set PA1 high if we've seen a rising edge on PA0.",
                 de: "Setze PA1 auf High, wenn an PA0 eine steigende Flanke erkannt 
             // wurde.",
+                ja: "PA0の立ち上がりエッジを検出した場合、PA1をハイに設定します。",
                 zh: "如果我们在PA0上已经看到了一个上升沿，拉高PA1。"
               )) + "
             interrupt::free(|cs| {
@@ -1193,6 +1437,7 @@ fn timer() {
     // " + ts((
         en: "This time in the interrupt we'll just clear PA0.",
         de: "Diesmal setzen wir im Interrupt lediglich PA0 zurueck.",
+        ja: "今回は、割り込み内では単純にPA0をクリアするだけです。",
         zh: "这次在中断中，我们将清除PA0。",
       )) + "
     interrupt::free(|cs| {
@@ -1203,6 +1448,8 @@ fn timer() {
             de: "Wir koennen `unwrap()` verwenden, da wir wissen, dass der Interrupt 
         // erst aktiviert wurde, nachdem `MY_GPIO` gesetzt war; andernfalls 
         // muessten wir den moeglichen Fall eines `None`-Werts behandeln.",
+            ja: "`unwrap()`を使うことができます。割り込みはMY_GPIOが設定されるまで有効化されないことを
+        // 知っているためです。そうでなければ、Noneを処理しなければならないでしょう。",
             zh: "我们可以使用`unwrap()` 因为我们知道直到MY_GPIO被设置后，中断都是禁用的；
         // 否则我应该处理会出现一个None值的潜在可能"
           )) + "
@@ -1219,6 +1466,9 @@ en: [
 de: [
   Das ist eine ganze Menge, die man erst einmal verarbeiten muss --
   schauen wir uns also die wichtigen Zeilen genauer an.
+],
+ja: [
+  非常に多くのことを取り入れています。重要な部分を詳細に見ていきましょう。
 ],
 zh: [
   这需要理解的内容很多，所以让我们把重要的内容分解一下。
@@ -1253,6 +1503,14 @@ de: [
   sondern nur zur Laufzeit auf das Peripherie-Singleton zugreifen können,
   ist dieses Vorgehen erforderlich.
 ],
+ja: [
+  ここでは、共有変数は`RefCell`を内部に含む`Mutex`です。さらに、RefCellは`Option`を含んでいます。
+  `Mutex`はクリティカルセクションの間だけ、アクセスできるようにします。
+  その結果、普通の`RefCell`はSyncでないにも関わらず、変数はSyncになります。
+  `RefCell`は、`GPIOA`を使うのに必要となる参照によって内部可変性を提供します。
+  `Option`を使用すると、この変数を空の値に初期化できます。後で実際に変数を移動します。
+  ペリフェラルのシングルトンには静的にアクセスすることはできません。実行時のみアクセスできるため、Optionが必要とされます。
+],
 zh: [
   我们的共享变量现在是一个包围了一个`RefCell`的`Mutex`，`RefCell`包含一个`Option`。`Mutex`确保只在一个临界区中的时候可以访问，因此使变量变成了Sync，甚至即使一个纯`RefCell`不是Sync。`RefCell`赋予了我们引用的内部可变性，我们将需要使用我们的`GPIOA`。`Option`让我们可以初始化这个变量成空的东西，只在随后实际移动变量进来。只有在运行时，我们才能静态地访问外设单例，因此这是必须的。
 
@@ -1273,6 +1531,10 @@ de: [
   Mutex aufrufen, was uns eine Referenz auf die `RefCell` liefert.
   Anschließend rufen wir `replace()` auf, um unseren neuen Wert in die
   `RefCell` zu verschieben.
+],
+ja: [
+  クリティカルセクションの内部で、ミューテックスの`borrow()`を呼んでいます。borrow()は`RefCell`の参照を提供します。
+  その後、`replace()`を呼び出して、`RefCell`に新しい値をムーブします。
 ],
 zh: [
   在一个临界区中，我们可以在互斥量上调用`borrow()`，其给了我们一个指向`RefCell`的引用。然后我们调用`replace()`去移动我们的新值进来`RefCell`。
@@ -1302,6 +1564,12 @@ de: [
   der Status der `RefCell` aktualisiert, um anzuzeigen, dass sie nicht
   mehr ausgeliehen ist.
 ],
+ja: [
+  最後に、`MY_GPIO`を安全で並行なやり方で使います。
+  クリティカルセクションは、通常通り割り込みの発生を防ぎ、ミューテックスを借用できます。
+  `RefCell`は`&Option<GPIOA>`を提供し、その借用がいつまで続くかを追跡します。
+  その参照がスコープ外になると、`RefCell`が借用されなくなったことを示すため、更新されます。
+],
 zh: [
   最终，我们用一种安全和并发的方式使用`MY_GPIO`。临界区禁止了中断像往常一样发生，让我们借用互斥量。`RefCell`然后给了我们一个`&Option<GPIOA>`并追踪它还要借用多久 - 一旦引用超出作用域，`RefCell`将会被更新去指出引用不再被借用。
 ]))
@@ -1318,6 +1586,11 @@ de: [
   umwandeln. Dieses können wir schließlich mit `unwrap()` auflösen, um das
   `&GPIOA` zu erhalten, das uns den Zugriff zur Modifikation der
   Peripherieeinheit ermöglicht.
+],
+ja: [
+  `&Option`の外に`GPIOA`をムーブすることはできないので、`as_ref()`を使って`&Option<&GPIOA>`に変換します。
+  そうすると、最終的に、`unwrap()`で`&GPIOA`を取得できます。
+  &GPIOAにより、ペリフェラルを修正することができます。
 ],
 zh: [
   因为我不能把`GPIOA`移出`&Option`，我们需要用`as_ref()`将它转换成一个`&Option<&GPIOA>`，最终我们能使用`unwrap()`获得`&GPIOA`，其让我们可以修改外设。
@@ -1394,6 +1667,9 @@ de: [
   Puh! Das ist zwar sicher, aber auch etwas unhandlich. Können wir sonst
   noch etwas tun?
 ],
+ja: [
+  ヒューッ！これは安全ですが、少し大げさすぎて扱いにくいです。他に方法はないのでしょうか？
+],
 zh: [
   呼！这是安全的，但也有点笨拙。我们还能做些什么吗？
 ]))
@@ -1423,6 +1699,14 @@ de: [
   (wie bei `RefCell`) entstünde. Dies bietet eine Reihe von Vorteilen, wie
   etwa die Garantie von Deadlock-Freiheit sowie einen extrem geringen
   Zeit- und Speicheraufwand.
+],
+ja: [
+  代替手段の１つは、#link(url_rtic)[RTFMフレームワーク]です。RTFMは、Real
+  Time For the Massesの略です。
+  RTFMは、共有リソースが常に安全にアクセスされることを保証するために、静的な優先度を適用し、
+  `static mut`変数（「リソース」）へのアクセスを追跡します。
+  この方法は、（`RefCell`のように）常にクリティカルセクションに入り、参照カウントを使うというオーバーヘッドを必要としません。
+  デッドロックがないことを保証したり、時間とメモリのオーバーヘッドを極めて小さくするといった、多くの利点があります。
 ],
 zh: [
   另一个方法是使用#link(url_rtic)[RTIC框架]，Real
@@ -1458,6 +1742,11 @@ de: [
   planen, womit sich beispielsweise periodische Aufgaben realisieren
   lassen. Weitere Informationen finden Sie in
   #link(url_rtic_doc)[der Dokumentation]!
+],
+ja: [
+  このフレームワークは他の機能も含んでいます。例えば、メッセージパッシングは明示的な共有状態の必要性を減らします。
+  また、タスクを指定した時間に実行するスケジュールする機能もあります。これは、周期タスクの実装に使えます。
+  詳しくは#link(url_rtic_doc)[ドキュメント]を参照して下さい。
 ],
 zh: [
   这个框架也包括了其它的特性，像是消息传递(message
@@ -1516,6 +1805,7 @@ de: [
 == #tr((
   en: [Real Time Operating Systems],
   de: [Echtzeitbetriebssysteme],
+  ja: [リアルタイムオペレーティングシステム],
   zh: [实时操作系统],
 ))
 
@@ -1547,6 +1837,16 @@ de: [
   Synchronisationsprimitive bereit und interagieren häufig mit
   Hardwarefunktionen wie DMA-Controllern.
 ],
+ja: [
+  #todoupd("ja")
+  組込み向け並行性の異なる一般的なモデルとして、リアルタイムオペレーティングシステム（RTOS）があります。
+  現在、Rustではあまり検証されていませんが、従来の組込み開発では広く使用されています。
+  オープンソースの例として、#ln_freertos;と#ln_chibi;があります。
+  これらのRTOSは、複数のアプリケーションスレッドを動作させる機能を提供しています。
+  スレッドが制御を明け渡す時（コオペレーティブマルチタスク）か、
+  周期タイマまたは割り込みに基づく時（プリエンプティブマルチタスク）に、CPUで実行するスレッドを切り替えます。
+  RTOSは、通常ミューテックスや他の同期プリミティブを提供します。また、DMAエンジンようなハードウェア機能を同時に使えることも多いです。
+],
 zh: [
   #todoupd("zh")
   与嵌入式并发有关的另一个模型是实时操作系统(RTOS)。虽然现在在Rust中的研究较少，但是它们被广泛用于传统的嵌入式开发。开源的例子包括#ln_freertos;和#ln_chibi。这些RTOSs提供对运行多个应用线程的支持，CPU在这些线程间进行切换，切换要么发生在当线程让出控制权的时候(被称为非抢占式多任务)，要么是基于一个常规计时器或者中断(抢占式多任务)。RTOS通常提供互斥量或者其它的同步原语，经常与硬件功能相互使用，比如DMA引擎。
@@ -1562,14 +1862,18 @@ de: [
   auf die man verweisen könnte; es handelt sich jedoch um ein
   interessantes Gebiet -- bleiben Sie also dran!
 ],
+ja: [
+  この本を書いている時点では、Rustで書かれたRTOSの例はそれほど多くありません。
+  しかし、興味深い分野ですので、この分野にご注目下さい！
+],
 zh: [
-  在撰写本文时，没有太多的Rust
-  RTOS示例可供参考，但这是一个有趣的领域，所以请关注这块！
+  在撰写本文时，没有太多的Rust RTOS示例可供参考，但这是一个有趣的领域，所以请关注这块！
 ]))
 
 == #tr((
   en: [Multiple Cores],
   de: [Mehrere Kerne],
+  ja: [マルチコア],
   zh: [多个核心],
 ))
 
@@ -1593,6 +1897,14 @@ de: [
   wir Synchronisierungsprimitive, die speziell für Mehrkernsysteme (auch
   SMP, für symmetrisches Multiprocessing, genannt) entwickelt wurden.
 ],
+ja: [
+  組込みプロセッサにおいても、2個以上のコアを持つことがより一般的になってきています。
+  このことは、並行性をさらに複雑にします。（`cortex_m::interrupt::Mutex`を含む）クリティカルセクションで使っている全ての例は、
+  他の実行スレッドは、割り込みスレッドだけであることを前提にしています。
+  しかし、マルチコアシステムにおいては、これは当てはまりません。
+  代わりに、マルチコア（SMP; symmetric
+  multi-proccesingとも呼ばれます）向けに設計した同期プリミティブが必要になります。
+],
 zh: [
   在嵌入式处理器中有两个或者多个核心很正常，其为并发添加了额外一层复杂性。所有使用临界区的例子(包括`cortex_m::interrupt::Mutex`)都假设了另一个执行的线程仅是中断线程，但是在一个多核系统中，这不再是正确的假设。反而，我们将需要为多核设计的同步原语(也被叫做SMP，symmetric
   multi-processing的缩写)。
@@ -1607,6 +1919,10 @@ de: [
   Diese verwenden typischerweise die bereits erwähnten atomaren Befehle,
   da das Verarbeitungssystem die Atomarität über alle Kerne hinweg gewährleistet.
 ],
+ja: [
+  通常、これまでに見たアトミック命令を使用します。
+  アトミック命令は、処理システムが全てのコア間でのアトミック性を維持してくれるためです。
+],
 zh: [
   我们之前看到的，这些通常使用原子指令，因为处理系统将确保原子性在所有的核中都保持着。
 ]))
@@ -1619,6 +1935,10 @@ en: [
 de: [
   Eine detaillierte Behandlung dieser Themen würde den Rahmen dieses
   Buches sprengen, die allgemeinen Muster sind jedoch dieselben wie im Einzelkernfall.
+],
+ja: [
+  これらのトピックを詳細に説明することは、この本のスコープ範囲外ですが、
+  一般的なパターンはシングルコアの場合と同じです。
 ],
 zh: [
   覆盖这些主题的细节已经超出了本书的范围，但是常规的模式与单核的相似。

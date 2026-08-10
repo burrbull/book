@@ -1,10 +1,9 @@
 #import "../../config.typ": *
 
-#h1(offset: whole*2, tr((
-  en: [Naming],
+#h1((en: [Naming],
   de: [Benennung],
   zh: [命名],
-)))
+), offset: whole*2)
 <hal-naming>
 
 = #tr((

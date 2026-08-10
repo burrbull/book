@@ -1,12 +1,11 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Meet Your Hardware],
+#h1((en: [Meet Your Hardware],
   de: [Lernen Sie Ihre Hardware kennen],
   ja: [ハードウェアとの出会い],
   uk: [Зустрічайте залізо],
   zh: [熟悉你的硬件],
-)))
+), offset: whole)
 
 #tr((
 en: [

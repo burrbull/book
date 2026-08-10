@@ -1,11 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Panicking],
+#h1((en: [Panicking],
   de: [In Panik geraten],
   ja: [パニック],
   zh: [运行时恐慌(Panicking)],
-)))
+), offset: whole)
 <getting-started-panicking>
 
 #tr((
@@ -270,6 +269,7 @@ zh: [
 = #tr((
   en: [An example],
   de: [Ein Beispiel],
+  ja: [例],
   zh: [一个例子],
 ))
 
@@ -281,6 +281,9 @@ en: [
 de: [
   Hier ist ein Beispiel, das versucht, auf ein Array an einer Position
   zuzugreifen, die über dessen Länge hinausgeht. Der Vorgang führt zu einer Panic.
+],
+ja: [
+  配列の長さを超えてアクセスしようとする例を示します。この操作はパニックを引き起こします。
 ],
 zh: [
   这里有一个尝试越界访问数组的例子。操作的结果导致了一个运行时恐慌(panic)。
@@ -301,6 +304,7 @@ fn main() -> ! {
     let _y = xs[i]; // " + ts((
                         en: "out of bounds access",
                         de: "Zugriff ausserhalb der zulaessigen Grenzen",
+                        ja: "範囲外アクセス",
                         zh: "out of bounds access"
                       )) + "
 
@@ -316,6 +320,10 @@ en: [
 de: [
   Für dieses Beispiel wurde das Verhalten `panic-semihosting` gewählt, das
   die Panic-Meldung mittels Semihosting auf der Host-Konsole ausgibt.
+],
+ja: [
+  この例では、`panic-semihosting`の挙動を選択しており、パニックメッセージは、
+  セミホスティングを使ってホストコンソールに出力されます。
 ],
 zh: [
   这个例子选择了`panic-semihosting`行为，运行时恐慌的信息会被打印至使用了半主机模式的主机控制台上。
@@ -335,6 +343,9 @@ en: [
 de: [
   Sie können versuchen, das Verhalten auf `panic-halt` zu ändern, und
   bestätigen, dass in diesem Fall keine Meldung ausgegeben wird.
+],
+ja: [
+  挙動を`panic-halt`に変更し、その場合にメッセージが出力されないことを確認することができます。
 ],
 zh: [
   你可以尝试将行为改成`panic-halt`，确保在这个案例里没有信息被打印。

@@ -1,11 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [A `no_std` Rust Environment],
+#h1((en: [A `no_std` Rust Environment],
   de: [Eine `no_std`-Rust-Umgebung],
   ja: [Rustの`no_std`環境],
   zh: [一个 `no_std` Rust环境],
-)))
+), offset: whole)
 
 #let ln_st72325 = link("https://www.st.com/resource/en/datasheet/st72325j6.pdf")[ST72325xx]
 #let ln_rpi = link("https://en.wikipedia.org/wiki/Raspberry_Pi#Specifications")[Modell B 3+]

@@ -1,10 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Semihosting],
+#h1((en: [Semihosting],
   de: [Semihosting],
+  ja: [セミホスティング],
   zh: [半主机模式],
-)))
+), offset: whole)
 
 #tr((
 en: [
@@ -26,6 +26,11 @@ de: [
   Hardware-Debugger (z. B. ST-Link) kann jeder Schreibvorgang mehrere
   Millisekunden in Anspruch nehmen.
 ],
+ja: [
+  セミホスティングは、組込みデバイスがホスト上でI/Oを行う仕組みです。主に、ホストのコンソールにログ出力するために使われます。
+  セミホスティングには、デバッグセッションが必要ですが、他には何も必要としません（追加の配線は不要です）。そのため、非常に便利です。
+  欠点は、非常に低速であることです。ハードウェアデバッガ（例えば、ST-Link）によっては、書き込み操作が数ミリ秒かかります。
+],
 zh: [
   半主机模式是一种可以让嵌入式设备在主机上进行I/O操作的的机制，主要被用来记录信息到主机控制台上。半主机模式需要一个debug会话，除此之外几乎没有其它要求了，因此它非常易于使用。缺点是它非常慢：每个写操作需要几毫秒的时间，其取决于你的硬件调试器(e.g.~ST-LINK)。
 ]))
@@ -41,6 +46,10 @@ de: [
   Das #ln_sh;-Crate
   stellt eine API für Semihosting-Operationen auf Cortex-M-Geräten bereit.
   Das folgende Programm ist die Semihosting-Version von „Hello, world!":
+],
+ja: [
+  #ln_sh;クレートは、Cortex-Mデバイス上でセミホスティング操作をするためのAPIを提供します。
+  下のプログラムは、セミホスティングバージョンの「Hello, world!」です。
 ],
 zh: [
   #ln_sh crate 提供了一个API去在Cortex-M设备上执行半主机操作。下面的程序是"Hello,
@@ -73,6 +82,10 @@ de: [
   Wenn Sie dieses Programm auf der Hardware ausführen, sehen Sie die
   Meldung „Hello, world!" in den OpenOCD-Protokollen.
 ],
+ja: [
+  このプログラムをハードウェア上で実行すると、OpenOCDのログに、「Hello
+  world!」のメッセージが表示されます。
+],
 zh: [
   如果你在硬件上运行这个程序，你将会在OpenOCD的logs中看到"Hello,
   world!"信息。
@@ -91,6 +104,9 @@ en: [
 ],
 de: [
   Sie müssen zunächst Semihosting in OpenOCD über GDB aktivieren:
+],
+ja: [
+  最初に、GDBからOpenOCDのセミホスティングを有効化する必要があります。
 ],
 zh: [
   你首先需要从GDB使能OpenOCD中的半主机模式。
@@ -117,6 +133,11 @@ de: [
   zu aktivieren; diese Optionen sind bereits in der Datei
   `.cargo/config.toml` der Vorlage enthalten.
 ],
+ja: [
+  QEMUはセミホスティング操作を理解しているため、上のプログラムは、デバッグセッションを開始していない`qemu-system-arm`でも動作します。
+  セミホスティングサポートを有効化するため、QEMUに`-semihosting-config`フラグを渡す必要があることに注意して下さい。
+  これらのフラグは、テンプレートの`.cargo/config`ファイルに既に含まれています。
+],
 zh: [
   QEMU理解半主机操作，因此上面的程序不需要启动一个debug会话，也能在`qemu-system-arm`中工作。注意你需要传递`-semihosting-config`标志给QEMU去使能支持半主机模式；这些标识已经被包括在模板的`.cargo/config.toml`文件中了。
 ]))
@@ -125,6 +146,7 @@ zh: [
 "$ # " + ts((
     en: "this program will block the terminal",
     de: "Dieses Programm wird das Terminal blockieren.",
+    ja: "このプログラムは端末をブロックします",
   )) + "
 $ cargo run
      Running `qemu-system-arm (..)
@@ -144,6 +166,11 @@ de: [
   *nicht* auf echter Hardware; diese Funktion kann Ihre
   OpenOCD-Sitzung beschädigen, sodass Sie keine weiteren Programme mehr
   debuggen können, bis Sie die Sitzung neu starten.
+],
+ja: [
+  `exit`セミホスティング操作もあり、QEMUプロセスを終了するために使われます。
+  重要：ハードウェア上で`debug::exit`を*使用しない*で下さい。この関数は、OpenOCDセッションを破壊する可能性があり、
+  OpenOCDを再起動しない限り、それ以上のプログラムのデバッグができなくなります。
 ],
 zh: [
   `exit`半主机操作也能被用于终止QEMU进程。重要：*不要*在硬件上使用`debug::exit`；这个函数会关闭你的OpenOCD对话，这样你就不能执行其它的程序调试操作了，除了重启它。
@@ -192,6 +219,11 @@ de: [
   schreiben, die erfolgreich durchlaufen und unter QEMU ausgeführt werden
   können.
 ],
+ja: [
+  最後のヒント：パニック時の挙動を、`exit(EXIT_FAILURE)`に設定することができます。
+  これで、QEMU上で実行できる`no_std`ランパステストを書くことができます。
+
+],
 zh: [
   最后一个提示：你可以将运行时恐慌(panicking)的行为设置成
   `exit(EXIT_FAILURE)`。这会允许你编写可以在QEMU上运行通过的 `no_std`
@@ -208,6 +240,10 @@ de: [
   Praktischerweise bietet der `panic-semihosting`-Crate ein „exit"-Feature
   an; ist dieses aktiviert, wird `exit(EXIT_FAILURE)` aufgerufen, nachdem
   die Panic-Meldung auf dem `stderr` des Hosts ausgegeben wurde.
+],
+ja: [
+  利便性のために、`panic-semihosting`クレートは、「exit」フィーチャを持っています。
+  このフィーチャが有効化されていると、ホストの標準エラーにパニックメッセージをログ出力した後、`exit(EXIT_FAILURE)`を呼び出します。
 ],
 zh: [
   为了方便，`panic-semihosting` crate有一个 "exit"

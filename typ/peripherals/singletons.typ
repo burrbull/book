@@ -1,10 +1,10 @@
 #import "../config.typ": *
 
-#h1(offset: whole, tr((
-  en: [Singletons],
+#h1((en: [Singletons],
   de: [Singletons],
+  ja: [シングルトン],
   zh: [单例],
-)))
+), offset: whole)
 
 #quote(block: true)[
 #tr((
@@ -15,6 +15,9 @@ en: [
 de: [
 	In der Softwaretechnik ist das Singleton-Muster ein Entwurfsmuster, das
 	die Instanziierung einer Klasse auf ein einziges Objekt beschränkt.
+],
+ja: [
+  ソフトウェア工学において、シングルトン・パターンはクラスのインスタンス化を１つのオブジェクトに制限するデザインパターンです。
 ],
 zh: [
 	在软件工程中，单例模式是一个软件设计模式，其限制了一个类到一个对象的实例化。
@@ -28,6 +31,9 @@ en: [
 de: [
 	_Wikipedia: #link(url_singleton)[Singleton-Muster]_
 ],
+ja: [
+  _Wikipedia: #link(url_singleton)[Singleton Pattern]_
+],
 zh: [
 	_Wikipedia: #link(url_singleton)[Singleton Pattern]_
 ]))
@@ -36,6 +42,7 @@ zh: [
 = #tr((
   en: [But why can't we just use global variable(s)?],
   de: [Aber warum können wir nicht einfach globale Variable(n) verwenden?],
+  ja: [なぜグローバル変数は使えないのか？],
   zh: [为什么不可以使用全局变量？],
 ))
 
@@ -45,6 +52,9 @@ en: [
 ],
 de: [
 	Wir könnten alles als „public static" definieren, etwa so:
+],
+ja: [
+  このように、全てをパブリックかつスタティックにすることができます。
 ],
 zh: [
 	可以像这样，我们可以使每个东西都变成公共静态的(public static):
@@ -74,6 +84,11 @@ de: [
 	sichtbar, was bedeutet, dass der Borrow Checker nicht dabei helfen kann,
 	die Referenzen und die Ownership dieser Variablen zu verfolgen.
 ],
+ja: [
+  しかし、これにはいくつか問題があります。
+  これはミュータブルなグローバル変数であり、Rustにおいては、これらとやり取りするのは常にアンセーフです。
+  これらの変数はプログラムの全体を通して見えることになり、つまりそれは借用チェッカがこれらの変数の参照や所有権を追跡するのに役立たなくなることを意味します。
+],
 zh: [
 	但是这个带来了一些问题。它是一个可变的全局变量，在Rust，与这些变量交互总是unsafe的。这些变量在你所有的程序间也是可见的，意味着借用检查器不能帮你跟踪这些变量的引用和所有权。
 ]))
@@ -81,6 +96,7 @@ zh: [
 = #tr((
   en: [How do we do this in Rust?],
   de: [Wie machen wir das in Rust?],
+  ja: [Rustではどうするか？],
   zh: [在Rust中要怎么做?],
 ))
 
@@ -95,6 +111,9 @@ de: [
 	definieren, könnten wir uns stattdessen dazu entschließen, eine Struktur
 	-- in diesem Fall mit dem Namen `PERIPHERALS` -- zu erstellen, die für
 	jedes unserer Peripheriegeräte ein `Option<T>` enthält.
+],
+ja: [
+  単にペリフェラルをグローバル変数にする代わりに、各ペリフェラル毎に`Option<T>`を含む`PERIPHERALS`と呼ばれるグローバル変数を作ることにします。
 ],
 zh: [
 	与其只是让我们的外设变成一个全局变量，我们不如创造一个结构体，在这个例子里其被叫做
@@ -127,6 +146,10 @@ de: [
 	Peripheriekomponente zu erhalten. Wenn wir versuchen, `take_serial()`
 	mehr als einmal aufzurufen, wird unser Code eine Panic auslösen!
 ],
+ja: [
+  この構造体によって、ペリフェラルの唯一のインスタンスが取得できるようになります。
+  もしも`take_serial()`を複数回呼び出そうとすれば、コードはパニックするでしょう。
+],
 zh: [
 	这个结构体允许我们获得一个外设的实例。如果我们尝试调用`take_serial()`获得多个实例，我们的代码将会抛出运行时恐慌(panic)！
 ]))
@@ -137,6 +160,7 @@ zh: [
     // " + ts((
         en: "This panics!",
         de: "Dies loest eine panic aus!",
+        ja: "これはパニックします！",
         zh: "这里造成运行时恐慌！",
       )) + "
     // let serial_2 = unsafe { PERIPHERALS.take_serial() };
@@ -153,6 +177,9 @@ de: [
 	Obwohl die Interaktion mit dieser Struktur als `unsafe` gilt, benötigen
 	wir -- sobald wir über die darin enthaltene `SerialPort`-Instanz
 	verfügen -- weder `unsafe`-Code noch die `PERIPHERALS`-Struktur selbst.
+],
+ja: [
+  この構造体とのやり取りは`unsafe`にはなりますが、一度この構造体に含まれる`SerialPort`を取得してしまえばもう`unsafe`や`PERIPHERALS`構造体を使う必要は全くありません。
 ],
 zh: [
 	虽然与这个结构体交互是`unsafe`，然而一旦我们获得了它包含的
@@ -173,6 +200,10 @@ de: [
 	ermöglicht es uns jedoch, den Borrow-Checker im weiteren Verlauf des
 	Programms voll zu nutzen.
 ],
+ja: [
+  この方法では、オプション型の中に`SerialPort`構造体をラップし、`take_serial()`を一度コールする必要があるため、実行時に小さなオーバーヘッドとなります。
+  しかし、この少々のコストを前払いすることで、残りのプログラムで借用チェッカを利用できるようになるのです。
+],
 zh: [
 	这个带来了少量的运行时开销，因为我们必须打包 `SerialPort`
 	结构体进一个option中，且我们将需要调用一次
@@ -183,6 +214,7 @@ zh: [
 = #tr((
   en: [Existing library support],
   de: [Vorhandene Bibliotheksunterstützung],
+  ja: [既存のライブラリによるサポート],
   zh: [已存在的库支持],
 ))
 
@@ -197,6 +229,10 @@ de: [
 	dies für Ihren Code nicht erforderlich; das `cortex_m`-Crate enthält ein
 	Makro namens `singleton!()`, das diese Aufgabe für Sie übernimmt.
 ],
+ja: [
+  上記のコードでは`Peripherals`構造体を作りましたが、あなたのコードでも同じようにする必要はありません。
+  `cortex_m`クレートはこれと同様のことをしてくれる`singleton!()`と呼ばれるマクロを含んでいます。
+],
 zh: [
 	虽然我们在上面生成了我们自己的 `Peripherals`
 	结构体，但这并不是必须的。`cortex_m` crate 包含一个被叫做 `singleton!()`
@@ -210,6 +246,7 @@ fn main() {
     // " + ts((
         en: "OK if `main` is executed only once",
         de: "In Ordnung, wenn `main` nur einmal ausgefuehrt wird.",
+        ja: "`main`が一度だけしか実行されなければOKです",
         zh: "OK 如果 `main` 只被执行一次",
       )) + "
     let x: &'static mut bool =
@@ -221,7 +258,6 @@ fn main() {
 #tr((
   en: link(url_sinmacro)[cortex_m docs],
   de: link(url_sinmacro)[cortex_m Dokumente],
-  zh: link(url_sinmacro)[cortex_m docs],
 ))
 
 #let ln_rtic = link("https://github.com/rtic-rs/cortex-m-rtic")[`cortex-m-rtic`]
@@ -274,6 +310,7 @@ const APP: () = {
 = #tr((
   en: [But why?],
   de: [Aber warum?],
+  ja: [しかしなぜ？],
   zh: [为什么？],
 ))
 
@@ -285,6 +322,9 @@ en: [
 de: [
 	Aber wie bewirken diese Singletons einen spürbaren Unterschied in der
 	Funktionsweise unseres Rust-Codes?
+],
+ja: [
+  しかし、これらのシングルトンがRustのコードの動作にどのような顕著な違いをもたらすのでしょうか？
 ],
 zh: [
 	但是这些单例模式是如何使我们的Rust代码在工作方式上产生很大不同的?
@@ -298,6 +338,7 @@ zh: [
         &self // " + ts((
                   en: "<------ This is really, really important",
                   de: "<------ Das ist wirklich, wirklich wichtig.",
+                  ja: "<------ これは本当に、本当に重要です。",
                   zh: "<------ 这个真的真的很重要",
                 )) + "
     ) -> u32 {
@@ -323,6 +364,11 @@ de: [
 	- Um die Methode `read_speed()` aufzurufen, benötigen wir den Besitz
 	einer `SerialPort`-Struktur oder eine Referenz darauf.
 ],
+ja: [
+  ここには２つの重要な要素があります。
+  - シングルトンを使用しているため、`SerialPort`構造体の取得手段や場所は１つだけになります。
+  - `read_speed()`メソッドを呼ぶためには、`SerialPort`構造体の所有権もしくは参照を持つ必要があります。
+],
 zh: [
 	这里有两个重要因素:
 	- 因为我们正在使用一个单例模式，所以我们只有一种方法或者地方去获得一个
@@ -345,6 +391,9 @@ de: [
 	Zeitpunkt mehrere veränderbare Referenzen auf dieselbe Hardware
 	existieren!
 ],
+ja: [
+  これらの２つの要素をまとめると、借用チェッカを適切に満たしている場合のみハードウェアにアクセスできることを意味します。つまり、同じハードウェアに対して複数のミュータブルな参照を持つことはありません。
+],
 zh: [
 	这两个因素放在一起意味着，只有当我们满足了借用检查器的条件时，我们才有可能访问硬件，也意味着在任何时候不可能存在多个对同一个硬件的可变引用(&mut)！
 ]))
@@ -354,6 +403,7 @@ zh: [
     // " + ts((
         en: "missing reference to `self`! Won't work.",
         de: "Verweis auf `self` fehlt! Das wird nicht funktionieren.",
+        ja: "`self`への参照が見つかりません。これはうまく動きません。",
         zh: "缺少对`self`的引用！将不会工作。",
       )) + "
     // SerialPort::read_speed();
@@ -363,6 +413,7 @@ zh: [
     // " + ts((
         en: "you can only read what you have access to",
         de: "Sie koennen nur lesen, worauf Sie Zugriff haben",
+        ja: "アクセスできるものだけ読み出すことができます。",
         zh: "你只能读取你有权访问的内容",
       )) + "
     let _ = serial_1.read_speed();
@@ -372,6 +423,7 @@ zh: [
 = #tr((
   en: [Treat your hardware like data],
   de: [Behandle deine Hardware wie Daten],
+  ja: [ハードウェアをデータのように扱う],
   zh: [像对待数据一样对待硬件],
 ))
 
@@ -386,6 +438,9 @@ de: [
 	lässt sich erkennen, ob eine Funktion oder Methode potenziell den
 	Zustand der Hardware ändern könnte. Zum Beispiel:
 ],
+ja: [
+  加えて、いくつかの参照はミュータブルで、またいくつかはイミュータブルなため、関数またはメソッドがハードウェアの状態を変更できるかどうかを確認することが可能になります。
+],
 zh: [
 	另外，因为一些引用是可变的，一些是不可变的，就可以知道一个函数或者方法是否有能力修改硬件的状态。比如，
 ]))
@@ -396,6 +451,9 @@ en: [
 ],
 de: [
 	Dies darf Hardware-Einstellungen ändern:
+],
+ja: [
+  この関数はハードウェアの設定を変更できます。
 ],
 zh: [
 	这个函数可以改变硬件的配置:
@@ -416,6 +474,9 @@ en: [
 ],
 de: [
 	Das nicht:
+],
+ja: [
+  このメソッドは変更できません。
 ],
 zh: [
   这个不行:
@@ -442,6 +503,12 @@ de: [
 	innerhalb einer einzelnen Anwendung funktioniert; da unsere Software für
 	Bare-Metal-Systeme jedoch als eine einzige Anwendung kompiliert wird,
 	stellt dies üblicherweise keine Einschränkung dar.
+],
+ja: [
+
+  これにより、実行時ではなく*コンパイル時に*コードがハードウェアを変更するかどうかを強制できます。
+  注意点としては、通常この強制はひとつのアプリケーション内でのみ機能します。ベアメタルシステムにおいては、ソフトウェアはひとつのアプリケーションにコンパイルされるため、これは一般的には制約にはなりません。
+
 ],
 zh: [
 	这允许我们在*编译时*而不是运行时强制代码是否应该或者不应该对硬件进行修改。要注意，这通常在只有一个应用的情况下起作用，但是对于裸机系统来说，我们的软件将被编译进一个单一应用中，因此这通常不是一个限制。

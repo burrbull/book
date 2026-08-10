@@ -1,15 +1,16 @@
 #import "../config.typ": *
 
-#h1(tr((
-  en: [Peripherals],
+#h1((en: [Peripherals],
   de: [Peripheriegeräte],
+  ja: [ペリフェラル],
   zh: [外设],
-)))
+))
 <peripherals>
 
 = #tr((
   en: [What are Peripherals?],
   de: [Was sind Peripheriegeräte?],
+  ja: [ペリフェラルとは何か？],
   zh: [什么是外设?],
 ))
 
@@ -30,6 +31,9 @@ de: [
   über Sensoren, Motorsteuerungen oder menschliche Schnittstellen wie ein
   Display oder eine Tastatur verwendet werden. Diese Komponenten werden
   zusammenfassend als Peripheriegeräte bezeichnet.
+],
+ja: [
+  ほとんどのマイクロコントローラはCPUやRAM、フラッシュメモリ以外のものを持っています。マイクロコントローラはシリコン上に専用のセクションを持っており、そのセクションは、マイクロコントローラの外のシステムとやり取りしたり、センサーやモーターコントローラ、またはディスプレイもしくはキーボードのようなヒューマンインタフェースによって世界中の周囲環境と直接的または間接的にやり取りするために使用されます。それらのコンポーネントはまとめてペリフェラルと呼ばれています。
 ],
 zh: [
   大多数微处理器不仅仅有一个CPU，RAM，或者Flash存储器 -
@@ -53,6 +57,9 @@ de: [
   würde, können Embedded-Entwickler einige Aufgaben auf Peripheriegeräte
   verlagern, sodass die CPU ihre Zeit mit anderen wichtigen Dingen
   verbringen oder gar nichts tun kann, um Strom zu sparen.
+],
+ja: [
+  これらのペリフェラルは有用です。なぜならば、開発者はペリフェラルに処理をオフロードすることが可能になるため、全ての処理をソフトウェアで行う必要がなくなります。デスクトップ開発者がグラフィック処理をビデオカードにオフロードするのと同じように、組込み開発者は一部のタスクをペリフェラルにオフロードして、CPUの時間を他の重要なことに使ったり、電力を節約するために何もしないようにすることができます。
 ],
 zh: [
   这些外设很有用，因为它们允许一个开发者将处理工作交给它们来做，避免了必须在软件中处理每件事。就像一个桌面开发者如何将图形处理工作让给一个显卡那样，嵌入式开发者能将一些任务让给外设去做，让CPU可以把时间放在做其它更重要的事上，或者为了省电啥事也不做。
@@ -78,6 +85,13 @@ de: [
   - Einen RAM-Chip
   - Einen ROM-Chip
   - Einen Ein-/Ausgabe-Controller
+],
+ja: [
+  1970年代か1980年代の旧式の家庭用コンピュータのメイン回路基板を見れば（実際に、旧式のデスクトップPCは今日の組込みシステムとさほど違いません）、次のものを目にするはずです。
+  - プロセッサ
+  - RAMチップ
+  - ROMチップ
+  - I/Oコントローラ
 ],
 zh: [
   如果你看向来自1970s或者1980s的旧型号的家庭电脑的主板(其实，昨日的桌面PCs与今日的嵌入式系统没太大区别)，你将看到:
@@ -107,6 +121,9 @@ de: [
   gleichen Prinzipien -- nur dass alles auf einem einzigen Stück Silizium
   untergebracht ist.
 ],
+ja: [
+  RAMチップ、ROMチップ、I/Oコントローラ（このシステムのペリフェラル）は「バス」として知られる一連の並列な配線を通してプロセッサに接続されているでしょう。アドレスバスは、プロセッサがバス上のどのデバイスと通信したいかを選択するアドレス情報を運び、データバスは、実際のデータを運びます。組込みマイクロコントローラにおいても、同じ原理が適用されます。それは全てが１つのシリコン片に詰め込まれているということです。
+],
 zh: [
   RAM芯片，ROM芯片和I/O控制器(这个系统中的外设)会通过一系列并行的迹(traces)又被称为一个"总线"被加进处理器中。地址总线搬运地址信息，其用来选择处理器希望跟总线上哪个设备通信，还有一个用来搬运实际数据的数据总线。在我们的嵌入式微控制器中，应用了相同的概念
   \- 只是所有的东西被打包到一片硅片上。
@@ -124,6 +141,9 @@ de: [
   Mikrocontroller über eine Hardwareschnittstelle zugänglich gemacht, die
   einem Teil des Speichers zugeordnet ist.
 ],
+ja: [
+  しかしながら、VulkanやMetal、OpenGLなどのソフトウェアのAPIを通常持つグラフィックカードとは異なり、ペリフェラルはメモリチャンクにマッピングされたハードウェアインターフェースとしてマイクロコントローラに公開されています。
+],
 zh: [
   然而，不像显卡，显卡通常有像是Vulkan，Metal，或者OpenGL这样的一个软件API。外设暴露给微控制器的是一个硬件接口，其被映射到一块存储区域。
 ]))
@@ -131,6 +151,7 @@ zh: [
 = #tr((
   en: [Linear and Real Memory Space],
   de: [Linearer und realer Speicherraum],
+  ja: [線形な実メモリ空間],
   zh: [线性的物理存储空间],
 ))
 
@@ -144,6 +165,9 @@ de: [
   Bei einem Mikrocontroller kann auch das Schreiben von Daten an eine
   beliebige andere Adresse -- etwa `0x4000_0000` oder `0x0000_0000` -- ein
   völlig zulässiger Vorgang sein.
+],
+ja: [
+  マイクロコントローラでは、`0x4000_0000`や`0x0000_0000`のような任意のアドレスにデータを書き込むことは、完全に正当な行為でしょう。
 ],
 zh: [
   在一个微控制器上，随便往一些地址写一些数据，比如 `0x4000_0000` 或者
@@ -170,6 +194,9 @@ de: [
   Speicherbereiche, die von der Software genutzt werden. Mikrocontroller
   verfügen in der Regel nicht über eine MMU; stattdessen verwendet die
   Software dort ausschließlich reale physische Adressen.
+],
+ja: [
+  デスクトップシステムでは、メモリアクセスはMMU（メモリ管理ユニット）によって厳密に制御されています。このコンポーネントは２つの主な役割を持っています。メモリのセクションへのアクセス権限の強制（あるプロセスが別のプロセスのメモリを読み出したり変更したりできないようにする）、そして物理メモリのセグメントをソフトウェアで使用される仮想メモリ範囲に再マッピングすることです。マイクロコントローラは通常はMMUを持たず、代わりにソフトウェアで物理アドレスのみを使用します。
 ],
 zh: [
   在一个桌面系统上，访问内存被MMU，或者内存管理单元紧紧地控制着。这个组件有两个主要责任:
@@ -215,6 +242,9 @@ de: [
   Mikrocontroller die Schnittstellen für Peripheriegeräte bestimmten
   Speicheradressen zugeordnet. Das Ergebnis sieht dann ungefähr so ​​aus:
 ],
+ja: [
+  32ビットマイクロコントローラは`0x0000_0000`から`0xFFFF_FFFF`の線形な実アドレス空間を持ちますが、それらは大抵の場合、実際のメモリのためにはその範囲の数百キロバイトしか使用しません。これにより、かなりの量のアドレス空間が残ります。前の章では、RAMが`0x2000_0000`のアドレスに配置されていることについて話しました。もしもRAMが64KiBの長さなら（すなわち、最大アドレスが0xFFFF）、`0x2000_0000`から`0x2000_FFFF`がRAMのアドレスに対応します。`0x2000_1234`のアドレスにある変数に書き込むと、内部ではアドレスの上位部分（この例では0x2000）を検出し、アドレスの下位部分（この例では0x1234）に作用できるようにRAMをアクティブにします。Cortex-Mにおいては、フラッシュROMも`0x0000_0000`から`0x0007_FFFF`のアドレスにマッピングされています（512KiBのフラッシュROMが載っている場合）。これら２つの領域の間に残るスペースを全て無視するのではなく、代わりにマイクロコントローラの設計者は特定のメモリ配置にペリフェラルのインターフェースをマッピングしました。これは次のようなものになります。
+],
 zh: [
   虽然32位微控制器有一个从`0x0000_0000`到`0xFFFF_FFFF`的线性的物理地址空间，但是它们通常只使用几百KiB的实际内存。有相当大部分的地址空间保留着。在早期的章节中，我们说到RAM被放置在地址`0x2000_0000`处。如果我们的RAM是64KiB大小(i.e.~最大地址为0xFFFF),那么地址
   `0x2000_0000`到`0x2000_FFFF`与我们的RAM有关。当我们写入一个位于地址`0x2000_1234`的变量时，内部发生的是，一些逻辑发现了地址的上部(这个例子里是0x2000)，然后激活RAM，以便能操作地址的下部(这个例子里是0x1234)。在一个Cortex-M上，我们也也会把Flash
@@ -230,6 +260,7 @@ zh: [
 = #tr((
   en: [Memory Mapped Peripherals],
   de: [Im Speicher abgebildete Peripheriegeräte],
+  ja: [メモリマップド・ペリフェラル],
   zh: [存储映射的外设],
 ))
 
@@ -248,6 +279,9 @@ de: [
   Schnittstelle genauso direkt sein wie das Schreiben dieses 32-Bit-Worts
   an eine bestimmte Speicheradresse. Das Serial-Port-Peripheriegerät würde
   dann übernehmen und die Daten automatisch versenden.
+],
+ja: [
+  一見すると、これらのペリフェラルとのやり取りは簡単です。正しいデータを正しいアドレスに書き込むだけです。例えば、32ビットワードをシリアルポート上で送信することは、32ビットワードを特定のメモリアドレスに書き込むことと同じくらい直接的になり得ます。シリアルポート・ペリフェラルは自動的にデータを引き受けて送信します。
 ],
 zh: [
   乍一看，与这些外设交互很简单 -
@@ -273,6 +307,9 @@ de: [
   „0x0200_0000" an dieselbe Adresse und der SPI-Port sendet Daten mit 125
   Kilobit pro Sekunde. Diese Konfigurationsregister sehen in etwa so aus:
 ],
+ja: [
+  これらのペリフェラルの設定についても同じように動作します。ペリフェラルの設定をするための関数を呼ぶ代わりに、ハードウェアAPIとして機能するメモリチャンクが公開されます。`0x8000_0000`をSPI周波数の設定レジスタに書き込むと、SPIポートは8Mbpsでデータを送信するようになります。`0x0200_0000`を同じアドレスに書き込むと、SPIは125Kbpsでデータを送信するようになります。これらの設定レジスタをちょっとだけ見てみます。
+],
 zh: [
   这些外设的配置工作相似。不是调用一个函数去配置一个外设，而是暴露一块地址空间作为硬件API。向一个SPI频率控制寄存器写入
   `0x8000_0000`，SPI端口将会按照每秒8MB的速度发送数据。向同个地址写入
@@ -292,6 +329,9 @@ de: [
   Über diese Schnittstelle erfolgen die Interaktionen mit der Hardware,
   unabhängig davon, welche Sprache verwendet wird -- sei es Assembler, C
   oder Rust.
+],
+ja: [
+  アセンブリ言語やC言語、Rustなど、どの言語が使われようとも、このインターフェースがどのように作用するかはハードウェアによって定められています。
 ],
 zh: [
   这个接口是关于如何与硬件交互的，其与被使用的语言无关，无论这个语言是汇编，C，或者Rust。
