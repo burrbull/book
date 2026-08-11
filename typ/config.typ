@@ -59,8 +59,6 @@
 // str: use in code blocks
 #let ts = tr.with(default: todos)
 
-#let book_title = "The Embedded Rust Book"
-
 #let h1(it, offset: 0) = {
   if type(it) == dictionary {
     it = tr(it)

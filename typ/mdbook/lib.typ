@@ -42,7 +42,7 @@
   #html.link(rel: "stylesheet", href: pth+"fonts/fonts-9644e21d.css")
 ]
 
-#let html_head(title, root_pth) = html.head[
+#let html_head(title, root_pth, lang-list: true) = html.head[
   #html.meta(charset: "utf-8")
   #html.title(title)
 
@@ -55,7 +55,9 @@
   #html.elem("link", attrs: (rel: "shortcut icon", href: root_pth+"favicon-8114d1fc.png"))
   #html_head_common(root_pth)
 
-  #html.style("#language-list { left: auto; right: 10px; } #language-list a { color: inherit; }")
+  #if lang-list {
+    html.style("#language-list { left: auto; right: 10px; } #language-list a { color: inherit; }")
+  }
 
   // Highlight.js Stylesheets
   #html.link(rel: "stylesheet", id: "mdbook-highlight-css", href: root_pth+"highlight-493f70e1.css")
@@ -128,7 +130,8 @@
   items
 }
 
-#let page_header(pth, root_pth, lang, languages, default_lang) = [
+#let page_header(data, pth) = [
+  #let root_pth = data.root_prefix+pth
   #html.div(id: "mdbook-menu-bar-hover-placeholder")
   #html.div(id: "mdbook-menu-bar", class: ("menu-bar", "sticky"))[
     #html.div(class: "left-buttons")[
@@ -153,22 +156,26 @@
       ]
       #html.button(id: "mdbook-search-toggle", class: "icon-button", type: "button", title: "Search (`/`)", aria-label: "Toggle Searchbar", aria-expanded: false, aria-keyshortcuts: "/ s", aria-controls: "mdbook-searchbar", builtin-icon("search"))
     ]
-    #html.h1(class: "menu-title")[The Embedded Rust Book]
+    #html.h1(class: "menu-title", data.book_title)
     #html.div(class: "right-buttons")[
-      #html.button(id: "language-toggle", class: "icon-button", type: "button", title: "Change language", aria-label: "Change language", aria-haspopup: true, aria-expanded: false, aria-controls: "language-list", builtin-icon("globe"))
-      #html.ul(id: "language-list", class: "theme-popup", aria-label: "Languages", role: "menu")[
-        #for (l, name) in languages [
-          #html.li(role: none,
-            html.a(role: "menuitem", class: "theme", id: "lang-"+l, name, href: root_pth+if l == default_lang {
-              ""
-            } else {
-              l+"/"
-            }+"index.html"))
+      #if data.multilingual [
+        #html.button(id: "language-toggle", class: "icon-button", type: "button", title: "Change language", aria-label: "Change language", aria-haspopup: true, aria-expanded: false, aria-controls: "language-list", builtin-icon("globe"))
+        #html.ul(id: "language-list", class: "theme-popup", aria-label: "Languages", role: "menu")[
+          #for (l, name) in data.languages [
+            #html.li(role: none,
+              html.a(role: "menuitem", class: "theme", id: "lang-"+l, name, href: root_pth+if l == data.default_lang {
+                ""
+              } else {
+                l+"/"
+              }+"index.html"))
+          ]
         ]
+        #builtin-script("show-language-list")
       ]
-      #builtin-script("show-language-list")
-      #html.a(href: root_pth+"book_"+lang+".pdf", title: "PDF version of this book", aria-label: "PDF", builtin-icon("pdf", id: "book-pdf"))
-      #html.a(href: "https://github.com/rust-embedded/book", title: "Git repository", aria-label: "Git repository", builtin-icon("github"))
+      #html.a(href: root_pth+"book_"+data.lang+".pdf", title: "PDF version of this book", aria-label: "PDF", builtin-icon("pdf", id: "book-pdf"))
+      #if data.git != none {
+        html.a(href: data.git, title: "Git repository", aria-label: "Git repository", builtin-icon("github"))
+      }
     ]
   ]
   #html.div(id: "mdbook-search-wrapper", class: "hidden")[
@@ -235,18 +242,14 @@
     }
   }
 ]
-#let toc(tree, out, lang, default_lang) = document(out)[
-  #html.html(lang: lang, class: "light", dir: ltr)[
+#let toc(tree, out, data) = document(out)[
+  #html.html(lang: data.lang, class: "light", dir: ltr)[
     #html.head[
       #html.meta(charset: "utf-8")
       #html.meta(name:"robots", content: "noindex")
       #html.meta(name: "viewport", content: "width=device-width, initial-scale=1")
       #html.meta(name: "theme-color", content: "#ffffff")
-      #html_head_common(if lang == default_lang {
-        ""
-      } else {
-        "../"
-      })
+      #html_head_common(data.root_prefix)
       #html.title()
     ]
     #html.body(class: "sidebar-iframe-inner")[
@@ -269,25 +272,19 @@
 #let book_page(
   source,
   out,
-  lang,
-  languages,
-  default_lang,
+  data,
   title,
   depth,
   sidebar,
   prev_path,
   next_path,
 ) = document(out)[
-  #html.html(lang: lang, class: ("light", "sidebar-visible"), dir: ltr)[
+  #html.html(lang: data.lang, class: ("light", "sidebar-visible"), dir: ltr)[
     #let pth = (("../",)*depth).join("")
-    #let root_pth = if lang == default_lang {
-      ""
-    } else {
-      "../"
-    }+pth
-    #html_head(title, root_pth)
+    #let root_pth = data.root_prefix+pth
+    #html_head(to-string(title) + " - " + data.book_title, root_pth, lang-list: data.multilingual)
     // Start loading toc.js asap
-    #html.script(src: pth+"toc-7ac66f26_"+lang+".js")
+    #html.script(src: pth+"toc-7ac66f26_"+data.lang+".js")
     #html.body[
       #help_container()
       #html.div(id: "mdbook-body-container")[
@@ -295,7 +292,7 @@
         #sidebar
         #html.div(id: "mdbook-page-wrapper", class: "page-wrapper")[
           #html.div(class: "page")[
-            #page_header(pth, root_pth, lang, languages, default_lang)
+            #page_header(data, pth)
             #html.div(id: "mdbook-content", class: "content")[
               #html.main[
                 #source
@@ -347,33 +344,28 @@
 
 #let html_book(
   sources,
-  lang,
-  languages,
-  book_title,
-  default_lang,
+  data,
 ) = {
   let sa = source_array(sources)
-  if lang == default_lang {
+  if data.is_root {
     for path in asset_list {
       asset(path, read("assets/"+path, encoding: none))
     }
   }
-  let prefix = if lang != default_lang { lang+"/" } else { "" }
+  asset(data.prefix+"toc-7ac66f26_"+data.lang+".js", read("assets/"+"toc-7ac66f26.js_part1")+elem-to-string(toc_tree(sources, prefix: data.prefix))+read("assets/"+"toc-7ac66f26.js_part2"))
 
-  asset(prefix+"toc-7ac66f26_"+lang+".js", read("assets/"+"toc-7ac66f26.js_part1")+elem-to-string(toc_tree(sources, prefix: prefix))+read("assets/"+"toc-7ac66f26.js_part2"))
-
-  toc(toc_tree(sources), prefix+"toc.html", lang, default_lang)
+  toc(toc_tree(sources), data.prefix+"toc.html", data)
   for (i, (path, source, title)) in sa.enumerate() {
     let (prev_path, _, _) = if i > 0 { sa.at(i - 1) } else { (none, none, none) }
     let (next_path, _, _) = sa.at(i + 1, default: (none, none, none))
-    let out = prefix+path + ".html"
+    let out = data.prefix+path + ".html"
     let depth = path.split("/").len() - 1
     [
-      #book_page(source, out, lang, languages, default_lang, to-string(title) + " - " + book_title, depth, sidebar(depth), prev_path, next_path) #lbl(path)
+      #book_page(source, out, data, title, depth, sidebar(depth), prev_path, next_path) #lbl(path)
     ]
     if i == 0 {
       let depth = 0
-      book_page(source, prefix+"index.html", lang, languages, default_lang, to-string(title) + " - " + book_title, depth, sidebar(depth), prev_path, next_path)
+      book_page(source, data.prefix+"index.html", data, title, depth, sidebar(depth), prev_path, next_path)
     }
   }
 }
@@ -397,6 +389,9 @@
 
   #outline(depth: 3)
   #let part = "main"
+  
+  #set page(numbering: "1", number-align: right + top)
+
   #for (path, source, _) in sa {
     let offset = path.split("/").len() - 1
     if path.ends-with("/index") {
@@ -420,13 +415,30 @@
   lang,
   languages,
   book_title: "The Book",
+  git: none,
   default_lang: "en",
 ) = {
+  let is_root = lang == default_lang
+  let data = (
+    lang: lang,
+    languages: languages,
+    is_root: is_root,
+    multilingual: languages.keys().len() > 1,
+    prefix: if is_root { "" } else { lang+"/" },
+    root_prefix: if is_root {
+      ""
+    } else {
+      "../"
+    },
+    book_title: book_title,
+    git: git,
+    default_lang: default_lang,
+  )
   if tgt == "pdf" {
     pdf_book(
       [
         #v(1fr)
-        #align(center, text(size: 40pt, [#book_title\ (#languages.at(lang))]))
+        #align(center, text(size: 40pt, [#book_title\ (#data.languages.at(data.lang))]))
         #v(1fr)
       ],
       sources,
@@ -434,10 +446,7 @@
   } else if tgt == "html" {
     html_book(
       sources,
-      lang,
-      languages,
-      book_title,
-      default_lang
+      data,
     )
   }
 }
