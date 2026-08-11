@@ -420,5 +420,6 @@
   sources,
   lang,
   languages,
-  book_title: book_title,
+  book_title: "The Embedded Rust Book",
+  git: "https://github.com/rust-embedded/book",
 )
