@@ -28,43 +28,33 @@ jobs:
         id: cache-cargo-typst
         with:
           path: ~/cargo-bin
-          key: cache-cargo-typst
+          key: cache-cargo-typst-0.15.1
       - name: Install Typst
         if: steps.cache-cargo-typst.outputs.cache-hit != 'true'
         uses: actions-rs/install@v0.1
         with:
           crate: typst-cli
           version: latest
+      - name: Install Just
+        if: steps.cache-cargo-typst.outputs.cache-hit != 'true'
+        uses: actions-rs/install@v0.1
+        with:
+          crate: just
+          version: latest
       - name: Copy typst to cache directory
         if: steps.cache-cargo-typst.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/cargo-bin
+          cp ~/.cargo/bin/just ~/cargo-bin
           cp ~/.cargo/bin/typst ~/cargo-bin
       - name: Put new cargo binary directory into path
         run: echo "~/cargo-bin" >> $GITHUB_PATH
 
-      - name: Build original (English) book
-        run: |
-          typst compile typ/book.typ --input lang=en --input target=html book --features bundle,html -f bundle
-          typst compile typ/book.typ --input lang=en --input target=pdf book/book_en.pdf
+      - name: Build book
+        run: just build
 
-      - name: Build translated book
-        run: |
-          typst compile typ/book.typ --input lang=de --input target=html book --features bundle,html -f bundle
-          typst compile typ/book.typ --input lang=de --input target=pdf book/book_de.pdf
-          typst compile typ/book.typ --input lang=de --input target=pdf book/book_de_tr.pdf --input goal=translation
-          typst compile typ/book.typ --input lang=ja --input target=html book --features bundle,html -f bundle
-          typst compile typ/book.typ --input lang=ja --input target=pdf book/book_ja.pdf
-          typst compile typ/book.typ --input lang=ja --input target=pdf book/book_ja_tr.pdf --input goal=translation
-          typst compile typ/book.typ --input lang=uk --input target=html book --features bundle,html -f bundle
-          typst compile typ/book.typ --input lang=uk --input target=pdf book/book_uk.pdf
-          typst compile typ/book.typ --input lang=uk --input target=pdf book/book_uk_tr.pdf --input goal=translation
-          typst compile typ/book.typ --input lang=zh --input target=html book --features bundle,html -f bundle
-          typst compile typ/book.typ --input lang=zh --input target=pdf book/book_zh.pdf
-          typst compile typ/book.typ --input lang=zh --input target=pdf book/book_zh_tr.pdf --input goal=translation
- 
       - name: Check links
-        run: linkchecker book
+        run: just check-links
 
       - name: Deploy book
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
