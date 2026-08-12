@@ -1,0 +1,303 @@
+<!DOCTYPE html><html lang="ja" class="light sidebar-visible" dir="ltr"><head><meta charset="utf-8"><title>並行性 - The Embedded Rust Book</title><meta name="description" content><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ffffff"><link rel="icon" href="../../favicon-de23e50b.svg"><link rel="shortcut icon" href="../../favicon-8114d1fc.png"><link rel="stylesheet" href="../../css/variables-8adf115d.css"><link rel="stylesheet" href="../../css/general-e96d0476.css"><link rel="stylesheet" href="../../css/chrome-d279d366.css"><link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print"><link rel="stylesheet" href="../../fonts/fonts-9644e21d.css"><style>#language-list { left: auto; right: 10px; } #language-list a { color: inherit; }</style><link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css"><link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css"><link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css"><script>
+      const path_to_root = "../../";
+      const default_light_theme = "light";
+      const default_dark_theme = "navy";
+      window.path_to_searchindex_js = "../../searchindex-8ec871e3.js";
+    </script></head><script src="../toc-7ac66f26_ja.js"></script><body><div id="mdbook-help-container"><div id="mdbook-help-popup"><h2 class="mdbook-help-title">Keyboard shortcuts</h2><div><p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p><p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p><p>Press <kbd>?</kbd> to show this help</p><p>Press <kbd>Esc</kbd> to hide this help</p></div></div></div><div id="mdbook-body-container"><script>
+      try {
+          let theme = localStorage.getItem('mdbook-theme');
+          let sidebar = localStorage.getItem('mdbook-sidebar');
+
+          if (theme.startsWith('"') && theme.endsWith('"')) {
+              localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+          }
+
+          if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+              localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+          }
+      } catch (e) { }
+    </script><script>
+      const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+      let theme;
+      try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+      if (theme === null || theme === undefined) { theme = default_theme; }
+      const html = document.documentElement;
+      html.classList.remove('light')
+      html.classList.add(theme);
+      html.classList.add("js");
+    </script><input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden"><script>
+      let sidebar = null;
+      const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+      if (document.body.clientWidth >= 1080) {
+          try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+          sidebar = sidebar || 'visible';
+      } else {
+          sidebar = 'hidden';
+          sidebar_toggle.checked = false;
+      }
+      if (sidebar === 'visible') {
+          sidebar_toggle.checked = true;
+      } else {
+          html.classList.remove('sidebar-visible');
+      }
+    </script><nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents"><mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox><noscript><iframe class="sidebar-iframe-outer" src="../toc.html"></iframe></noscript><div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle"><div class="sidebar-resize-indicator"></div></div></nav><div id="mdbook-page-wrapper" class="page-wrapper"><div class="page"><div id="mdbook-menu-bar-hover-placeholder"></div><div id="mdbook-menu-bar" class="menu-bar sticky"><div class="left-buttons"><label id="mdbook-sidebar-toggle" class="icon-button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar" for="mdbook-sidebar-toggle-anchor"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"></path></svg></span></label><button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"></path></svg></span></button><ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu"><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li></ul><button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"></path></svg></span></button></div><h1 class="menu-title">The Embedded Rust Book</h1><div class="right-buttons"><button id="language-toggle" class="icon-button" type="button" title="Change language" aria-label="Change language" aria-haspopup="true" aria-expanded="false" aria-controls="language-list"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M351.9 280l-190.9 0c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zM160.9 232l190.9 0C349 167.5 334.7 108.1 314.4 64.6 303 40.2 290.7 22.8 279.3 12.2 268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4zm-48 0C116.4 146.4 138.5 66.9 170.8 14.7 78.7 47.3 10.9 131.2 1.5 232l111.4 0zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3L1.5 280zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3l-111.4 0zm111.4-48C501.9 131.2 434.1 47.3 342 14.7 374.3 66.9 396.4 146.4 399.9 232l111.4 0z"></path></svg></span></button><ul id="language-list" class="theme-popup" aria-label="Languages" role="menu"><li role="none"><a role="menuitem" class="theme" id="lang-en" href="../../index.html">English</a></li><li role="none"><a role="menuitem" class="theme" id="lang-de" href="../../de/index.html">German</a></li><li role="none"><a role="menuitem" class="theme" id="lang-ja" href="../../ja/index.html">Japanese</a></li><li role="none"><a role="menuitem" class="theme" id="lang-uk" href="../../uk/index.html">Ukrainian</a></li><li role="none"><a role="menuitem" class="theme" id="lang-zh" href="../../zh/index.html">Chinese</a></li></ul><script>
+      let langToggle = document.getElementById("language-toggle");
+      let langList = document.getElementById("language-list");
+      langToggle.addEventListener("click", (event) => {
+          langList.style.display = langList.style.display == "block" ? "none" : "block";
+      });
+    </script><a href="../../book_ja.pdf" title="PDF version of this book" aria-label="PDF"><span class="fa-svg" id="book-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M208 48L96 48c-8.8 0-16 7.2-16 16l0 384c0 8.8 7.2 16 16 16l80 0 0 48-80 0c-35.3 0-64-28.7-64-64L32 64C32 28.7 60.7 0 96 0L229.5 0c17 0 33.3 6.7 45.3 18.7L397.3 141.3c12 12 18.7 28.3 18.7 45.3l0 149.5-48 0 0-128-88 0c-39.8 0-72-32.2-72-72l0-88zM348.1 160L256 67.9 256 136c0 13.3 10.7 24 24 24l68.1 0zM240 380l32 0c33.1 0 60 26.9 60 60s-26.9 60-60 60l-12 0 0 28c0 11-9 20-20 20s-20-9-20-20l0-128c0-11 9-20 20-20zm32 80c11 0 20-9 20-20s-9-20-20-20l-12 0 0 40 12 0zm96-80l32 0c28.7 0 52 23.3 52 52l0 64c0 28.7-23.3 52-52 52l-32 0c-11 0-20-9-20-20l0-128c0-11 9-20 20-20zm32 128c6.6 0 12-5.4 12-12l0-64c0-6.6-5.4-12-12-12l-12 0 0 88 12 0zm76-108c0-11 9-20 20-20l48 0c11 0 20 9 20 20s-9 20-20 20l-28 0 0 24 28 0c11 0 20 9 20 20s-9 20-20 20l-28 0 0 44c0 11-9 20-20 20s-20-9-20-20l0-128z"></path></svg></span></a><a href="https://github.com/rust-embedded/book" title="Git repository" aria-label="Git repository"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg></span></a></div></div><div id="mdbook-search-wrapper" class="hidden"><form id="mdbook-searchbar-outer" class="searchbar-outer"><div class="search-wrapper"><input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header"><div class="spinner-wrapper"><span class="fa-svg" id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"></path></svg></span></div></div></form><div id="mdbook-searchresults-outer" class="searchresults-outer hidden"><div id="mdbook-searchresults-header" class="searchresults-header"></div><ul id="mdbook-searchresults"></ul></div></div><script>
+      document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+      document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+      Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+          link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+      });
+    </script><div id="mdbook-content" class="content"><main><h1 id="concurrency">並行性</h1><p>プログラムの異なる部分が様々なタイミングで実行されたり、アウトオブオーダに実行されると、並行性が発生します。 組込みでは、次のものが該当します。</p><ul><li>割り込みが発生するたびに実行される割り込みハンドラ</li><li>マイクロプロセッサがプログラムの一部を定期的にスワップする様々な形式のマルチスレッド</li><li>システムによっては、各コアがプログラムの異なる部分を同時に独立して実行できるマルチコアマイクロプロセッサ</li></ul><p>多くの組込みプログラムは割り込みを処理する必要があるため、早かれ遅かれ、並行性は発生します。 割り込みは、捉えにくく、難しいバグが数多く発生し得る場所でもあります。 幸運なことに、Rustは正しいコードを書く助けになる抽象化と安全性保証とを、いくつか提供しています。</p><h3>並行性なし</h3><p>組込みプログラムの最も簡単な並行性は、並行性がないことです。ソフトウェアは1つの動作し続けるメインループからなり、割り込みも発生しません。 時には、これが手元の問題の最適解かもしれません。 通常、ループは何か入力を受け付け、何らかの処理を行い、何かを出力します。</p><pre><code data-lang="rust"><span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() {
+    <span style="color: #d73948">let</span> peripherals <span style="color: #d73948">=</span> <span style="color: #4b69c6">setup_peripherals</span>();
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> inputs <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_inputs</span>(<span style="color: #d73948">&amp;</span>peripherals);
+        <span style="color: #d73948">let</span> outputs <span style="color: #d73948">=</span> <span style="color: #4b69c6">process</span>(inputs);
+        <span style="color: #4b69c6">write_outputs</span>(<span style="color: #d73948">&amp;</span>peripherals, outputs);
+    }
+}</code></pre><p>並行性がないため、プログラム間でのデータ共有や、ペリフェラルへのアクセス同期に悩む必要はありません。 このような単純なアプローチに逃れることができるのであれば、素晴らしい解決策かもしれません。</p><h3>グローバルでミュータブルなデータ</h3><p>組込みでないRustと異なり、通常、ヒープ領域を作成し、そのデータへの参照を新しく作成したスレッドに渡す、というような贅沢はできません。 代わりに、割り込みハンドラはいつでも呼び出される可能性があり、使用する共有メモリにアクセスする方法を知っていなければなりません。 最も低いレベルでは、 <em>静的に割り当てられた</em> ミュータブルなメモリを持つ必要があることを意味します。 このメモリは、割り込みハンドラとメインコードの両方が参照できます。</p><p>Rustでは、このような<a href="https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable"><code>static mut</code></a>変数への読み書きは、常にアンセーフです。 特別な注意を払わないと、レースコンディションを引き起こす可能性があります。 つまり、その変数へのアクセスが、さらにその変数にアクセスする割り込みによって、中断されるということです。</p><p>この動作によって、コード内に分かりにくいエラーが発生する可能性があります。 例えば、1秒毎に入力信号の立ち上がりエッジをカウントする組込みプログラム（周波数カウンタ）を考えてみましょう。</p><pre><code data-lang="rust"><span style="color: #d73948">static</span> <span style="color: #d73948">mut</span> <span style="color: #b60157">COUNTER</span>: <span style="color: #d73948">u32</span> <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>;
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> 危険。実際に安全ではありません。データ競合を引き起こす可能性があります。</span>
+            <span style="color: #d73948">unsafe</span> { <span style="color: #b60157">COUNTER</span> <span style="color: #d73948">+=</span> <span style="color: #b60157">1</span> };
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #d73948">unsafe</span> { <span style="color: #b60157">COUNTER</span> <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>; }
+}
+</code></pre><p>毎秒、タイマ割り込みはカウンタを0に戻します。同時に、メインループは信号を継続的に測定し、信号がローからハイに変わった時にカウンタをインクリメントします。 <code>static mut</code>な<code>COUNTER</code>にアクセスするためには、<code>unsafe</code>を使う必要があります。 これは、未定義動作を引き起こさないことを、コンパイラに約束するということです。 レースコンディションがどこにあるかわかりますか？ <code>COUNTER</code>のインクリメントは、アトミックであることが保証されて <em>いません</em> 。 実際、ほとんどの組込みプラットフォームにおいて、この操作は、ロードし、インクリメントし、ストアする、という動作に分割されます。 割り込みがロードの後からストアの前に発生した場合、0に戻すリセットは、割り込みから復帰した後に無視されます。 そして、その期間では、2倍の遷移をカウントすることになります。</p><h3>クリティカルセクション</h3><p>それでは、データ競合についてどうすれば良いのでしょうか。 単純な方法は、割り込みが無効なコンテキストである <em>クリティカルセクション</em> を使うことです。 <code>main</code>中の<code>COUNTER</code>へのアクセスを、クリティカルセクションでラッピングします。 そうすることで、<code>COUNTER</code>のインクリメントが完了するまで、タイマ割り込みが発生しないようにできます。</p><pre><code data-lang="rust"><span style="color: #d73948">static</span> <span style="color: #d73948">mut</span> <span style="color: #b60157">COUNTER</span>: <span style="color: #d73948">u32</span> <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>;
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> 新しいクリティカルセクションは、COUNTERへの同期アクセスを保証します</span>
+            cortex_m::interrupt::free(|_| {
+                <span style="color: #d73948">unsafe</span> { <span style="color: #b60157">COUNTER</span> <span style="color: #d73948">+=</span> <span style="color: #b60157">1</span> };
+            });
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #d73948">unsafe</span> { <span style="color: #b60157">COUNTER</span> <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>; }
+}
+</code></pre><p>この例では<code>cortex_m::interrupt::free</code>を使いました。他のプラットフォームでもクリティカルセクションのコードを実行するための、類似の方法があります。 これは、割り込みを無効にして、コードを実行し、再び割り込みを有効にすることと同じです。</p><p>タイマ割り込み内クリティカルセクションを置く必要がないことに注意して下さい。これは次の2つの理由からです。</p><ul><li>読み込みをしないため、<code>COUNTER</code>に0を書くことは、競合の影響を受けません</li><li>いずれにせよ、<code>main</code>スレッドによって割り込まれることはありえません</li></ul><p><code>COUNTER</code>がお互いに <em>プリエンプション</em> する複数の割り込みハンドラから共有される場合、 それぞれにクリティカルセクションが必要になるでしょう。</p><p>クリティカルセクションは、当面の問題を解決しますが、慎重に検討しなければならない<code>unsafe</code>なコードをまだたくさん書いています。 その結果、必要以上にクリティカルセクションを使用することになり、オーバーヘッドと割り込みレイテンシおよびジッタをもたらします。</p><p>注目すべき点は、クリティカルセクションでは、割り込みが発生しないことが保証されますが、 マルチコアシステムでは、排他性の保証は提供されないことです。 他のコアは、割り込みでなくても、とあるコアと同じメモリにアクセスできてしまいます。 マルチコアを使う場合、より強力な同期プリミティブが必要になります。</p><h3>アトミックアクセス</h3><p>プラットフォームによっては、アトミック命令が利用できます。アトミック命令は、リードモディファイライト操作の保証を提供します。 特にCortex-Mの場合、<code>thumbv6</code>（Cortex-M0）はアトミック命令を提供しませんが、<code>thumbv7</code>（Cortex-M3以上）は提供します。 これらの命令は、全ての割り込みを無効化する手荒な方法の代替手段を提供します。 インクリメントを試みる時、ほとんどの場合は成功しますが、割り込まれた場合はインクリメント操作全体を自動的にやり直します。 このようなアトミック操作は、複数のコアにまたがっても安全です。</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::sync::atomic::{AtomicUsize, Ordering};
+
+<span style="color: #d73948">static</span> <span style="color: #b60157">COUNTER</span>: AtomicUsize <span style="color: #d73948">=</span> AtomicUsize::new(<span style="color: #b60157">0</span>);
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> 自動的にCOUNTERに1を加えるために`fetch_add`を使います</span>
+            <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">fetch_add</span>(<span style="color: #b60157">1</span>, Ordering::Relaxed);
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> COUNTERに直接0を書くために`store`を使います</span>
+    <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">store</span>(<span style="color: #b60157">0</span>, Ordering::Relaxed)
+}
+</code></pre><p>ここで、<code>COUNTER</code>は安全な<code>static</code>変数です。<code>AtomicUsize</code>のおかげで<code>COUNTER</code>の型は、割り込みを無効化することなく、 割り込みハンドラとメインスレッドの両方から安全に修正できます。 可能であれば、これはより良い解決方法です。しかし、あなたのプラットフォームではサポートされていないかもしれません。</p><p><a href="https://doc.rust-lang.org/core/sync/atomic/enum.Ordering.html"><code>Ordering</code></a>の注釈：これは、コンパイラとハードウェアがどのように命令の順番を入れ替えるか、に影響を与えます。 また、キャッシュの可視性にも影響します。ターゲットがシングルコアプラットフォームだと仮定すると、<code>Relaxed</code>で十分であり、このケースでは最も効率の良い選択です。 より厳密なオーダリングでは、コンパイラはアトミック操作の前後にメモリバリアを発行します。 使用するアトミック操作によって、必要かもしれませんし、必要でないかもしれません！ アトミックモデルの正確な詳細は複雑であり、他の文書内でしっかりと説明されています。</p><p>詳細は、<a href="https://doc.rust-lang.org/nomicon/atomics.html">ノミコン</a>のアトミックとオーダリングを参照して下さい。</p><h3>抽象化、SendとSync</h3><p>上記の解決方法のいずれも、これと言って満足いくものではありません。 どの解決方法も<code>unsafe</code>ブロックを必要とし、非常に注意深くチェックしなければならず、人間工学的ではありません。 Rustではもっとうまくやれるはずです！</p><p>カウンタを、コード内のどこからでも安全に使えるインタフェースに抽象化することができます。 次の例では、クリティカルセクションカウンタを使いますが、アトミックと非常に良く似たことが実現できます。</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::cell::UnsafeCell;
+<span style="color: #d73948">use</span> cortex_m::interrupt;
+
+<span style="color: #74747c">//</span><span style="color: #74747c"> カウンタはUnsafeCell&lt;u32>の単なるラッパです。UnsafeCellはRustの内部可変性の重要要素です。</span>
+<span style="color: #74747c">//</span><span style="color: #74747c"> 内部可変性を使用することで、COUNTERを`static mut`の代わりに`static`として持つことができます。</span>
+<span style="color: #74747c">//</span><span style="color: #74747c"> しかし、依然として、カウンタの値は変更することができます。</span>
+<span style="color: #d73948">struct</span> <span style="color: #4b69c6">CSCounter</span>(UnsafeCell&lt;<span style="color: #d73948">u32</span>>);
+
+<span style="color: #d73948">const</span> <span style="color: #b60157">CS_COUNTER_INIT</span>: CSCounter <span style="color: #d73948">=</span> CSCounter(UnsafeCell::new(<span style="color: #b60157">0</span>));
+
+<span style="color: #d73948">impl</span> <span style="color: #4b69c6">CSCounter</span> {
+    <span style="color: #d73948">pub</span> <span style="color: #d73948">fn</span> <span style="color: #4b69c6">reset</span>(<span style="color: #d73948">&amp;</span>self, _cs: <span style="color: #d73948">&amp;</span>interrupt::CriticalSection) {
+        <span style="color: #74747c">//</span><span style="color: #74747c"> クリティカルセクションを引数として要求することで、クリティカルセクション内で</span>
+        <span style="color: #74747c">//</span><span style="color: #74747c"> 実行されなければならないことがわかります。そのため、このアンセーフブロックを</span>
+        <span style="color: #74747c">//</span><span style="color: #74747c"> 自信を持って使用できます（UnsafeCell::getの呼び出しに必要です）。</span>
+        <span style="color: #d73948">unsafe</span> { <span style="color: #d73948">*</span><span style="color: #d73948">self</span>.<span style="color: #b60157">0.</span><span style="color: #4b69c6">get</span>() <span style="color: #d73948">=</span> <span style="color: #b60157">0</span> };
+    }
+
+    <span style="color: #d73948">pub</span> <span style="color: #d73948">fn</span> <span style="color: #4b69c6">increment</span>(<span style="color: #d73948">&amp;</span>self, _cs: <span style="color: #d73948">&amp;</span>interrupt::CriticalSection) {
+        <span style="color: #d73948">unsafe</span> { <span style="color: #d73948">*</span><span style="color: #d73948">self</span>.<span style="color: #b60157">0.</span><span style="color: #4b69c6">get</span>() <span style="color: #d73948">+=</span> <span style="color: #b60157">1</span> };
+    }
+}
+
+<span style="color: #74747c">//</span><span style="color: #74747c"> 静的なCSCounterを許可するために必要です。以下の説明を参照して下さい。</span>
+<span style="color: #d73948">unsafe</span> <span style="color: #d73948">impl</span> Sync <span style="color: #d73948">for</span> <span style="color: #4b69c6">CSCounter</span> {}
+
+<span style="color: #74747c">//</span><span style="color: #74747c"> 内部可変性を使用するため、COUNTERは、もはや`mut`ではありません。</span>
+<span style="color: #74747c">//</span><span style="color: #74747c"> 従って、アクセスの際に、アンセーフなブロックも必要なくなりました。</span>
+<span style="color: #d73948">static</span> <span style="color: #b60157">COUNTER</span>: CSCounter <span style="color: #d73948">=</span> <span style="color: #b60157">CS_COUNTER_INIT</span>;
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> アンセーフはここでは必要ありません！</span>
+            interrupt::free(|cs| <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">increment</span>(cs));
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 有効なcsトークンを得るため、ここでクリティカルセクションに入る必要があります。</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 他の割り込みがプリエンプションを起こさないと分かっていても必要です。</span>
+    interrupt::free(|cs| <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">reset</span>(cs));
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> オーバーヘッドを避けるために、本当に必要であれば、偽のクリティカルセクションを生成する</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> アンセーフなコードを使うことができます。</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> let cs = unsafe { interrupt::CriticalSection::new() };</span>
+}
+</code></pre><p><code>unsafe</code>コードを慎重に検討された抽象の内側に移動しました。 そして、アプリケーションコードは、<code>unsafe</code>ブロックを含んでいません。</p><p>この設計は、アプリケーションが<code>CriticalSection</code>トークンを渡すことを要求します。 トークンは、<code>interrupt::free</code>によってのみ、安全に生成することができます。 そのため、このトークンが渡されることを要求することで、自分自身でロックを実際にかけることなしに、クリティカルセクション内で動作していることを保証します。 この保証は、静的にコンパイラによって提供されます。<code>cs</code>による実行時のオーバーヘッドはありません。 カウンタが複数ある場合、複数の入れ子になったクリティカルセクションなしに、同じ<code>cs</code>を与えることができます。</p><p>これは、Rustの並行性についても重要なトピックを提起します。<a href="https://doc.rust-lang.org/nomicon/send-and-sync.html"><code>Send</code>と<code>Sync</code></a>トレイトです。 the Rust bookを要約すると、安全に別のスレッドに移動できるとき、型はSendです。 一方、複数のスレッド間で安全に共有できるとき、型はSyncです。 組込みでは、割り込みがアプリケーションコードとは異なるスレッドで動作すると考えます。 そのため、割り込みとメインコードとの両方からアクセスされる変数は、Syncでなければなりません。</p><p>Rustのほとんどの型では、コンパイラによってSendとSyncの両方のトレイトが自動的に継承されます。 しかし、<code>CSCounter</code>は<a href="https://doc.rust-lang.org/core/cell/struct.UnsafeCell.html"><code>UnsafeCell</code></a>を含んでいるため、Syncではありません。 従って、<code>static CSCounter</code>を作ることはできません。<code>static</code>変数は、複数のスレッドからアクセスされるため、Syncでなければなりません。</p><p><code>CSCounter</code>が実はスレッド間で共有しても安全なように処理していることを、コンパイラに伝えるため、Syncトレイトを明示的に実装します。 これまでのクリティカルセクションの使用と同様に、シングルコアのプラットフォームでのみ安全です。 マルチコアのプラットフォームでは、安全性を確保するためにさらなる取り組みが必要です。</p><h3>ミューテックス</h3><p>カウンタの問題に特有の便利な抽象化を行いましたが、並行性のために利用されるいくつかの抽象化が存在します。</p><p>そのような <em>同期プリミティブ</em> の1つはミューテックス（mutex）です。mutexはmutual exclusionの略です。 ミューテックスは、私達のカウンタのような変数への排他アクセスを保証します。 あるスレッドは、ミューテックスの <em>ロック</em>（または <em>獲得</em>）を試みます。 すると、すぐに成功するか、ロックが獲得されるのを待ってブロックするか、ミューテックスをロックできなかったエラーを返します。 そのスレッドがロックを保持している間、保護されたデータへのアクセスが許可されます。 そのスレッドが実行を完了すると、ミューテックスを <em>アンロック</em>（または <em>解放</em>）することで、他のスレッドがミューテックスをロックできるようにします。 Rustでは、通常、アンロックを実装するために<a href="https://doc.rust-lang.org/core/ops/trait.Drop.html"><code>Drop</code></a>トレイトを使用します。 これは、ミューテックスがスコープの外に到達すると、常に解放されることを保証するためです。</p><p>割り込みハンドラでミューテックスを使用するのはトリッキーです。割り込みハンドラ内でブロックすることは、通常、好ましくありません。 割り込みハンドラ内で、メインスレッドがロックを解放するのを待ってブロックすると、特に悲惨です。 なぜならば。<em>デッドロック</em> になるからです。（割り込みハンドラ内に実行がとどまるため、メインスレッドがロックを解放することは決してありません） デッドロックはアンセーフとは考えられていません。安全なRustでも発生する可能性があります。</p><p>この動作を完全に避けるため、カウンタの例で示すように、ロックのためにクリティカルセクションを必要とするミューテックスを実装できます。 クリティカルセクションがロックしている間続く限り、ミューテックスのロック/アンロックの状態を追跡することなしに、 ラップされた変数に排他的にアクセスできます。</p><p>これは実際に<code>cortex_m</code>クレートで行われています！ それを使ってカウンタを書くことができます。</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::cell::Cell;
+<span style="color: #d73948">use</span> cortex_m::interrupt::Mutex;
+
+<span style="color: #d73948">static</span> <span style="color: #b60157">COUNTER</span>: Mutex&lt;Cell&lt;<span style="color: #d73948">u32</span>>> <span style="color: #d73948">=</span> Mutex::new(Cell::new(<span style="color: #b60157">0</span>));
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            interrupt::free(|cs|
+                <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">set</span>(<span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">get</span>() <span style="color: #d73948">+</span> <span style="color: #b60157">1</span>));
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> ミューテックスを満たすために、ここでもクリティカルセクションに入る必要があります。</span>
+    interrupt::free(|cs| <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">set</span>(<span style="color: #b60157">0</span>));
+}
+</code></pre><p>今回は<a href="https://doc.rust-lang.org/core/cell/struct.Cell.html"><code>Cell</code></a>を使っています。これは、<code>RefCell</code>の同類で安全な内部可変性を提供するために使用されます。 既に、<code>UnsafeCell</code>が、Rustの内部可変性の最下層であることを見てきました。 UnsafeCellは、値への複数のミュータブル参照の取得を可能としますが、アンセーフなコードでのみ使用できます。 <code>Cell</code>は<code>UnsafeCell</code>と似ていますが、安全なインタフェースを提供します。 Cellは参照を取得せず、現在値のコピーを取得するか、置き換えることだけを許可します。 CellはSyncでないため、スレッド間で共有できません。 これらの制約は安全に使えることを意味しますが、<code>static</code>変数として直接使用できません。<code>static</code>はSyncである必要があるからです。</p><p>では、なぜ上記の例はうまく動くのでしょうか？<code>Mutex&lt;T></code>は、<code>Cell</code>のようなSendな<code>T</code>に対してSyncを実装します。 このことが、Cellをstaticで使うことを安全にします。なぜなら、クリティカルセクションの間だけ、その中身へのアクセスを提供するからです。 従って、全くアンセーフなコードなしに、安全なカウンタを手に入れることができます。</p><p>この方法は、カウンタの<code>u32</code>のような単純な型に適しています。しかし、もっと複雑なCopyでない型についてはどうでしょうか？ 組込みにおいて非常に一般的な例は、ペリフェラル構造体です。これは、通常Copyではありません。 そのためには、<code>RefCell</code>に頼ることができます。</p><h3>ペリフェラルの共有</h3><p><code>svd2rust</code>および同様の抽象化を使って生成されるデバイスクレートは、ペリフェラルへの安全なアクセスを提供します。 これは、同時に1つのペリフェラル構造体インスタンスしか存在できないように強制することによって、もたらされます。 このことは、安全性を保証しますが、メインスレッドと割り込みハンドとの両方からペリフェラルにアクセスすることを難しくします。</p><p>ペリフェラルアクセスを安全に共有するため、上で見たように<code>Mutex</code>を使うことができます。 また、<a href="https://doc.rust-lang.org/core/cell/struct.RefCell.html"><code>RefCell</code></a>も必要です。RefCellは、実行時チェックを使って、同時に1つのペリフェラルへの参照だけが渡されるようにします。 実行時チェックは、普通の<code>Cell</code>よりもオーバーヘッドが大きくなりますが、 コピーではなく参照を受け渡しするため、同時に存在するのが1つだけであることを確認する必要があります。</p><p>最後に、メインコード内でペリフェラルを初期化した後、なんとかしてペリフェラルを共有変数に移動する方法が必要です。 これを実現するために、<code>Option</code>型を使います。<code>None</code>で初期化し、後でペリフェラルのインスタンスを設定します。</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::cell::RefCell;
+<span style="color: #d73948">use</span> cortex_m::interrupt::{<span style="color: #d73948">self</span>, Mutex};
+<span style="color: #d73948">use</span> stm32f4::stm32f405;
+
+<span style="color: #d73948">static</span> <span style="color: #b60157">MY_GPIO</span>: Mutex&lt;RefCell&lt;<span style="color: #4b69c6">Option</span>&lt;stm32f405::GPIOA>>> <span style="color: #d73948">=</span>
+    Mutex::new(RefCell::new(<span style="color: #4b69c6">None</span>));
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> ペリフェラルのシングルトンを取得し、設定します。</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> この例は、svd2rustで生成されたクレートから持ってきたものですが、</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> ほとんどの組込みデバイスクレートは同様になります。</span>
+    <span style="color: #d73948">let</span> dp <span style="color: #d73948">=</span> stm32f405::Peripherals::take().<span style="color: #4b69c6">unwrap</span>();
+    <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #d73948">&amp;</span>dp.<span style="color: #b60157">GPIOA</span>;
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 一連の設定をする関数です。</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> PA0を入力、PA1を出力に設定すると仮定して下さい。</span>
+    <span style="color: #4b69c6">configure_gpio</span>(gpioa);
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> GPIOAをミューテックスに格納し、ムーブします。</span>
+    interrupt::free(|cs| <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">replace</span>(<span style="color: #4b69c6">Some</span>(dp.<span style="color: #b60157">GPIOA</span>)));
+    <span style="color: #74747c">//</span><span style="color: #74747c"> もはや`gpioa`や`dp.GPIOA`は使いません。</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 代わりに、ミューテックス経由でアクセスする必要があります。</span>
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> MY_GPIOを設定した後にのみ、割り込みを有効にするように注意して下さい。</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> そうしなければ、まだNoneが含まれている間に、割り込みが発生する可能性があります。</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> （`unwrap()`を使用して）書き込まれると、パニックになるでしょう。</span>
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #74747c">//</span><span style="color: #74747c"> ミューテックス経由で、デジタル入力としての状態を読み込みます。</span>
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> interrupt::free(|cs| {
+            <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow</span>();
+            gpioa.<span style="color: #4b69c6">as_ref</span>().<span style="color: #4b69c6">unwrap</span>().idr.<span style="color: #4b69c6">read</span>().<span style="color: #4b69c6">idr0</span>().<span style="color: #4b69c6">bit_is_set</span>()
+        });
+
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> PA0の立ち上がりエッジを検出した場合、PA1をハイに設定します。</span>
+            interrupt::free(|cs| {
+                <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow</span>();
+                gpioa.<span style="color: #4b69c6">as_ref</span>().<span style="color: #4b69c6">unwrap</span>().odr.<span style="color: #4b69c6">modify</span>(|_, w| w.<span style="color: #4b69c6">odr1</span>().<span style="color: #4b69c6">set_bit</span>());
+            });
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 今回は、割り込み内では単純にPA0をクリアするだけです。</span>
+    interrupt::free(|cs| {
+        <span style="color: #74747c">//</span><span style="color: #74747c"> `unwrap()`を使うことができます。割り込みはMY_GPIOが設定されるまで有効化されないことを</span>
+        <span style="color: #74747c">//</span><span style="color: #74747c"> 知っているためです。そうでなければ、Noneを処理しなければならないでしょう。</span>
+        <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow</span>();
+        gpioa.<span style="color: #4b69c6">as_ref</span>().<span style="color: #4b69c6">unwrap</span>().odr.<span style="color: #4b69c6">modify</span>(|_, w| w.<span style="color: #4b69c6">odr1</span>().<span style="color: #4b69c6">clear_bit</span>());
+    });
+}
+</code></pre><p>非常に多くのことを取り入れています。重要な部分を詳細に見ていきましょう。</p><pre><code data-lang="rust"><span style="color: #d73948">static</span> <span style="color: #b60157">MY_GPIO</span>: Mutex&lt;RefCell&lt;<span style="color: #4b69c6">Option</span>&lt;stm32f405::GPIOA>>> <span style="color: #d73948">=</span>
+    Mutex::new(RefCell::new(<span style="color: #4b69c6">None</span>));</code></pre><p>ここでは、共有変数は<code>RefCell</code>を内部に含む<code>Mutex</code>です。さらに、RefCellは<code>Option</code>を含んでいます。 <code>Mutex</code>はクリティカルセクションの間だけ、アクセスできるようにします。 その結果、普通の<code>RefCell</code>はSyncでないにも関わらず、変数はSyncになります。 <code>RefCell</code>は、<code>GPIOA</code>を使うのに必要となる参照によって内部可変性を提供します。 <code>Option</code>を使用すると、この変数を空の値に初期化できます。後で実際に変数を移動します。 ペリフェラルのシングルトンには静的にアクセスすることはできません。実行時のみアクセスできるため、Optionが必要とされます。</p><pre><code data-lang="rust">interrupt::free(|cs| <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">replace</span>(<span style="color: #4b69c6">Some</span>(dp.<span style="color: #b60157">GPIOA</span>)));</code></pre><p>クリティカルセクションの内部で、ミューテックスの<code>borrow()</code>を呼んでいます。borrow()は<code>RefCell</code>の参照を提供します。 その後、<code>replace()</code>を呼び出して、<code>RefCell</code>に新しい値をムーブします。</p><pre><code data-lang="rust">interrupt::free(|cs| {
+    <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow</span>();
+    gpioa.<span style="color: #4b69c6">as_ref</span>().<span style="color: #4b69c6">unwrap</span>().odr.<span style="color: #4b69c6">modify</span>(|_, w| w.<span style="color: #4b69c6">odr1</span>().<span style="color: #4b69c6">set_bit</span>());
+});</code></pre><p>最後に、<code>MY_GPIO</code>を安全で並行なやり方で使います。 クリティカルセクションは、通常通り割り込みの発生を防ぎ、ミューテックスを借用できます。 <code>RefCell</code>は<code>&amp;Option&lt;GPIOA></code>を提供し、その借用がいつまで続くかを追跡します。 その参照がスコープ外になると、<code>RefCell</code>が借用されなくなったことを示すため、更新されます。</p><p><code>&amp;Option</code>の外に<code>GPIOA</code>をムーブすることはできないので、<code>as_ref()</code>を使って<code>&amp;Option&lt;&amp;GPIOA></code>に変換します。 そうすると、最終的に、<code>unwrap()</code>で<code>&amp;GPIOA</code>を取得できます。 &amp;GPIOAにより、ペリフェラルを修正することができます。</p><p>If we need a mutable reference to a shared resource, then <code>borrow_mut</code> and <code>deref_mut</code> should be used instead. The following code shows an example using the TIM2 timer.</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::cell::RefCell;
+<span style="color: #d73948">use</span> core::ops::DerefMut;
+<span style="color: #d73948">use</span> cortex_m::interrupt::{<span style="color: #d73948">self</span>, Mutex};
+<span style="color: #d73948">use</span> cortex_m::asm::wfi;
+<span style="color: #d73948">use</span> stm32f4::stm32f405;
+
+<span style="color: #d73948">static</span> <span style="color: #b60157">G_TIM</span>: Mutex&lt;RefCell&lt;<span style="color: #4b69c6">Option</span>&lt;Timer&lt;stm32::TIM2>>>> <span style="color: #d73948">=</span>
+    Mutex::new(RefCell::new(<span style="color: #4b69c6">None</span>));
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> cp <span style="color: #d73948">=</span> cm::Peripherals::take().<span style="color: #4b69c6">unwrap</span>();
+    <span style="color: #d73948">let</span> dp <span style="color: #d73948">=</span> stm32f405::Peripherals::take().<span style="color: #4b69c6">unwrap</span>();
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> Some sort of timer configuration function.</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> Assume it configures the TIM2 timer, its NVIC interrupt,</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> and finally starts the timer.</span>
+    <span style="color: #d73948">let</span> tim <span style="color: #d73948">=</span> <span style="color: #4b69c6">configure_timer_interrupt</span>(<span style="color: #d73948">&amp;</span><span style="color: #d73948">mut</span> cp, dp);
+
+    interrupt::free(|cs| {
+        <span style="color: #b60157">G_TIM</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">replace</span>(<span style="color: #4b69c6">Some</span>(tim));
+    });
+
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #4b69c6">wfi</span>();
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    interrupt::free(|cs| {
+        <span style="color: #d73948">if</span> <span style="color: #d73948">let</span> <span style="color: #4b69c6">Some</span>(<span style="color: #d73948">ref</span> <span style="color: #d73948">mut</span> tim)) <span style="color: #d73948">=</span>  <span style="color: #b60157">G_TIM</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow_mut</span>().<span style="color: #4b69c6">deref_mut</span>() {
+            tim.<span style="color: #4b69c6">start</span>(<span style="color: #b60157">1.</span><span style="color: #4b69c6">hz</span>());
+        }
+    });
+}
+</code></pre><p>ヒューッ！これは安全ですが、少し大げさすぎて扱いにくいです。他に方法はないのでしょうか？</p><h3>RTIC</h3><p>代替手段の１つは、<a href="https://github.com/rtic-rs/cortex-m-rtic">RTFMフレームワーク</a>です。RTFMは、Real Time For the Massesの略です。 RTFMは、共有リソースが常に安全にアクセスされることを保証するために、静的な優先度を適用し、 <code>static mut</code>変数（「リソース」）へのアクセスを追跡します。 この方法は、（<code>RefCell</code>のように）常にクリティカルセクションに入り、参照カウントを使うというオーバーヘッドを必要としません。 デッドロックがないことを保証したり、時間とメモリのオーバーヘッドを極めて小さくするといった、多くの利点があります。</p><p>RTIC comes with as asynchronous executor, so your software tasks are <code>async</code> functions where you can use <code>async</code> APIs in addition to regular synchronous APIs.</p><p>このフレームワークは他の機能も含んでいます。例えば、メッセージパッシングは明示的な共有状態の必要性を減らします。 また、タスクを指定した時間に実行するスケジュールする機能もあります。これは、周期タスクの実装に使えます。 詳しくは<a href="https://rtic.rs">ドキュメント</a>を参照して下さい。</p><h3>Embassy</h3><p>Embassy is an ecosystem of libraries which focus on using the <code>async</code> / <code>await</code> syntax included in Rust for concurrency. The core of embassy is its <a href="https://docs.rs/embassy-executor/latest/embassy_executor/">asynchronous executor</a> which supports most common MCU architectures.</p><p>embassy also takes a battery-included approach and offers many other components, for example:</p><ul><li><a href="https://docs.rs/embassy-time/latest/embassy_time/">Time library</a></li><li>Various HAL libraries which also provide the time library support.</li><li><a href="https://docs.embassy.dev/embassy-sync/git/default/index.html">embassy-sync</a> for synchronization primitives</li></ul><p>You can check the <a href="https://embassy.dev/">website</a> and the <a href="https://embassy.dev/book/">book</a> for more information.</p><h3>リアルタイムオペレーティングシステム</h3><p>翻訳が古くなっています 組込み向け並行性の異なる一般的なモデルとして、リアルタイムオペレーティングシステム（RTOS）があります。 現在、Rustではあまり検証されていませんが、従来の組込み開発では広く使用されています。 オープンソースの例として、<a href="https://freertos.org/">FreeRTOS</a>と<a href="http://chibios.org/">ChibiOS</a>があります。 これらのRTOSは、複数のアプリケーションスレッドを動作させる機能を提供しています。 スレッドが制御を明け渡す時（コオペレーティブマルチタスク）か、 周期タイマまたは割り込みに基づく時（プリエンプティブマルチタスク）に、CPUで実行するスレッドを切り替えます。 RTOSは、通常ミューテックスや他の同期プリミティブを提供します。また、DMAエンジンようなハードウェア機能を同時に使えることも多いです。</p><p>この本を書いている時点では、Rustで書かれたRTOSの例はそれほど多くありません。 しかし、興味深い分野ですので、この分野にご注目下さい！</p><h3>マルチコア</h3><p>組込みプロセッサにおいても、2個以上のコアを持つことがより一般的になってきています。 このことは、並行性をさらに複雑にします。（<code>cortex_m::interrupt::Mutex</code>を含む）クリティカルセクションで使っている全ての例は、 他の実行スレッドは、割り込みスレッドだけであることを前提にしています。 しかし、マルチコアシステムにおいては、これは当てはまりません。 代わりに、マルチコア（SMP; symmetric multi-proccesingとも呼ばれます）向けに設計した同期プリミティブが必要になります。</p><p>通常、これまでに見たアトミック命令を使用します。 アトミック命令は、処理システムが全てのコア間でのアトミック性を維持してくれるためです。</p><p>これらのトピックを詳細に説明することは、この本のスコープ範囲外ですが、 一般的なパターンはシングルコアの場合と同じです。</p></main><nav class="nav-wrapper" aria-label="Page navigation"><a rel="prev" href="../portability/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg></span></a><a rel="next" href="../collections/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path></svg></span></a></nav></div></div><nav class="nav-wide-wrapper" aria-label="Page navigation"><a rel="prev" href="../portability/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg></span></a><a rel="next" href="../collections/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path></svg></span></a></nav></div><template id="fa-eye"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"></path></svg></span></template><template id="fa-eye-slash"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"></path></svg></span></template><template id="fa-copy"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"></path></svg></span></template><template id="fa-play"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path></svg></span></template><template id="fa-clock-rotate-left"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"></path></svg></span></template><script>window.playground_copyable = true;</script><script src="../../elasticlunr-ef4e11c1.min.js"></script><script src="../../mark-09e88c2c.min.js"></script><script src="../../searcher-09f2665d.js"></script><script src="../../clipboard-1626706a.min.js"></script><script src="../../highlight-abc7f01d.js"></script><script src="../../book-609e4cb8.js"></script></div></body></html>

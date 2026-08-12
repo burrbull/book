@@ -1,0 +1,297 @@
+<!DOCTYPE html><html lang="zh" class="light sidebar-visible" dir="ltr"><head><meta charset="utf-8"><title>并发 - The Embedded Rust Book</title><meta name="description" content><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ffffff"><link rel="icon" href="../../favicon-de23e50b.svg"><link rel="shortcut icon" href="../../favicon-8114d1fc.png"><link rel="stylesheet" href="../../css/variables-8adf115d.css"><link rel="stylesheet" href="../../css/general-e96d0476.css"><link rel="stylesheet" href="../../css/chrome-d279d366.css"><link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print"><link rel="stylesheet" href="../../fonts/fonts-9644e21d.css"><style>#language-list { left: auto; right: 10px; } #language-list a { color: inherit; }</style><link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css"><link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css"><link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css"><script>
+      const path_to_root = "../../";
+      const default_light_theme = "light";
+      const default_dark_theme = "navy";
+      window.path_to_searchindex_js = "../../searchindex-8ec871e3.js";
+    </script></head><script src="../toc-7ac66f26_zh.js"></script><body><div id="mdbook-help-container"><div id="mdbook-help-popup"><h2 class="mdbook-help-title">Keyboard shortcuts</h2><div><p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p><p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p><p>Press <kbd>?</kbd> to show this help</p><p>Press <kbd>Esc</kbd> to hide this help</p></div></div></div><div id="mdbook-body-container"><script>
+      try {
+          let theme = localStorage.getItem('mdbook-theme');
+          let sidebar = localStorage.getItem('mdbook-sidebar');
+
+          if (theme.startsWith('"') && theme.endsWith('"')) {
+              localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+          }
+
+          if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+              localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+          }
+      } catch (e) { }
+    </script><script>
+      const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+      let theme;
+      try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+      if (theme === null || theme === undefined) { theme = default_theme; }
+      const html = document.documentElement;
+      html.classList.remove('light')
+      html.classList.add(theme);
+      html.classList.add("js");
+    </script><input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden"><script>
+      let sidebar = null;
+      const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+      if (document.body.clientWidth >= 1080) {
+          try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+          sidebar = sidebar || 'visible';
+      } else {
+          sidebar = 'hidden';
+          sidebar_toggle.checked = false;
+      }
+      if (sidebar === 'visible') {
+          sidebar_toggle.checked = true;
+      } else {
+          html.classList.remove('sidebar-visible');
+      }
+    </script><nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents"><mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox><noscript><iframe class="sidebar-iframe-outer" src="../toc.html"></iframe></noscript><div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle"><div class="sidebar-resize-indicator"></div></div></nav><div id="mdbook-page-wrapper" class="page-wrapper"><div class="page"><div id="mdbook-menu-bar-hover-placeholder"></div><div id="mdbook-menu-bar" class="menu-bar sticky"><div class="left-buttons"><label id="mdbook-sidebar-toggle" class="icon-button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar" for="mdbook-sidebar-toggle-anchor"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"></path></svg></span></label><button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"></path></svg></span></button><ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu"><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li></ul><button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"></path></svg></span></button></div><h1 class="menu-title">The Embedded Rust Book</h1><div class="right-buttons"><button id="language-toggle" class="icon-button" type="button" title="Change language" aria-label="Change language" aria-haspopup="true" aria-expanded="false" aria-controls="language-list"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M351.9 280l-190.9 0c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zM160.9 232l190.9 0C349 167.5 334.7 108.1 314.4 64.6 303 40.2 290.7 22.8 279.3 12.2 268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4zm-48 0C116.4 146.4 138.5 66.9 170.8 14.7 78.7 47.3 10.9 131.2 1.5 232l111.4 0zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3L1.5 280zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3l-111.4 0zm111.4-48C501.9 131.2 434.1 47.3 342 14.7 374.3 66.9 396.4 146.4 399.9 232l111.4 0z"></path></svg></span></button><ul id="language-list" class="theme-popup" aria-label="Languages" role="menu"><li role="none"><a role="menuitem" class="theme" id="lang-en" href="../../index.html">English</a></li><li role="none"><a role="menuitem" class="theme" id="lang-de" href="../../de/index.html">German</a></li><li role="none"><a role="menuitem" class="theme" id="lang-ja" href="../../ja/index.html">Japanese</a></li><li role="none"><a role="menuitem" class="theme" id="lang-uk" href="../../uk/index.html">Ukrainian</a></li><li role="none"><a role="menuitem" class="theme" id="lang-zh" href="../../zh/index.html">Chinese</a></li></ul><script>
+      let langToggle = document.getElementById("language-toggle");
+      let langList = document.getElementById("language-list");
+      langToggle.addEventListener("click", (event) => {
+          langList.style.display = langList.style.display == "block" ? "none" : "block";
+      });
+    </script><a href="../../book_zh.pdf" title="PDF version of this book" aria-label="PDF"><span class="fa-svg" id="book-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M208 48L96 48c-8.8 0-16 7.2-16 16l0 384c0 8.8 7.2 16 16 16l80 0 0 48-80 0c-35.3 0-64-28.7-64-64L32 64C32 28.7 60.7 0 96 0L229.5 0c17 0 33.3 6.7 45.3 18.7L397.3 141.3c12 12 18.7 28.3 18.7 45.3l0 149.5-48 0 0-128-88 0c-39.8 0-72-32.2-72-72l0-88zM348.1 160L256 67.9 256 136c0 13.3 10.7 24 24 24l68.1 0zM240 380l32 0c33.1 0 60 26.9 60 60s-26.9 60-60 60l-12 0 0 28c0 11-9 20-20 20s-20-9-20-20l0-128c0-11 9-20 20-20zm32 80c11 0 20-9 20-20s-9-20-20-20l-12 0 0 40 12 0zm96-80l32 0c28.7 0 52 23.3 52 52l0 64c0 28.7-23.3 52-52 52l-32 0c-11 0-20-9-20-20l0-128c0-11 9-20 20-20zm32 128c6.6 0 12-5.4 12-12l0-64c0-6.6-5.4-12-12-12l-12 0 0 88 12 0zm76-108c0-11 9-20 20-20l48 0c11 0 20 9 20 20s-9 20-20 20l-28 0 0 24 28 0c11 0 20 9 20 20s-9 20-20 20l-28 0 0 44c0 11-9 20-20 20s-20-9-20-20l0-128z"></path></svg></span></a><a href="https://github.com/rust-embedded/book" title="Git repository" aria-label="Git repository"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg></span></a></div></div><div id="mdbook-search-wrapper" class="hidden"><form id="mdbook-searchbar-outer" class="searchbar-outer"><div class="search-wrapper"><input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header"><div class="spinner-wrapper"><span class="fa-svg" id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"></path></svg></span></div></div></form><div id="mdbook-searchresults-outer" class="searchresults-outer hidden"><div id="mdbook-searchresults-header" class="searchresults-header"></div><ul id="mdbook-searchresults"></ul></div></div><script>
+      document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+      document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+      Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+          link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+      });
+    </script><div id="mdbook-content" class="content"><main><h1 id="concurrency">并发</h1><p>当程序的不同部分有可能会在不同的时刻被执行或者不按顺序地被执行时，那并发就出现了。在一个嵌入式环境中，这包括:</p><ul><li>中断处理函数，一旦相关的中断发生时，中断处理函数就会运行，</li><li>不同的多线程形式，在这块，微处理器通常会在程序的不同部分间进行切换，</li><li>在一些多核微处理器系统中，每个核可以同时独立地运行程序的不同部分。</li></ul><p>因为许多嵌入式程序需要处理中断，因此并发迟早会出现，这也是许多微妙和困难的bugs会出现的地方。幸运地是，Rust提供了许多抽象和安全保障去帮助我们写正确的代码。</p><h3>没有并发</h3><p>对于一个嵌入式程序来说最简单的并发是没有并发: 软件由一个保持运行的main循环组成，一点中断也没有。有时候这非常适合手边的问题! 通常你的循环将会读取一些输入，执行一些处理，且写入一些输出。</p><pre><code data-lang="rust"><span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() {
+    <span style="color: #d73948">let</span> peripherals <span style="color: #d73948">=</span> <span style="color: #4b69c6">setup_peripherals</span>();
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> inputs <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_inputs</span>(<span style="color: #d73948">&amp;</span>peripherals);
+        <span style="color: #d73948">let</span> outputs <span style="color: #d73948">=</span> <span style="color: #4b69c6">process</span>(inputs);
+        <span style="color: #4b69c6">write_outputs</span>(<span style="color: #d73948">&amp;</span>peripherals, outputs);
+    }
+}</code></pre><p>因为这里没有并发，因此不需要担心程序不同部分间的共享数据或者同步对外设的访问。如果可以使用一个简单的方法来解决问题，这种方法是个不错的选择。</p><h3>全局可变数据</h3><p>不像非嵌入式Rust，我们通常不会奢侈地在堆上分配数据，并将对该数据的引用传递到新创建的线程中。相反，我们的中断处理函数随时可能被调用，且必须知道如何访问我们正在使用的共享内存。从最底层看来，这意味着我们必须有 <em>静态分配的</em> 可变的内存，中断处理函数和main代码都可以引用这块内存。</p><p>在Rust中，<a href="https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable"><code>static mut</code></a>这样的变量读取或者写入总是unsafe的，因为不特别关注它们的话，可能会触发一个竞态条件，对变量的访问在中途就被一个也访问那个变量的中断打断了。</p><p>为了举例这种行为如何在代码中导致了微妙的错误，思考一个嵌入式程序，这个程序在每一秒的周期内计数一些输入信号的上升沿(一个频率计数器):</p><pre><code data-lang="rust"><span style="color: #d73948">static</span> <span style="color: #d73948">mut</span> <span style="color: #b60157">COUNTER</span>: <span style="color: #d73948">u32</span> <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>;
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> 危险 - 实际不安全! 可能导致数据竞争。</span>
+            <span style="color: #d73948">unsafe</span> { <span style="color: #b60157">COUNTER</span> <span style="color: #d73948">+=</span> <span style="color: #b60157">1</span> };
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #d73948">unsafe</span> { <span style="color: #b60157">COUNTER</span> <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>; }
+}
+</code></pre><p>每秒计时器中断会把计数器设置回0。这期间，main循环连续地测量信号，且当看到从低电平到高电平的变化时，增加计数器的值。因为它是<code>static mut</code>的，我们不得不使用<code>unsafe</code>去访问<code>COUNTER</code>，意思是我们向编译器保证我们的操作不会导致任何未定义的行为。你能发现竞态条件吗？<code>COUNTER</code>上的增加并不一定是原子的 - 事实上，在大多数嵌入式平台上，它将被分开成一个读取操作，然后是增加，然后是写回。如果中断在计数器被读取之后但是在被写回之前被激活，在中断返回后，重置回0的操作会被忽略掉 - 那期间，我们会算出两倍的转换次数。</p><h3>临界区(Critical Sections)</h3><p>因此，关于数据竞争可以做些什么？一个简单的方法是使用 <em>临界区(critical sections）</em> ，在临界区的上下文中中断被关闭了。通过把对<code>main</code>中的<code>COUNTER</code>访问封装进一个临界区，我们能确保计时器中断将不会激活，直到我们完成了增加<code>COUNTER</code>的操作:</p><pre><code data-lang="rust"><span style="color: #d73948">static</span> <span style="color: #d73948">mut</span> <span style="color: #b60157">COUNTER</span>: <span style="color: #d73948">u32</span> <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>;
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> 新的临界区确保对COUNTER的同步访问</span>
+            cortex_m::interrupt::free(|_| {
+                <span style="color: #d73948">unsafe</span> { <span style="color: #b60157">COUNTER</span> <span style="color: #d73948">+=</span> <span style="color: #b60157">1</span> };
+            });
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #d73948">unsafe</span> { <span style="color: #b60157">COUNTER</span> <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>; }
+}
+</code></pre><p>在这个例子里，我们使用 <code>cortex_m::interrupt::free</code>，但是其它平台将会有更简单的机制在一个临界区中执行代码。它们都有一样的逻辑，关闭中断，运行一些代码，然后重新使能中断。</p><p>注意，有两个理由，不需要把一个临界区放进计时器中断中:</p><ul><li>向<code>COUNTER</code>写入0不会被一个竞争影响，因为我们不需要读取它</li><li>无论如何，它永远不会被<code>main</code>线程中断</li></ul><p>如果<code>COUNTER</code>被多个可能相互 <em>抢占</em> 的中断处理函数共享，那么每一个也需要一个临界区。</p><p>这解决了我们眼前的问题，但是我们仍然要编写许多unsafe的代码，我们需要仔细推敲这些代码，有些我们可能不需要使用临界区。因为每个临界区暂时暂停了中断处理，就会带来一些相关的成本，一些额外的代码大小，更高的中断延迟和抖动(中断可能花费很长时间去处理，等待被处理的时间变化非常大)。这是否是个问题取决于你的系统，但是通常，我们想要避免它。</p><p>值得注意的是，虽然一个临界区保障了不会发生中断，但是它在多核系统上不提供一个排他性保证(exclusivity guarantee)！其它核可能很开心地访问与你的核一样的内存区域，即使没有中断。如果你正在使用多核，你将需要更强的同步原语(synchronisation primitives)。</p><h3>原子访问</h3><p>在一些平台上，可以使用特定的原子指令，它保障了读取-修改-写回操作。针对Cortex-M: <code>thumbv6</code>(Cortex-M0，Cortex-M0+)只提供原子读取和存取指令，而<code>thumv7</code>(Cortex-M3及以上)提供完整的比较和交换(CAS)指令。这些CAS指令可以替代过重的禁用所有中断的方法: 我们可以尝试执行加法操作，它在大多数情况下都会成功，但是如果它被中断了它将会自动重试完整的加法操作。这些原子操作甚至在多核间也是安全的。</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::sync::atomic::{AtomicUsize, Ordering};
+
+<span style="color: #d73948">static</span> <span style="color: #b60157">COUNTER</span>: AtomicUsize <span style="color: #d73948">=</span> AtomicUsize::new(<span style="color: #b60157">0</span>);
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> 使用 `fetch_add` 原子性地给 COUNTER 加一</span>
+            <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">fetch_add</span>(<span style="color: #b60157">1</span>, Ordering::Relaxed);
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 使用 `store` 将 0 直接写入 COUNTER</span>
+    <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">store</span>(<span style="color: #b60157">0</span>, Ordering::Relaxed)
+}
+</code></pre><p>这时，<code>COUNTER</code>是一个safe的<code>static</code>变量。多亏了<code>AtomicUsize</code>类型，不需要禁用中断，<code>COUNTER</code>能从中断处理函数和main线程被安全地修改。当可以这么做时，这是一个更好的解决方案 - 然而平台上可能不支持这么做。</p><p>关于<a href="https://doc.rust-lang.org/core/sync/atomic/enum.Ordering.html"><code>Ordering</code></a>的提醒: 它可能影响编译器和硬件如何重新排序指令，也会影响缓存可见性。假设目标是个单核平台，在这个案例里<code>Relaxed</code>是充足的和最有效的选择。更严格的排序将导致编译器在原子操作周围产生内存屏障(Memory Barriers)；取决于你做什么原子操作，你可能需要或者不需要这个排序！原子模型的精确细节是复杂的，最好写在其它地方。</p><p>关于原子操作和排序的更多细节，可以看这里<a href="https://doc.rust-lang.org/nomicon/atomics.html">nomicon</a>。</p><h3>抽象，Send和Sync</h3><p>上面的解决方案都不是特别令人满意。它们需要<code>unsafe</code>块，<code>unsafe</code>块必须要被十分小心地检查且不符合人体工程学。确实，我们在Rust中可以做得更好！</p><p>我们可以把我们的计数器抽象进一个安全的接口中，它可以在代码的其它地方被安全地使用。在这个例子里，我们将使用临界区的(cirtical-section)计数器，但是你可以用原子操作做一些非常类似的事情。</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::cell::UnsafeCell;
+<span style="color: #d73948">use</span> cortex_m::interrupt;
+
+<span style="color: #74747c">//</span><span style="color: #74747c"> 我们的计数器只是包围UnsafeCell&lt;u32>的一个封装，它是Rust中内部可变性</span>
+<span style="color: #74747c">//</span><span style="color: #74747c"> (interior mutability)的关键。通过使用内部可变性，我们能让COUNTER</span>
+<span style="color: #74747c">//</span><span style="color: #74747c"> 变成`static`而不是`static mut`，但是仍能改变它的计数器值。</span>
+<span style="color: #d73948">struct</span> <span style="color: #4b69c6">CSCounter</span>(UnsafeCell&lt;<span style="color: #d73948">u32</span>>);
+
+<span style="color: #d73948">const</span> <span style="color: #b60157">CS_COUNTER_INIT</span>: CSCounter <span style="color: #d73948">=</span> CSCounter(UnsafeCell::new(<span style="color: #b60157">0</span>));
+
+<span style="color: #d73948">impl</span> <span style="color: #4b69c6">CSCounter</span> {
+    <span style="color: #d73948">pub</span> <span style="color: #d73948">fn</span> <span style="color: #4b69c6">reset</span>(<span style="color: #d73948">&amp;</span>self, _cs: <span style="color: #d73948">&amp;</span>interrupt::CriticalSection) {
+        <span style="color: #74747c">//</span><span style="color: #74747c"> 通过要求一个CriticalSection被传递进来，我们知道我们肯定正在一个</span>
+        <span style="color: #74747c">//</span><span style="color: #74747c"> CriticalSection中操作，且因此可以自信地使用这个unsafe块(调用UnsafeCell::get的前提)。</span>
+        <span style="color: #d73948">unsafe</span> { <span style="color: #d73948">*</span><span style="color: #d73948">self</span>.<span style="color: #b60157">0.</span><span style="color: #4b69c6">get</span>() <span style="color: #d73948">=</span> <span style="color: #b60157">0</span> };
+    }
+
+    <span style="color: #d73948">pub</span> <span style="color: #d73948">fn</span> <span style="color: #4b69c6">increment</span>(<span style="color: #d73948">&amp;</span>self, _cs: <span style="color: #d73948">&amp;</span>interrupt::CriticalSection) {
+        <span style="color: #d73948">unsafe</span> { <span style="color: #d73948">*</span><span style="color: #d73948">self</span>.<span style="color: #b60157">0.</span><span style="color: #4b69c6">get</span>() <span style="color: #d73948">+=</span> <span style="color: #b60157">1</span> };
+    }
+}
+
+<span style="color: #74747c">//</span><span style="color: #74747c"> 允许静态CSCounter的前提。看下面的解释。</span>
+<span style="color: #d73948">unsafe</span> <span style="color: #d73948">impl</span> Sync <span style="color: #d73948">for</span> <span style="color: #4b69c6">CSCounter</span> {}
+
+<span style="color: #74747c">//</span><span style="color: #74747c"> COUNTER不再是`mut`的因为它使用内部可变性;</span>
+<span style="color: #74747c">//</span><span style="color: #74747c"> 因此访问它也不再需要unsafe块。</span>
+<span style="color: #d73948">static</span> <span style="color: #b60157">COUNTER</span>: CSCounter <span style="color: #d73948">=</span> <span style="color: #b60157">CS_COUNTER_INIT</span>;
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> 这里不用unsafe!</span>
+            interrupt::free(|cs| <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">increment</span>(cs));
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 这里我们需要进入一个临界区，只是为了传递进一个有效的cs token，尽管我们知道</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 没有其它中断可以抢占这个中断。</span>
+    interrupt::free(|cs| <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">reset</span>(cs));
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 如果我们真的需要，我们可以使用unsafe代码去生成一个假CriticalSection，</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 避免开销:</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> let cs = unsafe { interrupt::CriticalSection::new() };</span>
+}
+</code></pre><p>我们已经把我们的<code>unsafe</code>代码移进了精心安排的抽象中，现在我们的应用代码不包含任何<code>unsafe</code>块。</p><p>这个设计要求应用传递一个<code>CriticalSection</code> token进来: 这些tokens仅由<code>interrupt::free</code>安全地产生，因此通过要求传递进一个<code>CriticalSection</code> token，我们确保我们正在一个临界区中操作，不用自己动手锁起来。这个保障由编译器静态地提供: 这将不会带来任何与<code>cs</code>有关的运行时消耗。如果我们有多个计数器，它们都可以被指定同一个<code>cs</code>，而不用要求多个嵌套的临界区。</p><p>这也带来了Rust中关于并发的一个重要主题: <a href="https://doc.rust-lang.org/nomicon/send-and-sync.html"><code>Send</code> and <code>Sync</code></a> traits。总结一下Rust book，当一个类型能够安全地被移动到另一个线程，它是Send，当一个类型能被安全地在多个线程间共享的时候，它是Sync。在一个嵌入式上下文中，我们认为中断是在应用代码的一个独立线程中执行的，因此在一个中断和main代码中都能被访问的变量必须是Sync。</p><p>在Rust中的大多数类型，这两个traits都会由你的编译器为你自动地产生。然而，因为<code>CSCounter</code>包含了一个<a href="https://doc.rust-lang.org/core/cell/struct.UnsafeCell.html"><code>UnsafeCell</code></a>，它不是Sync，因此我们不能使用一个<code>static CSCounter</code>: <code>static</code> 变量 <em>必须</em> 是Sync，因此它们能被多个线程访问。</p><p>为了告诉编译器我们已经注意到<code>CSCounter</code>事实上在线程间共享是安全的，我们显式地实现了Sync trait。与之前使用的临界区一样，这只在单核平台上是安全的: 对于多核，你需要做更多的事来确保安全。</p><h3>互斥量(Mutexs)</h3><p>我们已经为我们的计数器问题创造了一个有用的抽象，但是关于并发这里还存在许多通用的抽象。</p><p>一个互斥量(mutex)，互斥(mutual exclusion)的缩写，就是这样的一个 <em>同步原语</em> 。这些构造确保了对一个变量的排他访问，比如我们的计数器。一个线程会尝试 <em>lock</em> (或者 <em>acquire</em>) 互斥量，或者当互斥量不能被锁住时返回一个错误。当线程持有锁时，它有权访问被保护的数据，当线程工作完成了，它 <em>unlocks</em> (或者 <em>releases</em>) 互斥量，允许其它线程锁住它。在Rust中，我们通常使用<a href="https://doc.rust-lang.org/core/ops/trait.Drop.html"><code>Drop</code></a> trait实现unlock去确保当互斥量超出作用域时它总是被释放。</p><p>将中断处理函数与一个互斥量一起使用可能有点棘手: 阻塞中断处理函数通常是不可接受的，如果它阻塞等待main线程去释放一个锁，那将是一场灾难。因为我们会 <em>死锁</em> (因为执行停留在中断处理函数中，主线程将永远不会释放锁)。死锁被认为是不安全的: 即使在安全的Rust中这也是可能发生的。</p><p>为了完全避免这个行为，我们可以实现一个要求临界区的互斥量去锁住，就像我们的计数器例子一样。临界区的存在时间必须和锁存在的时间一样长，我们能确保我们对被封装的变量有排他式访问，甚至不需要跟踪互斥量的 lock/unlock 状态。</p><p>实际上我们在 <code>cortex_m</code> crate中就是这么做的！我们可以用它来写入我们的计数器:</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::cell::Cell;
+<span style="color: #d73948">use</span> cortex_m::interrupt::Mutex;
+
+<span style="color: #d73948">static</span> <span style="color: #b60157">COUNTER</span>: Mutex&lt;Cell&lt;<span style="color: #d73948">u32</span>>> <span style="color: #d73948">=</span> Mutex::new(Cell::new(<span style="color: #b60157">0</span>));
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> <span style="color: #4b69c6">read_signal_level</span>();
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            interrupt::free(|cs|
+                <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">set</span>(<span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">get</span>() <span style="color: #d73948">+</span> <span style="color: #b60157">1</span>));
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 这里我们仍然需要进入一个临界区去满足互斥量。</span>
+    interrupt::free(|cs| <span style="color: #b60157">COUNTER</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">set</span>(<span style="color: #b60157">0</span>));
+}
+</code></pre><p>我们现在使用了<a href="https://doc.rust-lang.org/core/cell/struct.Cell.html"><code>Cell</code></a>，它与它的兄弟<code>RefCell</code>一起被用于提供safe的内部可变性。我们已经见过<code>UnsafeCell</code>了，在Rust中它是内部可变性的底层: 它允许你去获得对某个值的多个可变引用，但是只能与不安全的代码一起工作。一个<code>Cell</code>像一个<code>UnsafeCell</code>一样但是它提供了一个安全的接口: 它只允许拷贝现在的值或者替换它，不允许获取一个引用，因此它不是Sync，它不能被在线程间共享。这些限制意味着它用起来是safe的，但是我们不能直接将它用于<code>static</code>变量因为一个<code>static</code>必须是Sync。</p><p>因此为什么上面的例子可以工作?<code>Mutex&lt;T></code>对于任何是Send的<code>T</code>实现了Sync - 比如一个<code>Cell</code>。因为它只能在临界区对它的内容进行访问，所以它这么做是safe的。因此我们可以即使没有一点unsafe的代码我们也能获取一个safe的计数器！</p><p>对于我们的简单类型，像是我们的计数器的<code>u32</code>来说是很棒的，但是对于更复杂的不能拷贝的类型呢？在一个嵌入式上下文中一个极度常见的例子是一个外设结构体，通常它们不是Copy。针对那种情况，我们可以使用<code>RefCell</code>。</p><h3>共享外设</h3><p>使用<code>svd2rust</code>生成的设备crates和相似的抽象，通过强制要求同时只能存在一个外设结构体的实例，提供了对外设的安全的访问。这个确保了安全性，但是使得它很难从main线程和一个中断处理函数一起访问一个外设。</p><p>为了安全地共享对外设的访问，我们能使用我们之前看到的<code>Mutex</code>。我们也将需要使用<a href="https://doc.rust-lang.org/core/cell/struct.RefCell.html"><code>RefCell</code></a>，它使用一个运行时检查去确保对一个外设每次只有一个引用被给出。这个比纯<code>Cell</code>消耗更多，但是因为我们正给出引用而不是拷贝，我们必须确保每次只有一个引用存在。</p><p>最终，我们也必须考虑在main代码中初始化外设后，如何将外设移到共享变量中。为了做这个，我们使用<code>Option</code>类型，初始成<code>None</code>，之后设置成外设的实例。</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::cell::RefCell;
+<span style="color: #d73948">use</span> cortex_m::interrupt::{<span style="color: #d73948">self</span>, Mutex};
+<span style="color: #d73948">use</span> stm32f4::stm32f405;
+
+<span style="color: #d73948">static</span> <span style="color: #b60157">MY_GPIO</span>: Mutex&lt;RefCell&lt;<span style="color: #4b69c6">Option</span>&lt;stm32f405::GPIOA>>> <span style="color: #d73948">=</span>
+    Mutex::new(RefCell::new(<span style="color: #4b69c6">None</span>));
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 获得外设的单例并配置它。这个例子来自一个svd2rust生成的crate，</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 但是大多数的嵌入式设备crates都相似。</span>
+    <span style="color: #d73948">let</span> dp <span style="color: #d73948">=</span> stm32f405::Peripherals::take().<span style="color: #4b69c6">unwrap</span>();
+    <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #d73948">&amp;</span>dp.<span style="color: #b60157">GPIOA</span>;
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 某个配置函数。假设它把PA0设置成一个输入和把PA1设置成一个输出。</span>
+    <span style="color: #4b69c6">configure_gpio</span>(gpioa);
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 把GPIOA存进互斥量中，移动它。</span>
+    interrupt::free(|cs| <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">replace</span>(<span style="color: #4b69c6">Some</span>(dp.<span style="color: #b60157">GPIOA</span>)));
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 我可以不再用`gpioa`或者`dp.GPIOA`，反而必须通过互斥量访问它。</span>
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 请注意，只有在设置MY_GPIO后才能使能中断: 要不然当MY_GPIO还是包含None的时候，</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 中断可能会发生，然后像上面写的那样操作(使用`unwrap()`)，它将发生运行时恐慌。</span>
+    <span style="color: #4b69c6">set_timer_1hz</span>();
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> last_state <span style="color: #d73948">=</span> <span style="color: #d73948">false</span>;
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #74747c">//</span><span style="color: #74747c"> 我们现在将通过互斥量，读取其作为数字输入时的状态。</span>
+        <span style="color: #d73948">let</span> state <span style="color: #d73948">=</span> interrupt::free(|cs| {
+            <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow</span>();
+            gpioa.<span style="color: #4b69c6">as_ref</span>().<span style="color: #4b69c6">unwrap</span>().idr.<span style="color: #4b69c6">read</span>().<span style="color: #4b69c6">idr0</span>().<span style="color: #4b69c6">bit_is_set</span>()
+        });
+
+        <span style="color: #d73948">if</span> state <span style="color: #d73948">&amp;&amp;</span> <span style="color: #d73948">!</span>last_state {
+            <span style="color: #74747c">//</span><span style="color: #74747c"> 如果我们在PA0上已经看到了一个上升沿，拉高PA1。</span>
+            interrupt::free(|cs| {
+                <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow</span>();
+                gpioa.<span style="color: #4b69c6">as_ref</span>().<span style="color: #4b69c6">unwrap</span>().odr.<span style="color: #4b69c6">modify</span>(|_, w| w.<span style="color: #4b69c6">odr1</span>().<span style="color: #4b69c6">set_bit</span>());
+            });
+        }
+        last_state <span style="color: #d73948">=</span> state;
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 这次在中断中，我们将清除PA0。</span>
+    interrupt::free(|cs| {
+        <span style="color: #74747c">//</span><span style="color: #74747c"> 我们可以使用`unwrap()` 因为我们知道直到MY_GPIO被设置后，中断都是禁用的；</span>
+        <span style="color: #74747c">//</span><span style="color: #74747c"> 否则我应该处理会出现一个None值的潜在可能</span>
+        <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow</span>();
+        gpioa.<span style="color: #4b69c6">as_ref</span>().<span style="color: #4b69c6">unwrap</span>().odr.<span style="color: #4b69c6">modify</span>(|_, w| w.<span style="color: #4b69c6">odr1</span>().<span style="color: #4b69c6">clear_bit</span>());
+    });
+}
+</code></pre><p>这需要理解的内容很多，所以让我们把重要的内容分解一下。</p><pre><code data-lang="rust"><span style="color: #d73948">static</span> <span style="color: #b60157">MY_GPIO</span>: Mutex&lt;RefCell&lt;<span style="color: #4b69c6">Option</span>&lt;stm32f405::GPIOA>>> <span style="color: #d73948">=</span>
+    Mutex::new(RefCell::new(<span style="color: #4b69c6">None</span>));</code></pre><p>我们的共享变量现在是一个包围了一个<code>RefCell</code>的<code>Mutex</code>，<code>RefCell</code>包含一个<code>Option</code>。<code>Mutex</code>确保只在一个临界区中的时候可以访问，因此使变量变成了Sync，甚至即使一个纯<code>RefCell</code>不是Sync。<code>RefCell</code>赋予了我们引用的内部可变性，我们将需要使用我们的<code>GPIOA</code>。<code>Option</code>让我们可以初始化这个变量成空的东西，只在随后实际移动变量进来。只有在运行时，我们才能静态地访问外设单例，因此这是必须的。</p><pre><code data-lang="rust">interrupt::free(|cs| <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">replace</span>(<span style="color: #4b69c6">Some</span>(dp.<span style="color: #b60157">GPIOA</span>)));</code></pre><p>在一个临界区中，我们可以在互斥量上调用<code>borrow()</code>，其给了我们一个指向<code>RefCell</code>的引用。然后我们调用<code>replace()</code>去移动我们的新值进来<code>RefCell</code>。</p><pre><code data-lang="rust">interrupt::free(|cs| {
+    <span style="color: #d73948">let</span> gpioa <span style="color: #d73948">=</span> <span style="color: #b60157">MY_GPIO</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow</span>();
+    gpioa.<span style="color: #4b69c6">as_ref</span>().<span style="color: #4b69c6">unwrap</span>().odr.<span style="color: #4b69c6">modify</span>(|_, w| w.<span style="color: #4b69c6">odr1</span>().<span style="color: #4b69c6">set_bit</span>());
+});</code></pre><p>最终，我们用一种安全和并发的方式使用<code>MY_GPIO</code>。临界区禁止了中断像往常一样发生，让我们借用互斥量。<code>RefCell</code>然后给了我们一个<code>&amp;Option&lt;GPIOA></code>并追踪它还要借用多久 - 一旦引用超出作用域，<code>RefCell</code>将会被更新去指出引用不再被借用。</p><p>因为我不能把<code>GPIOA</code>移出<code>&amp;Option</code>，我们需要用<code>as_ref()</code>将它转换成一个<code>&amp;Option&lt;&amp;GPIOA></code>，最终我们能使用<code>unwrap()</code>获得<code>&amp;GPIOA</code>，其让我们可以修改外设。</p><p>如果我们需要一个共享的资源的可变引用，那么<code>borrow_mut</code>和<code>deref_mut</code>应该被使用。下面的代码展示了一个使用TIM2计时器的例子。</p><pre><code data-lang="rust"><span style="color: #d73948">use</span> core::cell::RefCell;
+<span style="color: #d73948">use</span> core::ops::DerefMut;
+<span style="color: #d73948">use</span> cortex_m::interrupt::{<span style="color: #d73948">self</span>, Mutex};
+<span style="color: #d73948">use</span> cortex_m::asm::wfi;
+<span style="color: #d73948">use</span> stm32f4::stm32f405;
+
+<span style="color: #d73948">static</span> <span style="color: #b60157">G_TIM</span>: Mutex&lt;RefCell&lt;<span style="color: #4b69c6">Option</span>&lt;Timer&lt;stm32::TIM2>>>> <span style="color: #d73948">=</span>
+    Mutex::new(RefCell::new(<span style="color: #4b69c6">None</span>));
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #d73948">let</span> <span style="color: #d73948">mut</span> cp <span style="color: #d73948">=</span> cm::Peripherals::take().<span style="color: #4b69c6">unwrap</span>();
+    <span style="color: #d73948">let</span> dp <span style="color: #d73948">=</span> stm32f405::Peripherals::take().<span style="color: #4b69c6">unwrap</span>();
+
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 某个计时器配置函数。假设它配置了TIM2计时器和它的NVIC中断，</span>
+    <span style="color: #74747c">//</span><span style="color: #74747c"> 最终启动计时器。</span>
+    <span style="color: #d73948">let</span> tim <span style="color: #d73948">=</span> <span style="color: #4b69c6">configure_timer_interrupt</span>(<span style="color: #d73948">&amp;</span><span style="color: #d73948">mut</span> cp, dp);
+
+    interrupt::free(|cs| {
+        <span style="color: #b60157">G_TIM</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">replace</span>(<span style="color: #4b69c6">Some</span>(tim));
+    });
+
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #4b69c6">wfi</span>();
+    }
+}
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">interrupt</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">timer</span>() {
+    interrupt::free(|cs| {
+        <span style="color: #d73948">if</span> <span style="color: #d73948">let</span> <span style="color: #4b69c6">Some</span>(<span style="color: #d73948">ref</span> <span style="color: #d73948">mut</span> tim)) <span style="color: #d73948">=</span>  <span style="color: #b60157">G_TIM</span>.<span style="color: #4b69c6">borrow</span>(cs).<span style="color: #4b69c6">borrow_mut</span>().<span style="color: #4b69c6">deref_mut</span>() {
+            tim.<span style="color: #4b69c6">start</span>(<span style="color: #b60157">1.</span><span style="color: #4b69c6">hz</span>());
+        }
+    });
+}
+</code></pre><p>呼！这是安全的，但也有点笨拙。我们还能做些什么吗？</p><h3>RTIC</h3><p>另一个方法是使用<a href="https://github.com/rtic-rs/cortex-m-rtic">RTIC框架</a>，Real Time Interrupt-driven Concurrency的缩写。它强制执行静态优先级并追踪对<code>static mut</code>变量(“资源”)的访问去确保共享资源总是能被安全地访问，而不需要总是进入临界区和使用引用计数带来的消耗(如<code>RefCell</code>中所示)。这有许多好处，比如保证没有死锁且时间和内存的消耗极度低。</p><p>RTIC comes with as asynchronous executor, so your software tasks are <code>async</code> functions where you can use <code>async</code> APIs in addition to regular synchronous APIs.</p><p>这个框架也包括了其它的特性，像是消息传递(message passing)，消息传递减少了对显式共享状态的需要，还提供了在一个给定时间调度任务去运行的功能，这功能能被用来实现周期性的任务。看下<a href="https://rtic.rs">文档</a>可以知道更多的信息！</p><h3>Embassy</h3><p>Embassy is an ecosystem of libraries which focus on using the <code>async</code> / <code>await</code> syntax included in Rust for concurrency. The core of embassy is its <a href="https://docs.rs/embassy-executor/latest/embassy_executor/">asynchronous executor</a> which supports most common MCU architectures.</p><p>embassy also takes a battery-included approach and offers many other components, for example:</p><ul><li><a href="https://docs.rs/embassy-time/latest/embassy_time/">Time library</a></li><li>Various HAL libraries which also provide the time library support.</li><li><a href="https://docs.embassy.dev/embassy-sync/git/default/index.html">embassy-sync</a> for synchronization primitives</li></ul><p>You can check the <a href="https://embassy.dev/">website</a> and the <a href="https://embassy.dev/book/">book</a> for more information.</p><h3>实时操作系统</h3><p>翻译已过时 与嵌入式并发有关的另一个模型是实时操作系统(RTOS)。虽然现在在Rust中的研究较少，但是它们被广泛用于传统的嵌入式开发。开源的例子包括<a href="https://freertos.org/">FreeRTOS</a>和<a href="http://chibios.org/">ChibiOS</a>。这些RTOSs提供对运行多个应用线程的支持，CPU在这些线程间进行切换，切换要么发生在当线程让出控制权的时候(被称为非抢占式多任务)，要么是基于一个常规计时器或者中断(抢占式多任务)。RTOS通常提供互斥量或者其它的同步原语，经常与硬件功能相互使用，比如DMA引擎。</p><p>在撰写本文时，没有太多的Rust RTOS示例可供参考，但这是一个有趣的领域，所以请关注这块！</p><h3>多个核心</h3><p>在嵌入式处理器中有两个或者多个核心很正常，其为并发添加了额外一层复杂性。所有使用临界区的例子(包括<code>cortex_m::interrupt::Mutex</code>)都假设了另一个执行的线程仅是中断线程，但是在一个多核系统中，这不再是正确的假设。反而，我们将需要为多核设计的同步原语(也被叫做SMP，symmetric multi-processing的缩写)。</p><p>我们之前看到的，这些通常使用原子指令，因为处理系统将确保原子性在所有的核中都保持着。</p><p>覆盖这些主题的细节已经超出了本书的范围，但是常规的模式与单核的相似。</p></main><nav class="nav-wrapper" aria-label="Page navigation"><a rel="prev" href="../portability/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg></span></a><a rel="next" href="../collections/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path></svg></span></a></nav></div></div><nav class="nav-wide-wrapper" aria-label="Page navigation"><a rel="prev" href="../portability/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg></span></a><a rel="next" href="../collections/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path></svg></span></a></nav></div><template id="fa-eye"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"></path></svg></span></template><template id="fa-eye-slash"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"></path></svg></span></template><template id="fa-copy"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"></path></svg></span></template><template id="fa-play"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path></svg></span></template><template id="fa-clock-rotate-left"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"></path></svg></span></template><script>window.playground_copyable = true;</script><script src="../../elasticlunr-ef4e11c1.min.js"></script><script src="../../mark-09e88c2c.min.js"></script><script src="../../searcher-09f2665d.js"></script><script src="../../clipboard-1626706a.min.js"></script><script src="../../highlight-abc7f01d.js"></script><script src="../../book-609e4cb8.js"></script></div></body></html>

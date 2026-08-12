@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="de" class="light sidebar-visible" dir="ltr"><head><meta charset="utf-8"><title>QEMU - The Embedded Rust Book</title><meta name="description" content><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ffffff"><link rel="icon" href="../../favicon-de23e50b.svg"><link rel="shortcut icon" href="../../favicon-8114d1fc.png"><link rel="stylesheet" href="../../css/variables-8adf115d.css"><link rel="stylesheet" href="../../css/general-e96d0476.css"><link rel="stylesheet" href="../../css/chrome-d279d366.css"><link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print"><link rel="stylesheet" href="../../fonts/fonts-9644e21d.css"><style>#language-list { left: auto; right: 10px; } #language-list a { color: inherit; }</style><link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css"><link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css"><link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css"><script>
+      const path_to_root = "../../";
+      const default_light_theme = "light";
+      const default_dark_theme = "navy";
+      window.path_to_searchindex_js = "../../searchindex-8ec871e3.js";
+    </script></head><script src="../toc-7ac66f26_de.js"></script><body><div id="mdbook-help-container"><div id="mdbook-help-popup"><h2 class="mdbook-help-title">Keyboard shortcuts</h2><div><p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p><p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p><p>Press <kbd>?</kbd> to show this help</p><p>Press <kbd>Esc</kbd> to hide this help</p></div></div></div><div id="mdbook-body-container"><script>
+      try {
+          let theme = localStorage.getItem('mdbook-theme');
+          let sidebar = localStorage.getItem('mdbook-sidebar');
+
+          if (theme.startsWith('"') && theme.endsWith('"')) {
+              localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+          }
+
+          if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+              localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+          }
+      } catch (e) { }
+    </script><script>
+      const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+      let theme;
+      try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+      if (theme === null || theme === undefined) { theme = default_theme; }
+      const html = document.documentElement;
+      html.classList.remove('light')
+      html.classList.add(theme);
+      html.classList.add("js");
+    </script><input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden"><script>
+      let sidebar = null;
+      const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+      if (document.body.clientWidth >= 1080) {
+          try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+          sidebar = sidebar || 'visible';
+      } else {
+          sidebar = 'hidden';
+          sidebar_toggle.checked = false;
+      }
+      if (sidebar === 'visible') {
+          sidebar_toggle.checked = true;
+      } else {
+          html.classList.remove('sidebar-visible');
+      }
+    </script><nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents"><mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox><noscript><iframe class="sidebar-iframe-outer" src="../toc.html"></iframe></noscript><div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle"><div class="sidebar-resize-indicator"></div></div></nav><div id="mdbook-page-wrapper" class="page-wrapper"><div class="page"><div id="mdbook-menu-bar-hover-placeholder"></div><div id="mdbook-menu-bar" class="menu-bar sticky"><div class="left-buttons"><label id="mdbook-sidebar-toggle" class="icon-button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar" for="mdbook-sidebar-toggle-anchor"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"></path></svg></span></label><button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"></path></svg></span></button><ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu"><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li><li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li></ul><button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"></path></svg></span></button></div><h1 class="menu-title">The Embedded Rust Book</h1><div class="right-buttons"><button id="language-toggle" class="icon-button" type="button" title="Change language" aria-label="Change language" aria-haspopup="true" aria-expanded="false" aria-controls="language-list"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M351.9 280l-190.9 0c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zM160.9 232l190.9 0C349 167.5 334.7 108.1 314.4 64.6 303 40.2 290.7 22.8 279.3 12.2 268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4zm-48 0C116.4 146.4 138.5 66.9 170.8 14.7 78.7 47.3 10.9 131.2 1.5 232l111.4 0zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3L1.5 280zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3l-111.4 0zm111.4-48C501.9 131.2 434.1 47.3 342 14.7 374.3 66.9 396.4 146.4 399.9 232l111.4 0z"></path></svg></span></button><ul id="language-list" class="theme-popup" aria-label="Languages" role="menu"><li role="none"><a role="menuitem" class="theme" id="lang-en" href="../../index.html">English</a></li><li role="none"><a role="menuitem" class="theme" id="lang-de" href="../../de/index.html">German</a></li><li role="none"><a role="menuitem" class="theme" id="lang-ja" href="../../ja/index.html">Japanese</a></li><li role="none"><a role="menuitem" class="theme" id="lang-uk" href="../../uk/index.html">Ukrainian</a></li><li role="none"><a role="menuitem" class="theme" id="lang-zh" href="../../zh/index.html">Chinese</a></li></ul><script>
+      let langToggle = document.getElementById("language-toggle");
+      let langList = document.getElementById("language-list");
+      langToggle.addEventListener("click", (event) => {
+          langList.style.display = langList.style.display == "block" ? "none" : "block";
+      });
+    </script><a href="../../book_de.pdf" title="PDF version of this book" aria-label="PDF"><span class="fa-svg" id="book-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M208 48L96 48c-8.8 0-16 7.2-16 16l0 384c0 8.8 7.2 16 16 16l80 0 0 48-80 0c-35.3 0-64-28.7-64-64L32 64C32 28.7 60.7 0 96 0L229.5 0c17 0 33.3 6.7 45.3 18.7L397.3 141.3c12 12 18.7 28.3 18.7 45.3l0 149.5-48 0 0-128-88 0c-39.8 0-72-32.2-72-72l0-88zM348.1 160L256 67.9 256 136c0 13.3 10.7 24 24 24l68.1 0zM240 380l32 0c33.1 0 60 26.9 60 60s-26.9 60-60 60l-12 0 0 28c0 11-9 20-20 20s-20-9-20-20l0-128c0-11 9-20 20-20zm32 80c11 0 20-9 20-20s-9-20-20-20l-12 0 0 40 12 0zm96-80l32 0c28.7 0 52 23.3 52 52l0 64c0 28.7-23.3 52-52 52l-32 0c-11 0-20-9-20-20l0-128c0-11 9-20 20-20zm32 128c6.6 0 12-5.4 12-12l0-64c0-6.6-5.4-12-12-12l-12 0 0 88 12 0zm76-108c0-11 9-20 20-20l48 0c11 0 20 9 20 20s-9 20-20 20l-28 0 0 24 28 0c11 0 20 9 20 20s-9 20-20 20l-28 0 0 44c0 11-9 20-20 20s-20-9-20-20l0-128z"></path></svg></span></a><a href="https://github.com/rust-embedded/book" title="Git repository" aria-label="Git repository"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg></span></a></div></div><div id="mdbook-search-wrapper" class="hidden"><form id="mdbook-searchbar-outer" class="searchbar-outer"><div class="search-wrapper"><input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header"><div class="spinner-wrapper"><span class="fa-svg" id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"></path></svg></span></div></div></form><div id="mdbook-searchresults-outer" class="searchresults-outer hidden"><div id="mdbook-searchresults-header" class="searchresults-header"></div><ul id="mdbook-searchresults"></ul></div></div><script>
+      document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+      document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+      Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+          link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+      });
+    </script><div id="mdbook-content" class="content"><main><h1 id="getting-started-qemu">QEMU</h1><p>QEMU (von englisch „Quick Emulator“) ist eine freie Virtualisierungssoftware, die die gesamte Hardware eines Computers emuliert und durch die dynamische Übersetzung der Prozessorinstruktionen des Gastprozessors (englisch guest) in Instruktionen für den Wirtprozessor (englisch host) eine sehr gute Ausführungsgeschwindigkeit erreicht.</p><p>URL: <a href="https://www.qemu.org/">https://www.qemu.org/</a></p><p>QEMU emuliert Systeme mit den folgenden Prozessorarchitekturen:</p><ul><li>68K,</li><li>Alpha,</li><li>ARM (32- und 64-Bit),</li><li>CHRIS,</li><li>HPPA,</li><li>LatticeMico32,</li><li>m68K bzw. Coldfire,</li><li>MicroBlaze,</li><li>MIPS,</li><li>Moxie,</li><li>Nios2,</li><li>OpenRISC,</li><li>PC</li><li>Power</li><li>PowerNV</li><li>PowerPC (32- und 64-Bit),</li><li>RISC-V,</li><li>S/390,</li><li>SH-4,</li><li>Sparc32/64,</li><li>TILE-Gx,</li><li>TriCore,</li><li>Unicore,</li><li>x86 (x86-32 und x86-64),</li><li>Xtensa</li></ul><p>(Stand 2026).</p><p>Wir beginnen mit der Entwicklung eines Programms für den <a href="http://www.ti.com/product/LM3S6965">LM3S6965</a>, einen ARM Cortex-M3-Mikrocontroller. Wir haben diesen als unser erstes Ziel ausgewählt, da er mit QEMU <a href="https://wiki.qemu.org/Documentation/Platforms/ARM#Supported_in_qemu-system-arm">emuliert werden kann</a>, sodass Sie sich in diesem Abschnitt nicht mit der Hardware beschäftigen müssen und wir uns auf die Werkzeuge und den Entwicklungsprozess konzentrieren können.</p><p><strong>WICHTIG</strong> In dieser Anleitung verwenden wir den Namen „app“ als Projektnamen. Wann immer Sie das Wort „app” sehen, sollten Sie es durch den Namen ersetzen, den Sie für Ihr Projekt gewählt haben. Alternativ können Sie Ihr Projekt auch „app“ nennen und so die Ersetzungen vermeiden.</p><h2>Erstellen eines nicht standardmäßigen Rust-Programms</h2><p>Wir werden die Projektvorlage <a href="https://github.com/rust-embedded/cortex-m-quickstart"><code>cortex-m-quickstart</code></a> verwenden, um daraus ein neues Projekt zu erstellen. Das erstellte Projekt enthält eine Minimalanwendung: einen guten Ausgangspunkt für eine neue Embedded-Rust-Anwendung. Darüber hinaus enthält das Projekt ein Verzeichnis <code>examples</code> mit mehreren separaten Anwendungen, die einige der wichtigsten Funktionen von Embedded Rust veranschaulichen.</p><h3>Verwendung von <code>cargo-generate</code></h3><p>Installieren Sie zunächst cargo-generate</p><pre><code data-lang="console">cargo install cargo-generate</code></pre><p>Erstellen Sie anschließend ein neues Projekt</p><pre><code data-lang="console">cargo generate --git https://github.com/knurling-rs/app-template</code></pre><pre><code data-lang="text"> Project Name: app
+ Creating project called `app`...
+ Done! New project created /tmp/app</code></pre><pre><code data-lang="console">cd app</code></pre><h3>Verwendung von <code>git</code></h3><p>Das Repository klonen</p><pre><code data-lang="console">git clone https://github.com/rust-embedded/cortex-m-quickstart app
+cd app</code></pre><p>Und fülle dann die Platzhalter in der Datei <code>Cargo.toml</code> aus</p><pre><code data-lang="toml">[<span style="color: #4b69c6">package</span>]
+<span style="color: #4b69c6">authors</span> = [<span style="color: #198810">"</span><span style="color: #198810">{{authors}}</span><span style="color: #198810">"</span>] <span style="color: #74747c">#</span><span style="color: #74747c"> "{{authors}}" -> "John Smith"</span>
+<span style="color: #4b69c6">edition</span> = <span style="color: #198810">"</span><span style="color: #198810">2018</span><span style="color: #198810">"</span>
+<span style="color: #4b69c6">name</span> = <span style="color: #198810">"</span><span style="color: #198810">{{project-name}}</span><span style="color: #198810">"</span> <span style="color: #74747c">#</span><span style="color: #74747c"> "{{project-name}}" -> "app"</span>
+<span style="color: #4b69c6">version</span> = <span style="color: #198810">"</span><span style="color: #198810">0.1.0</span><span style="color: #198810">"</span>
+
+<span style="color: #74747c">#</span><span style="color: #74747c"> ..</span>
+
+[[<span style="color: #4b69c6">bin</span>]]
+<span style="color: #4b69c6">name</span> = <span style="color: #198810">"</span><span style="color: #198810">{{project-name}}</span><span style="color: #198810">"</span> <span style="color: #74747c">#</span><span style="color: #74747c"> "{{project-name}}" -> "app"</span>
+<span style="color: #4b69c6">test</span> = <span style="color: #d73948">false</span>
+<span style="color: #4b69c6">bench</span> = <span style="color: #d73948">false</span></code></pre><h3>Keines von beiden verwenden</h3><p>Laden Sie den neuesten Snapshot der Vorlage <code>cortex-m-quickstart</code> herunter und entpacken Sie ihn.</p><pre><code data-lang="console">curl -LO https://github.com/rust-embedded/cortex-m-quickstart/archive/master.zip
+unzip master.zip
+mv cortex-m-quickstart-master app
+cd app</code></pre><p>Oder Sie navigieren zu <a href="https://github.com/rust-embedded/cortex-m-quickstart"><code>cortex-m-quickstart</code></a>, klicken auf die grüne Schaltfläche „Clone or download“ und anschließend auf „Download ZIP”.</p><p>Füllen Sie anschließend die Platzhalter in der Datei <code>Cargo.toml</code> aus, wie im zweiten Teil der Version „Verwendung von <code>git</code> beschrieben.</p><h2>Programmübersicht</h2><p>Der Einfachheit halber sind hier die wichtigsten Teile des Quellcodes in <code>src/main.rs</code> aufgeführt:</p><pre><code data-lang="rust"><span style="color: #301414">#!</span><span style="color: #301414">[</span><span style="color: #301414">no_std</span><span style="color: #301414">]</span>
+<span style="color: #301414">#!</span><span style="color: #301414">[</span><span style="color: #301414">no_main</span><span style="color: #301414">]</span>
+
+<span style="color: #d73948">use</span> panic_halt <span style="color: #d73948">as</span> <span style="color: #d73948">_</span>;
+
+<span style="color: #d73948">use</span> cortex_m_rt::entry;
+
+<span style="color: #301414">#</span><span style="color: #301414">[</span><span style="color: #301414">entry</span><span style="color: #301414">]</span>
+<span style="color: #d73948">fn</span> <span style="color: #4b69c6">main</span>() -> <span style="color: #d73948">!</span> {
+    <span style="color: #d73948">loop</span> {
+        <span style="color: #74747c">//</span><span style="color: #74747c"> Hier kommt Ihr Code hin.</span>
+    }
+}
+</code></pre><p>Dieses Programm unterscheidet sich ein wenig von einem typischen Rust-Programm, schauen wir es uns also einmal genauer an.</p><p><code>#![no_std]</code> gibt an, dass dieses Programm <em>nicht</em> mit der Standard-Crate <code>std</code> verknüpft wird. Stattdessen wird es mit deren Teilmenge verknüpft: der Crate <code>core</code>.</p><p><code>#![no_main]</code> gibt an, dass dieses Programm nicht die Standard-<code>main</code>- Schnittstelle verwendet, die die meisten Rust-Programme nutzen. Der Hauptgrund (kein Wortspiel beabsichtigt) für die Verwendung von <code>no_main</code> ist, dass die Nutzung der <code>main</code>-Schnittstelle im <code>no_std</code>-Kontext „Nightly“ erfordert.</p><p><code>use panic_halt as _;</code>. Diese Crate stellt einen <code>panic_handler</code> bereit, der das Verhalten des Programms im Panikfall definiert. Wir werden darauf im Kapitel <a href="panicking.html#getting-started-panicking">In Panik geraten</a> des Buches näher eingehen.</p><p><a href="https://docs.rs/cortex-m-rt-macros/latest/cortex_m_rt_macros/attr.entry.html"><code>#[entry]</code></a> ist ein Attribut des <a href="https://crates.io/crates/cortex-m-rt"><code>cortex-m-rt</code></a>-Crate, das dazu dient, den Einstiegspunkt des Programms zu kennzeichnen. Da wir nicht die Standard-Schnittstelle <code>main</code> verwenden, benötigen wir eine andere Möglichkeit, den Einstiegspunkt des Programms anzugeben, und das wäre <code>#[entry]</code>.</p><p><code>fn main() -> !</code>. Unser Programm wird der <em>einzige</em> Prozess sein, der auf der Zielhardware läuft, deshalb soll es nicht beendet werden! Wir verwenden eine <a href="https://doc.rust-lang.org/rust-by-example/fn/diverging.html">divergent function</a> (das <code>-> !</code> in der Funktionssignatur), um bereits zur Kompilierungszeit sicherzustellen, dass dies auch der Fall ist.</p><h2>Cross-Kompilierung</h2><p>Zunächst benötigen wir das Speicherlayout für den Ziel-Mikrocontroller, in unserem Fall den LM3S6965. Andernfalls schlägt die Verknüpfung des Images beim Build fehl. Erstellen Sie eine Datei mit dem Namen <code>memory.x</code> im Stammverzeichnis des Projekts und fügen Sie den folgenden Inhalt ein:</p><pre><code data-lang="text">MEMORY
+{
+  /* Hinweis: 1 K = 1 KiBi = 1024 bytes */
+  /* TODO Passen Sie diese Speicherbereiche an das Speicherlayout Ihres Geräts an. */
+  /* Diese Werte entsprechen dem LM3S6965, einem der wenigen Bausteine, die 
+  QEMU emulieren kann */
+  FLASH : ORIGIN = 0x00000000, LENGTH = 256K
+  RAM : ORIGIN = 0x20000000, LENGTH = 64K
+}
+
+/* Hier wird der Aufrufstapel zugewiesen. */
+/* Der Stapel ist vom Typ „vollständig absteigend“. */
+/* Möglicherweise möchten Sie diese Variable verwenden, um den Aufrufstapel und 
+  statische Variablen in verschiedenen Speicherbereichen zu lokalisieren. 
+  Nachstehend ist der Standardwert aufgeführt */
+/* _stack_start = ORIGIN(RAM) + LENGTH(RAM); */
+
+/* Mit diesem Symbol können Sie den Speicherort des .text-Abschnitts anpassen. */
+/* Wird dies weggelassen, wird der .text-Abschnitt direkt nach dem .vector_table-
+  Abschnitt platziert */
+/* Dies ist nur bei Mikrocontrollern erforderlich, die bestimmte 
+  Konfigurationsdaten direkthinter der Vektortabelle speichern */
+/* _stext = ORIGIN(FLASH) + 0x400; */
+
+/* Beispiel für die Zuweisung nicht initialisierter Variablen zu 
+benutzerdefinierten RAM-Speicherplätzen. */
+/* Dies setzt voraus, dass Sie oben einen Bereich namens „RAM2“ definiert und 
+in den Rust-Quelldateien das Attribut `#[link_section = „.ram2bss“]` zu den 
+Daten hinzugefügt haben, die Sie dort platzieren möchten. */
+/* Beachten Sie, dass der Bereich von der Laufzeitumgebung nicht auf Null 
+initialisiert wird! */
+/* SECTIONS {
+     .ram2bss (NOLOAD) : ALIGN(4) {
+       *(.ram2bss);
+       . = ALIGN(4);
+     } > RAM2
+   } INSERT AFTER .bss;
+*/
+</code></pre><p>Der nächste Schritt besteht darin, das Programm für die Cortex-M3-Architektur <em>cross</em> zu kompilieren. Das geht ganz einfach mit dem Befehl <code>cargo build --target $TRIPLE</code>, sofern Sie wissen, wie das Kompilierungsziel (<code>$TRIPLE</code>) lauten soll. Glücklicherweise finden Sie die Antwort in der Datei <code>.cargo/config.toml</code> in der Vorlage:</p><pre><code data-lang="console">tail -n6 .cargo/config.toml</code></pre><pre><code data-lang="toml">[<span style="color: #4b69c6">build</span>]
+<span style="color: #74747c">#</span><span style="color: #74747c"> Waehlen Sie EINES dieser Kompilierungsziele aus</span>
+<span style="color: #74747c">#</span><span style="color: #74747c"> target = "thumbv6m-none-eabi"    # Cortex-M0 and Cortex-M0+</span>
+<span style="color: #4b69c6">target</span> = <span style="color: #198810">"</span><span style="color: #198810">thumbv7m-none-eabi</span><span style="color: #198810">"</span>    <span style="color: #74747c">#</span><span style="color: #74747c"> Cortex-M3</span>
+<span style="color: #74747c">#</span><span style="color: #74747c"> target = "thumbv7em-none-eabi"   # Cortex-M4 and Cortex-M7 (no FPU)</span>
+<span style="color: #74747c">#</span><span style="color: #74747c"> target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)</span>
+</code></pre><p>Für die Cross-Kompilierung für die Cortex-M3-Architektur müssen wir <code>thumbv7m-none-eabi</code> verwenden. Dieses Ziel wird bei der Installation der Rust-Werkzeuge nicht automatisch installiert. Jetzt wäre ein guter Zeitpunkt, dieses Ziel zu den Werkzeugen hinzuzufügen, falls Sie dies noch nicht getan haben:</p><pre><code data-lang="console">rustup target add thumbv7m-none-eabi</code></pre><p>Da das Kompilierungsziel <code>thumbv7m-none-eabi</code> in Ihrer Datei <code>.cargo/config.toml</code> als Standard festgelegt wurde, haben die beiden folgenden Befehle dieselbe Wirkung:</p><pre><code data-lang="console">cargo build --target thumbv7m-none-eabi
+cargo build</code></pre><h2>Überprüfen</h2><p>Nun haben wir eine nicht-native ELF-Binärdatei in <code>target/thumbv7m-none-eabi/debug/app</code>. Wir können sie mit <code>cargo-binutils</code> untersuchen.</p><p>Mit <code>cargo-readobj</code> können wir die ELF-Header ausgeben, um zu überprüfen, ob es sich um eine ARM- Binärdatei handelt.</p><pre><code data-lang="console">cargo readobj --bin app -- --file-headers</code></pre><p>Bitte beachten Sie:</p><ul><li><code>--bin app</code> ist eine vereinfachte Schreibweise für die Überprüfung der Binärdatei unter <code>target/$TRIPLE/debug/app</code></li><li><code>--bin app</code> kompiliert die Binärdatei bei Bedarf auch (neu)</li></ul><pre><code data-lang="text">ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0x0
+  Type:                              EXEC (Executable file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x405
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          153204 (bytes into file)
+  Flags:                             0x5000200
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         2
+  Size of section headers:           40 (bytes)
+  Number of section headers:         19
+  Section header string table index: 18</code></pre><p>Mit <code>cargo-size</code> lässt sich die Größe der Linker-Abschnitte der Binärdatei anzeigen.</p><pre><code data-lang="console">cargo size --bin app --release -- -A</code></pre><p>Wir verwenden <code>--release</code>, um die optimierte Version zu überprüfen.</p><pre><code data-lang="text">app  :
+section             size        addr
+.vector_table       1024         0x0
+.text                 92       0x400
+.rodata                0       0x45c
+.data                  0  0x20000000
+.bss                   0  0x20000000
+.debug_str          2958         0x0
+.debug_loc            19         0x0
+.debug_abbrev        567         0x0
+.debug_info         4929         0x0
+.debug_ranges         40         0x0
+.debug_macinfo         1         0x0
+.debug_pubnames     2035         0x0
+.debug_pubtypes     1892         0x0
+.ARM.attributes       46         0x0
+.debug_frame         100         0x0
+.debug_line          867         0x0
+Total              14570</code></pre><blockquote><p>Eine Auffrischung zum Thema ELF-Linker-Abschnitte</p><ul><li><code>.text</code> enthält die Programmbefehle</li><li><code>.rodata</code> enthält konstante Werte wie Zeichenfolgen</li><li><code>.data</code> enthält statisch zugewiesene Variablen, deren Anfangswerte <em>nicht</em> Null</li><li>Die Datei <code>.bss</code> enthält außerdem statisch zugewiesene Variablen, deren Anfangswerte <em>sind</em> Null</li><li><code>.vector_table</code> ist ein <em>nicht</em> standardmäßiger Abschnitt, in dem wir den Vektor speichern (interrupt) table</li><li>Die Abschnitte <code>.ARM.attributes</code> und <code>.debug_*</code> enthalten Metadaten und werden <em>nicht</em> beim Flashen der Binärdatei auf das Zielgerät geladen werden.</li></ul></blockquote><p><strong>WICHTIG</strong>: ELF-Dateien enthalten Metadaten wie Debug-Informationen, sodass ihre <em>Größe auf der Festplatte</em> <em>nicht</em> genau den Speicherplatz widerspiegelt, den das Programm beanspruchen wird, wenn es auf ein Gerät geflasht wird. Verwenden Sie <em>immer</em> <code>cargo-size</code>, um zu überprüfen, wie groß eine Binärdatei tatsächlich ist.</p><p>Mit <code>cargo-objdump</code> lässt sich die Binärdatei disassemblieren.</p><pre><code data-lang="console">cargo objdump --bin app --release -- --disassemble --no-show-raw-insn --print-imm-hex</code></pre><blockquote><strong>HINWEIS</strong>: Falls der obige Befehl die Fehlermeldung „Unbekanntes Befehlszeilenargument“ ausgibt, siehe den folgenden Fehlerbericht: <a href="https://github.com/rust-embedded/book/issues/269">https://github.com/rust-embedded/book/issues/269</a></blockquote><blockquote><strong>HINWEIS</strong> Diese Ausgabe kann auf Ihrem System abweichen. Neuere Versionen von rustc, LLVM und Bibliotheken können unterschiedlichen Assemblercode erzeugen. Wir haben einige der Befehle gekürzt, um den Ausschnitt kurz zu halten.</blockquote><pre><code data-lang="text">app:  file format ELF32-arm-little
+
+Disassembly of section .text:
+main:
+     400: bl  #0x256
+     404: b #-0x4 &lt;main+0x4>
+
+Reset:
+     406: bl  #0x24e
+     40a: movw  r0, #0x0
+     &lt; .. truncated any more instructions .. >
+
+DefaultHandler_:
+     656: b #-0x4 &lt;DefaultHandler_>
+
+UsageFault:
+     657: strb  r7, [r4, #0x3]
+
+DefaultPreInit:
+     658: bx  lr
+
+__pre_init:
+     659: strb  r7, [r0, #0x1]
+
+__nop:
+     65a: bx  lr
+
+HardFaultTrampoline:
+     65c: mrs r0, msp
+     660: b #-0x2 &lt;HardFault_>
+
+HardFault_:
+     662: b #-0x4 &lt;HardFault_>
+
+HardFault:
+     663: &lt;unknown></code></pre><h2>Ausführen</h2><p>Als Nächstes schauen wir uns an, wie man ein eingebettetes Programm auf QEMU ausführt! Diesmal verwenden wir das <code>hello</code>-Beispiel, das tatsächlich etwas tut. Standardmäßig nutzt dieses Beispiel <code>[defmt]</code> und RTT, um Text auszugeben.</p><blockquote><strong>HINWEIS</strong> <code>defmt</code> ist eine Abhängigkeit eines Drittanbieters (d. h. keine Kernkomponente), die im Embedded-Rust-Ökosystem weit verbreitet ist.</blockquote><p>Um die von <code>defmt</code> im Host erzeugten Nachrichten lesen und entschlüsseln zu können, müssen wir die RTT-Transportausgabe auf „Semihosting“ umstellen. Bei Verwendung von echter Hardware erfordert dies eine Debug-Sitzung, bei Verwendung von QEMU funktioniert dies jedoch einfach so.</p><p>Stellen wir die Abhängigkeiten um:</p><pre><code data-lang="console">cargo remove defmt-rtt
+cargo add defmt-semihosting</code></pre><p>Öffnen Sie <code>src/lib.rs</code> und ersetzen Sie <code>use defmt_rtt as _;</code> durch <code>use defmt_semihosting as _;</code>.</p><p>Nun können wir das Beispiel kompilieren:</p><pre><code data-lang="console">cargo build --bin hello</code></pre><p>Die ausgegebene Binärdatei befindet sich unter <code>target/thumbv7m-none-eabi/debug/hello</code>.</p><p>Um diese Binärdatei unter QEMU auszuführen, reicht in der Regel der folgende Befehl aus:</p><pre><code data-lang="console">qemu-system-arm \
+  -cpu cortex-m3 \
+  -machine lm3s6965evb \
+  -nographic \
+  -semihosting-config enable=on,target=native \
+  -kernel target/thumbv7m-none-eabi/debug/hello</code></pre><p>Da wir in unserem Fall <code>defmt</code> verwenden, kann der Host die Ausgabe nicht dekodieren. Stattdessen benötigen wir ein Werkzeug von Ferrous Systems namens <a href="https://github.com/knurling-rs/defmt/tree/main/qemu-run/"><code>qemu-run</code></a>:</p><pre><code data-lang="console">git clone git@github.com:knurling-rs/defmt.git
+cd defmt/qemu-run/
+cargo run -- --machine lm3s6965evb ../qemu-rs/target/thumbv7m-none-eabi/debug/hello</code></pre><pre><code data-lang="text">Hello, world!</code></pre><p>Der Befehl sollte nach der Ausgabe des Textes erfolgreich beendet werden (Exit-Code = 0). Unter *nix können Sie dies mit dem folgenden Befehl überprüfen:</p><pre><code data-lang="console">echo $?</code></pre><pre><code data-lang="text">0</code></pre><p>Schauen wir uns diesen QEMU-Befehl einmal genauer an:</p><ul><li><code>qemu-system-arm</code>. Dies ist der QEMU-Emulator. Es gibt einige Varianten dieser QEMU-Binärdateien; diese hier führt eine vollständige <em>System</em>-Emulation von <em>ARM</em>-Rechnern durch, daher der Name.</li><li><code>-cpu cortex-m3</code>. Damit wird QEMU angewiesen, eine Cortex-M3-CPU zu emulieren. Durch die Angabe des CPU-Modells lassen sich einige Kompilierungsfehler erkennen: Wenn man beispielsweise ein Programm ausführt, das für den Cortex-M4F kompiliert wurde, der über eine Hardware-FPU verfügt, löst dies bei QEMU während der Ausführung einen Fehler aus.</li><li><code>-machine lm3s6965evb</code>. Damit wird QEMU angewiesen, das LM3S6965EVB zu emulieren, ein Evaluierungsboard, das einen LM3S6965-Mikrocontroller enthält.</li><li><code>-nographic</code>. Damit wird QEMU angewiesen, seine grafische Benutzeroberfläche nicht zu starten.</li><li><code>-semihosting-config (..)</code>. Damit wird QEMU angewiesen, Semihosting zu aktivieren. Semihosting ermöglicht es dem emulierten Gerät unter anderem, die Host-Ausgabe (stdout), die Host-Fehlerausgabe (stderr) und die Host-Eingabe (stdin) zu nutzen sowie Dateien auf dem Host zu erstellen.</li><li><code>-kernel $file</code>. Damit wird QEMU mitgeteilt, welche Binärdatei auf der emulierten Maschine geladen und ausgeführt werden soll.</li></ul><p>Das Eintippen dieses langen QEMU-Befehls ist viel zu mühsam! Wir können einen benutzerdefinierten Runner einrichten, um den Vorgang zu vereinfachen. In der Datei <code>.cargo/config.toml</code> gibt es einen auskommentierten Runner, der QEMU aufruft; entfernen wir die Auskommentierung:</p><pre><code data-lang="console">head -n3 .cargo/config.toml</code></pre><pre><code data-lang="toml">[<span style="color: #4b69c6">target</span>.<span style="color: #4b69c6">thumbv7m-none-eabi</span>]
+<span style="color: #74747c">#</span><span style="color: #74747c"> Entferne den Kommentar hier, damit `cargo run` Programme auf QEMU ausfuehrt</span>
+<span style="color: #4b69c6">runner</span> = <span style="color: #198810">"</span><span style="color: #198810">qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel</span><span style="color: #198810">"</span>
+</code></pre><p>Dieser Runner gilt nur für das Ziel <code>thumbv7m-none-eabi</code>, das unser Standard-Kompilierungsziel ist. Nun kompiliert <code>cargo run</code> das Programm und führt es auf QEMU aus:</p><pre><code data-lang="console">cargo ru(
+  level: 2 + whole
+)--release</code></pre><pre><code data-lang="text">   Compiling app v0.1.0 (file:///tmp/app)
+    Finished release [optimized + debuginfo] target(s) in 0.26s
+     Running `qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel target/thumbv7m-none-eabi/release/examples/hello`
+Hello, world!</code></pre><h2>Fehlerbehebung (Debugging)</h2><p>Das Debuggen ist für die Embedded-Entwicklung von entscheidender Bedeutung. Schauen wir uns einmal an, wie es funktioniert.</p><p>Das Debuggen eines Embedded-Geräts erfolgt <em>remote</em>, da das Programm, das wir debuggen möchten, nicht auf dem Rechner läuft, auf dem das Debugger-Programm (GDB oder LLDB) ausgeführt wird.</p><p>Beim Remote-Debugging sind ein Client und ein Server beteiligt. In einer QEMU-Umgebung ist der Client ein GDB- (oder LLDB-)Prozess und der Server der QEMU-Prozess, auf dem auch das eingebettete Programm läuft.</p><p>In diesem Abschnitt verwenden wir das bereits kompilierte Beispiel <code>hello</code>.</p><p>Der erste Schritt beim Debuggen besteht darin, QEMU im Debugging-Modus zu starten:</p><pre><code data-lang="console">qemu-system-arm \
+  -cpu cortex-m3 \
+  -machine lm3s6965evb \
+  -nographic \
+  -semihosting-config enable=on,target=native \
+  -gdb tcp::3333 \
+  -S \
+  -kernel target/thumbv7m-none-eabi/debug/examples/hello</code></pre><p>Dieser Befehl gibt nichts auf der Konsole aus und blockiert das Terminal. Wir haben diesmal zwei zusätzliche Flags übergeben:</p><ul><li><code>-gdb tcp::3333</code>. Damit wird QEMU angewiesen, auf eine GDB-Verbindung über den TCP-Port 3333 zu warten.</li><li><code>-S</code>. Damit wird QEMU angewiesen, die Maschine beim Start einzufrieren. Ohne diese Option hätte das Programm das Ende der Funktion <code>main</code> erreicht, bevor wir die Gelegenheit gehabt hätten, den Debugger zu starten!</li></ul><p>Als Nächstes starten wir GDB in einem anderen Terminal und weisen es an, die Debug-Symbole des Beispiels zu laden:</p><pre><code data-lang="console">gdb-multiarch -q target/thumbv7m-none-eabi/debug/examples/hello</code></pre><p><strong>HINWEIS</strong>: Möglicherweise benötigen Sie anstelle von <code>gdb-multiarch</code> eine andere Version von gdb, je nachdem, welche Sie im Kapitel zur Installation installiert haben. Dies könnte auch <code>arm-none-eabi-gdb</code> oder einfach nur <code>gdb</code> sein.</p><p>Anschließend stellen wir innerhalb der GDB-Shell eine Verbindung zu QEMU her, das auf dem TCP-Port 3333 auf eine Verbindung wartet.</p><pre><code data-lang="console">target remote :3333</code></pre><pre><code data-lang="text">Remote debugging using :3333
+Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473
+473     pub unsafe extern "C" fn Reset() -> ! {</code></pre><p>Sie werden feststellen, dass der Prozess angehalten wurde und der Programmzähler auf eine Funktion namens <code>Reset</code> zeigt. Das ist der Reset-Handler: das, was Cortex-M-Kerne beim Booten ausführen.</p><blockquote><p>Beachten Sie, dass gdb in manchen Konfigurationen anstelle der oben gezeigten Zeile <code>Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473</code> möglicherweise Warnungen wie die folgenden ausgibt:</p><p><code>core::num::bignum::Big32x40::mul_small () at src/libcore/num/bignum.rs:254</code> <code>src/libcore/num/bignum.rs: No such file or directory.</code></p><p>Das ist ein bekannter Fehler. Sie können diese Warnungen getrost ignorieren, da Sie sich höchstwahrscheinlich bei <code>Reset()</code> befinden.</p></blockquote><p>Dieser Reset-Handler ruft schließlich unsere Hauptfunktion auf. Lassen Sie uns den gesamten Weg dorthin mithilfe eines Haltepunkts und des Befehls <code>continue</code> überspringen. Um den Haltepunkt zu setzen, schauen wir uns zunächst mit dem Befehl <code>list</code> an, an welcher Stelle in unserem Code wir anhalten möchten.</p><pre><code data-lang="console">list main</code></pre><p>Dadurch wird der Quellcode aus der Datei „examples/hello.rs“ angezeigt.</p><pre><code data-lang="text">6       use panic_halt as _;
+7
+8       use cortex_m_rt::entry;
+9       use cortex_m_semihosting::{debug, hprintln};
+10
+11      #[entry]
+12      fn main() -> ! {
+13          hprintln!("Hello, world!").unwrap();
+14
+15          // exit QEMU</code></pre><p>Wir möchten einen Haltepunkt direkt vor „Hello, world!“ setzen, das sich in Zeile 13 befindet. Dazu verwenden wir den Befehl <code>break</code>:</p><pre><code data-lang="console">break 13</code></pre><p>Wir können gdb nun mit dem Befehl <code>continue</code> anweisen, bis zu unserer Hauptfunktion weiterzulaufen:</p><pre><code data-lang="console">continue</code></pre><pre><code data-lang="text">Continuing.
+
+Breakpoint 1, hello::__cortex_m_rt_main () at examples\hello.rs:13
+13          hprintln!("Hello, world!").unwrap();</code></pre><p>Wir sind nun fast bei dem Code angelangt, der „Hello, world!“ ausgibt. Machen wir weiter mit dem Befehl <code>next</code>.</p><pre><code data-lang="console">next</code></pre><pre><code data-lang="text">16          debug::exit(debug::EXIT_SUCCESS);</code></pre><p>An dieser Stelle sollte auf dem Terminal, auf dem <code>qemu-system-arm</code> läuft, „Hello, world!“ angezeigt werden.</p><pre><code data-lang="text">$ qemu-system-arm (..)
+Hello, world!</code></pre><p>Ein erneuter Aufruf von <code>next</code> beendet den QEMU-Prozess.</p><pre><code data-lang="console">next</code></pre><pre><code data-lang="text">[Inferior 1 (Remote target) exited normally]</code></pre><p>Sie können die GDB-Sitzung nun beenden.</p><pre><code data-lang="console">quit</code></pre></main><nav class="nav-wrapper" aria-label="Page navigation"><a rel="prev" href="../start/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg></span></a><a rel="next" href="../start/hardware.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path></svg></span></a></nav></div></div><nav class="nav-wide-wrapper" aria-label="Page navigation"><a rel="prev" href="../start/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg></span></a><a rel="next" href="../start/hardware.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path></svg></span></a></nav></div><template id="fa-eye"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"></path></svg></span></template><template id="fa-eye-slash"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"></path></svg></span></template><template id="fa-copy"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"></path></svg></span></template><template id="fa-play"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path></svg></span></template><template id="fa-clock-rotate-left"><span class="fa-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"></path></svg></span></template><script>window.playground_copyable = true;</script><script src="../../elasticlunr-ef4e11c1.min.js"></script><script src="../../mark-09e88c2c.min.js"></script><script src="../../searcher-09f2665d.js"></script><script src="../../clipboard-1626706a.min.js"></script><script src="../../highlight-abc7f01d.js"></script><script src="../../book-609e4cb8.js"></script></div></body></html>
