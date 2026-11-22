@@ -2,6 +2,7 @@
 
 #h1((en: [Naming],
   de: [Benennung],
+  ru: [Именование],
   zh: [命名],
 ), offset: whole*2)
 <hal-naming>
@@ -9,6 +10,7 @@
 = #tr((
   en: [The crate is named appropriately],
   de: [Das Crate trägt einen passenden Namen],
+  ru: [Крейт назван надлежащим образом],
   zh: [crate要被恰当地命名],
 )) (C-CRATE-NAME)
 <c-crate-name>
@@ -25,6 +27,13 @@ de: [
   die sie unterstützen sollen. Ihr Name sollte auf `-hal` enden, um sie
   von Registerzugriffs-Crates zu unterscheiden. Der Name sollte keine
   Unterstriche enthalten (stattdessen sind Bindestriche zu verwenden).
+],
+ru: [
+  Крейты HAL должны называться по имени микросхемы или семейства
+  микросхем, которые они призваны поддерживать. Их название должно
+  заканчиваться на `-hal`, чтобы отличать их от крейтов доступа к
+  регистрам. Название не должно содержать символов подчёркивания (вместо
+  них используйте дефисы).
 ],
 zh: [
   HAL crates应该在目标支持的芯片或者芯片系列之后被命名。它们的名字应该以`-hal`结尾，为了将它们与PAC区分开来。名字不应该包含下划线(请改用破折号)。

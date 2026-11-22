@@ -2,6 +2,7 @@
 
 #h1((en: [Recommendations for GPIO Interfaces],
   de: [Empfehlungen für GPIO-Schnittstellen],
+  ru: [Рекомендации для интерфейсов GPIO],
   zh: [关于GPIO接口的建议],
 ), offset: whole*2)
 <hal-gpio>
@@ -9,6 +10,7 @@
 = #tr((
   en: [Pin types are zero-sized by default],
   de: [Pin-Typen haben standardmäßig die Größe Null],
+  ru: [Типы выводов по умолчанию имеют нулевой размер],
   zh: [Pin类型默认是零大小的],
 )) (C-ZST-PIN)
 <c-zst-pin>
@@ -25,6 +27,12 @@ de: [
   Größe Null bereitstellen. Dies führt zu einer kostenlosen
   GPIO-Abstraktion, wenn alle Pinbelegungen statisch bekannt sind.
 ],
+ru: [
+  Интерфейсы GPIO, предоставляемые HAL, должны предоставлять выделенные
+  типы нулевого размера для каждого вывода на каждом интерфейсе или порту.
+  Это даёт абстракцию GPIO с нулевой стоимостью, когда все назначения
+  выводов известны статически.
+],
 zh: [
   由HAL暴露的GPIO接口应该为所有接口或者端口上的每一个管脚提供一个专用的零大小类型，从而当所有的管脚分配静态已知时，提供一个零开销抽象。
 ]))
@@ -38,6 +46,10 @@ de: [
   Jede GPIO-Schnittstelle oder jeder Port sollte eine `split`-Methode
   implementieren, die eine Struktur mit allen Pins zurückgibt.
 ],
+ru: [
+  Каждый интерфейс или порт GPIO должен реализовывать метод `split`,
+  который возвращает структуру со всеми выводами.
+],
 zh: [
   每个GPIO接口或者端口应该实现一个`split`方法，它返回一个拥有所有管脚的结构体。
 ]))
@@ -48,6 +60,9 @@ en: [
 ],
 de: [
   Beispiel:
+],
+ru: [
+  Пример:
 ]))
 
 ```rust
@@ -77,6 +92,7 @@ pub struct PortAPins {
 = #tr((
   en: [Pin types provide methods to erase pin and port],
   de: [Pin-Typen stellen Methoden zum Löschen von Pins und Ports bereit],
+  ru: [Типы выводов предоставляют методы стирания вывода и порта],
   zh: [管脚类型提供方法去擦除管脚和端口],
 )) (C-ERASED-PIN)
 <c-erased-pin>
@@ -91,6 +107,11 @@ de: [
   die ihre Eigenschaften von der Kompilierzeit in die Laufzeit verlagern
   und so mehr Flexibilität in Anwendungen ermöglichen.
 ],
+ru: [
+  Выводы должны предоставлять методы стирания типа, которые переносят их
+  свойства из времени компиляции во время выполнения и дают больше
+  гибкости в приложениях.
+],
 zh: [
   从编译时到运行时，管脚都应该提供可以改变属性的类型擦出方法，允许在应用中有更多的灵活性。
 ]))
@@ -102,6 +123,9 @@ en: [
 de: [
   Beispiel:
 ],
+ru: [
+  Пример:
+],
 zh: [
   案例:
 ]))
@@ -110,6 +134,7 @@ zh: [
 "/// " + ts((
     en: "Port A, pin 0.",
     de: "Port A, pin 0.",
+    ru: "Порт A, вывод 0.",
     zh: "端口 A, 管脚 0。",
   )) + "
 pub struct PA0;
@@ -123,11 +148,13 @@ impl PA0 {
 /// " + ts((
     en: "A pin on port A.",
     de: "A pin on port A.",
+    ru: "Вывод порта A.",
     zh: "端口A上的A管脚。",
   )) + "
 pub struct PA {
     /// " + ts((
         en: "The pin number.",
+        ru: "Номер вывода.",
         zh: "管脚号。",
       )) + "
     pin: u8,
@@ -149,6 +176,7 @@ pub struct Pin {
         en: "(these fields can be packed to reduce the memory footprint)",
         de: "(Diese Felder koennen gepackt werden, um den Speicherbedarf zu 
     // verringern.)",
+        ru: "(эти поля можно упаковать, чтобы уменьшить объём памяти)",
         zh: "(这些字段)
     // (这些字段可以打包以减少内存占用)",
       )) + "
@@ -165,6 +193,7 @@ enum Port {
 = #tr((
   en: [Pin state should be encoded as type parameters],
   de: [Der Pin-Zustand sollte als Typparameter kodiert werden],
+  ru: [Состояние вывода должно кодироваться как параметры типа],
   zh: [管脚状态应该被编码成类型参数],
 )) (C-PIN-STATE)
 <c-pin-state>
@@ -181,6 +210,12 @@ de: [
   sollte im Typsystem abgebildet werden, um eine Verwendung der Pins in
   einem falschen Zustand zu verhindern.
 ],
+ru: [
+  Выводы могут быть настроены как входы или выходы с разными
+  характеристиками в зависимости от микросхемы или семейства. Это
+  состояние должно кодироваться в системе типов, чтобы предотвратить
+  использование выводов в неправильных состояниях.
+],
 zh: [
   取决于芯片或者芯片系列，管脚可能被配置为具有不同特性的输出或者输入。这个状态应该编码进类型系统中以避免在错误的状态中使用管脚。
 ]))
@@ -193,6 +228,11 @@ en: [
 de: [
   Auch zusätzliche, chip-spezifische Zustände (z. B. die Treiberstärke)
   lassen sich auf diese Weise mittels zusätzlicher Typparameter kodieren.
+],
+ru: [
+  Дополнительное, специфичное для микросхемы состояние (например,
+  нагрузочная способность выхода) также можно кодировать таким образом,
+  используя дополнительные параметры типа.
 ],
 zh: [
   另外，也可以用这个方法使用额外的类型参数编码芯片特定的状态(eg.
@@ -208,6 +248,10 @@ de: [
   Methoden zur Änderung des Pin-Zustands sollten als `into_input` und
   `into_output` bereitgestellt werden.
 ],
+ru: [
+  Методы изменения состояния вывода должны предоставляться в виде методов
+  `into_input` и `into_output`.
+],
 zh: [
   用来改变管脚状态的方法应该被实现成`into_input`和`into_output`方法。
 ]))
@@ -222,6 +266,11 @@ de: [
   werden, die einen Pin vorübergehend in einen anderen Zustand versetzen,
   ohne ihn zu verschieben (d.~h. ohne Eigentumsübergang).
 ],
+ru: [
+  Кроме того, должны предоставляться методы `with_{input,output}_state`,
+  которые временно переконфигурируют вывод в другое состояние, не
+  перемещая его.
+],
 zh: [
   另外，应该提供`with_{input,output}_state`方法，在一个不同的状态中临时配置一个管脚而不是移动它。
 ]))
@@ -235,6 +284,11 @@ de: [
   Für jeden Pin-Typ sollten die folgenden Methoden bereitgestellt werden
   (das heißt, sowohl „erased" als auch „non-erased" Pin-Typen müssen
   dieselbe API bieten):
+],
+ru: [
+  Для каждого типа вывода должны предоставляться следующие методы (то есть
+  и стёртые, и нестёртые типы выводов должны предоставлять один и тот же
+  API):
 ],
 zh: [
   应该为每个的管脚类型提供下列的方法(也就是说，已擦除和未擦除的管脚类型应该提供一样的API):
@@ -268,6 +322,12 @@ de: [
   können HAL-spezifische Methoden bereitstellen, die für die
   Implementierung der Pin-Zustands-API erforderlich sind.
 ],
+ru: [
+  Состояние вывода должно ограничиваться запечатанными трейтами (sealed
+  traits). Пользователям HAL не должно требоваться добавлять собственные
+  состояния. Трейты могут предоставлять специфичные для HAL методы,
+  необходимые для реализации API состояний вывода.
+],
 zh: [
   管脚状态应该用sealed
   traits来绑定。HAL的用户不必添加他们自己的状态。这个traits能提供HAL特定的方法，实现管脚状态API需要这些方法。
@@ -279,6 +339,9 @@ en: [
 ],
 de: [
   Beispiel:
+],
+ru: [
+  Пример:
 ],
 zh: [
   案例:
@@ -362,6 +425,7 @@ impl<S: PinState> PA1<S> {
 // " + ts((
     en: "Same for `PA` and `Pin`, and other pin types.",
     de: "Dasselbe gilt fuer `PA` und `Pin` sowie andere Pin-Typen.",
+    ru: "То же самое для `PA` и `Pin`, а также других типов выводов.",
     zh: "对于`PA`和`Pin`一样的，对于其它管脚类型来说也是。",
   )) + "
 ")

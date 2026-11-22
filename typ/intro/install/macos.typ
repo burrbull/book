@@ -18,6 +18,9 @@ ja: [
   #todoupd("ja")
   全てのツールは、#brew_ln;を使ってインストールできます。
 ],
+ru: [
+  Все инструменты можно установить с помощью #brew_ln или #ports_ln:
+],
 zh: [
   所有的工具都可以使用#brew_ln;或者#ports_ln;来安装：
 ]))
@@ -25,6 +28,7 @@ zh: [
 = #tr((
   en: [Install tools with #brew_ln],
   de: [Werkzeuge mit #brew_ln installieren],
+  ru: [Установка инструментов через #brew_ln],
   zh: [使用#brew_ln;安装工具],
 ))
 
@@ -49,6 +53,10 @@ de: [
   *HINWEIS* Falls OpenOCD abstürzt, müssen Sie möglicherweise die
   neueste Version installieren; verwenden Sie dazu:
 ],
+ru: [
+  *ПРИМЕЧАНИЕ* Если OpenOCD аварийно завершается, может
+  понадобиться установить последнюю версию командой:
+],
 zh: [
   *注意* 如果OpenOCD崩溃了，你可能需要用以下方法安装最新版本:
 ]))
@@ -61,6 +69,7 @@ $ brew install --HEAD openocd
 = #tr((
   en: [Install tools with #ports_ln],
   de: [Werkzeuge mit #ports_ln installieren],
+  ru: [Установка инструментов через #ports_ln],
   zh: [使用#ports_ln;安装工具],
 ))
 
@@ -84,6 +93,9 @@ de: [
 ],
 ja: [
   以上です！#link(<verify-installation>)[次のセクション]に進んで下さい。
+],
+ru: [
+  Всё! Перейдите к #link(<verify-installation>)[следующему разделу].
 ],
 zh: [
   这是全部内容，请转入#link(<verify-installation>)[下个章节]．

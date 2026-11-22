@@ -3,6 +3,7 @@
 #h1((en: [Interoperability],
   de: [Interoperabilität],
   ja: [相互運用性],
+  ru: [Взаимодействие],
   zh: [互操性],
 ))
 
@@ -24,6 +25,11 @@ ja: [
   そこで、2つの専用モジュールが`stdlib`内にあります。
   #ln_ffi;と呼ばれるものです。
 ],
+ru: [
+  Взаимодействие между кодом на Rust и C всегда зависит от преобразования
+  данных между этими двумя языками. Для этой цели в `stdlib` есть
+  специальный модуль #ln_ffi.
+],
 zh: [
   Rust和C代码之间的互操性始终依赖于数据在两个语言间的转换．为了互操性，在`stdlib`中有一个专用的模块，叫作 #ln_ffi.
 ]))
@@ -41,6 +47,12 @@ de: [
   Konvertierung komplexerer Typen wie Strings, indem es sowohl `&str` als
   auch `String` auf C-Typen abbildet, die sich einfacher und sicherer
   handhaben lassen.
+],
+ru: [
+  `std::ffi` предоставляет определения типов для примитивных типов C,
+  таких как `char`, `int` и `long`. Он также содержит утилиты для
+  преобразования более сложных типов, например строк, отображая `&str` и
+  `String` на типы C, с которыми проще и безопаснее работать.
 ],
 zh: [
   `std::ffi`提供了与C基础类型对应的类型定义，比如`char`，
@@ -63,6 +75,12 @@ de: [
   Speicherreservierungen erforderlich sind oder nicht.
   Auch die Crates #ln_cty und #ln_cstr bieten vergleichbare Funktionalitäten an.
 ],
+ru: [
+  Начиная с Rust 1.30 функциональность `std::ffi` доступна либо в
+  `core::ffi`, либо в `alloc::ffi`, в зависимости от того, связано ли это
+  с выделением памяти. Крейт #ln_cty и крейт #ln_cstr также
+  предлагают похожие возможности.
+],
 zh: [
   从Rust
   1.30以来，`std::ffi`的功能也出现在`core::ffi`或者`alloc::ffi`中，取决于是否涉及到内存分配．
@@ -79,18 +97,21 @@ zh: [
         en: [Rust type],
         de: [Rusttyp],
         ja: [Rustの型],
+        ru: [Тип Rust],
         zh: [Rust类型],
       )),
       tr((
         en: [Intermediate],
         de: [Dazwischenliegend],
         ja: [中間表現],
+        ru: [Промежуточный тип],
         zh: [间接],
       )),
       tr((
         en: [C type],
         de: [C-Typ],
         ja: [Cの型],
+        ru: [Тип C],
         zh: [C类型],
       )),
     ),
@@ -101,6 +122,7 @@ zh: [
       en: [`u32` or `u64`],
       de: [`u32` or `u64`],
       ja: [`u32` or `u64`],
+      ru: [`u32` или `u64`],
     )),
     )),
     `c_uint`, `unsigned int`,
@@ -108,6 +130,7 @@ zh: [
       en: [etc],
       de: [usw.],
       ja: [他],
+      ru: [и т. д.],
     )),
     […], […],
   )
@@ -127,6 +150,12 @@ de: [
   Code auf Plattformen kompilieren, auf denen `unsigned int` 32 Bit lang
   ist.
 ],
+ru: [
+  Значение примитивного типа C можно использовать как соответствующий тип
+  Rust и наоборот, поскольку первый является просто псевдонимом типа
+  второго. Например, следующий код скомпилируется на платформах, где
+  `unsigned int` имеет 32 бита.
+],
 zh: [
   一个C基本类型的值可以被用来作为相关的Rust类型的值，反之亦然，因此前者仅仅是后者的一个类型伪名．
   比如，下列的代码可以在`unsigned int`是32位宽的平台上编译．
@@ -143,6 +172,7 @@ fn foo(num: u32) {
   en: [Interoperability with other build systems],
   de: [Interoperabilität mit anderen Build-Systemen],
   ja: [他のビルドシステムとの相互運用性],
+  ru: [Взаимодействие с другими системами сборки],
   zh: [与其它编译系统的互用性],
 ))
 
@@ -158,6 +188,11 @@ de: [
 ],
 ja: [
   組込みプロジェクトにRustを組み込むための共通の要件は、Cargoとmakeやcmakeのような既存のビルドシステムとを組み合わせることです。
+],
+ru: [
+  Распространённая задача при включении Rust в ваш встраиваемый проект ---
+  объединить Cargo с существующей системой сборки, например make или
+  cmake.
 ],
 zh: [
   在嵌入式项目中引入Rust的一个常见需求是，把Cargo结合进你现存的编译系统中，比如make或者cmake。
@@ -176,6 +211,10 @@ de: [
 ja: [
   #link(url_issue61)[issue \#61]でこれに関する事例とユースケースを集めています。
 ],
+ru: [
+  Примеры и варианты использования для этого мы собираем в нашем трекере
+  задач в #link(url_issue61)[issue \#61].
+],
 zh: [
   在#link(url_issue61)[issue \#61]的issue
   tracker上，我们正在为这个需求收集例子和用例。
@@ -185,6 +224,7 @@ zh: [
   en: [Interoperability with RTOSs],
   de: [Interoperabilität mit RTOS],
   ja: [RTOSとの相互運用性],
+  ru: [Взаимодействие с RTOS],
   zh: [与RTOSs的互操性],
 ))
 
@@ -203,6 +243,11 @@ ja: [
   RustをFreeRTOSやChibiOSといったRTOSに統合することは、まだ作業を進めている状態です。
   特に、RTOSの関数をRustから呼び出すことはトリッキーです。
 ],
+ru: [
+  Интеграция Rust с RTOS, такой как FreeRTOS или ChibiOS, всё ещё
+  находится в разработке; в особенности вызов функций RTOS из Rust может
+  быть непростым.
+],
 zh: [
   将Rust和一个RTOS集成在一起，比如FreeRTOS或者ChibiOS仍然在进行中;
   尤其是从Rust调用RTOS函数可能很棘手。
@@ -219,6 +264,11 @@ de: [
   Derzeit unterstützen die folgenden Projekte öffentlich die
   Interoperabilität zwischen Rust und RTOS:
   - #link(url_zephyr)[Zephyr-Projekt]
+],
+ru: [
+  На данный момент следующие проекты публично поддерживают взаимодействие
+  Rust и RTOS:
+  - #link(url_zephyr)[Zephyr Project]
 ]))
 
 #let url_issue62 = "https://github.com/rust-embedded/book/issues/62"
@@ -234,6 +284,10 @@ de: [
 ],
 ja: [
   #link(url_issue62)[issue \#62]でこれに関する事例とユースケースを集めています。
+],
+ru: [
+  Примеры и варианты использования для этого мы собираем в нашем трекере
+  задач в #link(url_issue62)[issue \#62].
 ],
 zh: [
   在#link(url_issue62)[issue \#62]的issue

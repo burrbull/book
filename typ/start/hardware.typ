@@ -3,6 +3,7 @@
 #h1((en: [Hardware],
   de: [Hardware],
   ja: [ハードウェア],
+  ru: [Оборудование],
   zh: [硬件],
 ))
 <getting-started-hardware>
@@ -22,6 +23,11 @@ ja: [
   ここまでで、ツールと開発プロセスにある程度慣れたはずです。このセクションでは、実際のハードウェアに切り替えます。
   開発プロセスは、ほとんど同じままです。飛び込みましょう。
 ],
+ru: [
+  К этому моменту вы должны уже немного освоить инструменты и процесс
+  разработки. В этом разделе мы перейдём на настоящее оборудование;
+  процесс в основном останется прежним. Давайте начнём.
+],
 zh: [
   现在你应该有点熟悉工具和开发过程了。在这部分我们将切换到真正的硬件上；步骤非常相似。让我们深入下去。
 ]))
@@ -30,6 +36,7 @@ zh: [
   en: [Know your hardware],
   de: [Kennen Sie Ihre Hardware],
   ja: [ハードウェアを知る],
+  ru: [Знакомство с вашим оборудованием],
   zh: [认识你的硬件]
 ))
 
@@ -65,6 +72,17 @@ ja: [
   - フラッシュメモリとRAMは、アドレス空間のどこにマッピングされていますか？
     例えば、RAMは、通常`0x2000_0000`番地に位置します。
 ],
+ru: [
+  Прежде чем начать, нужно выяснить некоторые характеристики целевого
+  устройства, так как они понадобятся для настройки проекта:
+  - Ядро ARM, например Cortex-M3.
+  - Есть ли в ядре ARM FPU? Ядра Cortex-M4#[*F*] и Cortex-M7#[*F*]
+    его содержат.
+  - Сколько флеш-памяти и ОЗУ есть в целевом устройстве? Например, 256 КиБ
+    флеш-памяти и 32 КиБ ОЗУ.
+  - Где в адресном пространстве отображены флеш-память и ОЗУ? Например,
+    ОЗУ обычно расположено по адресу `0x2000_0000`.
+],
 zh: [
   在我们开始之前，你需要了解下你的目标设备的一些特性，因为你将用它们来配置项目:
   - ARM 内核。比如 Cortex-M3 。
@@ -84,6 +102,10 @@ de: [
 ],
 ja: [
   これらの情報は、デバイスのデータシートかリファレンスマニュアルに掲載されています。
+],
+ru: [
+  Эту информацию можно найти в техническом описании (data sheet) или
+  справочном руководстве (reference manual) вашего устройства.
 ],
 zh: [
   你可以在你的设备的数据手册和参考手册上找到这些信息。
@@ -115,6 +137,15 @@ ja: [
   - 0x0800_0000番地に配置された256KiBのフラッシュメモリ
   - 0x2000_0000番地に配置された40KiBのRAM。（別のRAM領域もありますが、説明の簡単化のため、取り扱
 ],
+ru: [
+  В этом разделе мы будем использовать наше эталонное оборудование ---
+  STM32F3DISCOVERY. Эта плата содержит микроконтроллер STM32F303VCT6. Он
+  имеет:
+  - ядро Cortex-M4F, которое включает FPU одинарной точности;
+  - 256 КиБ флеш-памяти по адресу `0x0800_0000`;
+  - 40 КиБ ОЗУ по адресу `0x2000_0000`. (Есть ещё одна область ОЗУ, но для
+    простоты мы её учитывать не будем.)
+],
 zh: [
   这部分，要使用我们的参考硬件，STM32F3DISCOVERY。这个板子包含一个STM32F303VCT6微控制器。这个微控制器拥有:
   - 一个Cortex-M4F核心，它包含一个单精度FPU。
@@ -126,6 +157,7 @@ zh: [
   en: [Configuring],
   de: [Konfigurieren],
   ja: [設定],
+  ru: [Настройка],
   zh: [配置],
 ))
 
@@ -141,6 +173,11 @@ de: [
 ja: [
   テンプレートの新しいインスタンスを使って、スクラッチから書いていきましょう。
   `cargo-generate`を使用しない方法については、#link(<getting-started-qemu>)[前セクションのQEMU]を参照して下さい。
+],
+ru: [
+  Начнём с нуля, с нового экземпляра шаблона. См.
+  #link(<getting-started-qemu>)[предыдущий раздел про QEMU] --- там есть напоминание о
+  том, как сделать это без `cargo-generate`.
 ],
 zh: [
   我们将使用一个新的模板实例从零开始。对于新手，请参考#link(<getting-started-qemu>)[先前的QEMU]章节，了解如何在没有`cargo-generate`的情况下完成配置。
@@ -166,6 +203,10 @@ de: [
 ja: [
   第一ステップは、`.cargo/config`にデフォルトコンパイルターゲットを設定することです。
 ],
+ru: [
+  Первый шаг --- задать целевую платформу по умолчанию в
+  `.cargo/config.toml`.
+],
 zh: [
   第一步是在`.cargo/config.toml`中设置一个默认编译目标。
 ]))
@@ -176,18 +217,28 @@ tail -n5 .cargo/config.toml
 
 #let _and_ = ts((
   en: " and ",
-  ja: "および"
+  ja: "および",
+  ru: " и ",
 ), default: " and ")
+#let _no_ = ts((
+  en: "no",
+  ru: "без",
+), default: "no")
+#let _with_ = ts((
+  en: "with",
+  ru: "с",
+), default: "with")
 #raw(block: true, lang: "toml",
 "# " + ts((
     en: "Pick ONE of these compilation targets",
     de: "Waehlen Sie EINES von diesen Kompilierungszielen aus",
-    ja: "以下のコンパイルターゲットから1つを選びます"
+    ja: "以下のコンパイルターゲットから1つを選びます",
+    ru: "Выберите ОДНУ из этих целевых платформ",
   )) + "
 # target = \"thumbv6m-none-eabi\"    # Cortex-M0"+_and_+"Cortex-M0+
 # target = \"thumbv7m-none-eabi\"    # Cortex-M3
-# target = \"thumbv7em-none-eabi\"   # Cortex-M4"+_and_+"Cortex-M7 (no FPU)
-target = \"thumbv7em-none-eabihf\" # Cortex-M4F"+_and_+"Cortex-M7F (with FPU)
+# target = \"thumbv7em-none-eabi\"   # Cortex-M4"+_and_+"Cortex-M7 ("+_no_+" FPU)
+target = \"thumbv7em-none-eabihf\" # Cortex-M4F"+_and_+"Cortex-M7F ("+_with_+" FPU)
 ")
 
 #tr((
@@ -200,28 +251,37 @@ de: [
 ja: [
   Cortex-M4Fコアを対象とするものとして、`thumbv7em-none-eabihf`を使います。
 ],
+ru: [
+  Мы будем использовать `thumbv7em-none-eabihf`, так как эта платформа
+  подходит для ядра Cortex-M4F.
+],
 zh: [
   我们将使用 `thumbv7em-none-eabihf`，因为它包括了Cortex-M4F内核． 
 ]))
 
-#quote(block: true, tr((
+#quote(block: true, [
+#let cmd = `rustup target add thumbv7em-none-eabihf`
+#tr((
 en: [
   *NOTE*: As you may remember from the previous chapter, we have to
   install all targets and this is a new one. So don't forget to run the
-  installation process `rustup target add thumbv7em-none-eabihf` for
-  this target.
+  installation process #cmd for this target.
 ],
 de: [
   *HINWEIS*: Wie Sie sich vielleicht aus dem vorherigen
   Kapitel erinnern, müssen wir alle Ziele installieren, dies ist ein
   neues Ziel. Vergessen Sie also nicht, die Installationsprozess
-  `rustup target add thumbv7em-none-eabihf` für dieses Ziel auszuführen.
+  #cmd für dieses Ziel auszuführen.
+],
+ru: [
+  *ПРИМЕЧАНИЕ*: как вы помните из предыдущей главы, каждую целевую
+  платформу нужно устанавливать, а эта --- новая. Поэтому не забудьте выполнить #cmd.
 ],
 zh: [
   *注意*：你可能还记得先前的章节，我们必须要安装所有的目标平台，这个平台是一个新的．
-  所以，不要忘了为这个平台运行安装步骤
-  `rustup target add thumbv7em-none-eabihf` ．
-])))
+  所以，不要忘了为这个平台运行安装步骤 #cmd ．
+]))
+])
 
 #tr((
 en: [
@@ -233,20 +293,29 @@ de: [
 ja: [
   第二ステップは、`memory.x`ファイルにメモリ領域の情報を入力することです。
 ],
+ru: [
+  Второй шаг --- внести информацию об областях памяти в файл `memory.x`.
+],
 zh: [
   第二步是将存储区域信息(memory region information)输入`memory.x`。
 ]))
 
-```text
-$ cat memory.x
-/* Linker script for the STM32F303VCT6 */
+#raw(block: true, lang: "text",
+"$ cat memory.x
+/* " + ts((
+    en: "Linker script for the STM32F303VCT6",
+    ru: "Скрипт компоновщика для STM32F303VCT6",
+  )) + " */
 MEMORY
 {
-  /* NOTE 1 K = 1 KiBi = 1024 bytes */
+  /* " + ts((
+    en: "NOTE 1 K = 1 KiBi = 1024 bytes",
+    ru: "ЗАМЕЧАНИЕ: 1 K = 1 KiBi = 1024 байта",
+  )) + " */
   FLASH : ORIGIN = 0x08000000, LENGTH = 256K
   RAM : ORIGIN = 0x20000000, LENGTH = 40K
 }
-```
+")
 
 #quote(block: true, tr((
 en: [
@@ -261,6 +330,12 @@ de: [
   Build-Ziel erstellt haben, dann führen Sie `cargo clean` vor
   `cargo build` aus, da `cargo build` keine Änderungen von `memory.x` verfolgt.
 ],
+ru: [
+  *ПРИМЕЧАНИЕ*: если по какой-то причине вы изменили файл
+  `memory.x` после первой сборки для конкретной целевой платформы,
+  выполните `cargo clean` перед `cargo build`, так как `cargo build` может
+  не отслеживать изменения в `memory.x`.
+],
 zh: [
   *注意*：如果你因为某些理由，在对某个编译目标首次编译后，改变了`memory.x`文件，需要在`cargo build`之前执行`cargo clean`。因为`cargo build`可能不会跟踪`memory.x`的更新。
 ])))
@@ -273,6 +348,10 @@ en: [
 de: [
   Wir beginnen noch einmal mit dem Hallo-Beispiel, aber zuerst müssen wir
   eine kleine Änderung vornehmen.
+],
+ru: [
+  Начнём снова с примера hello, но сначала нужно сделать небольшое
+  изменение.
 ],
 zh: [
   我们将再次使用hello示例作为开始，但是首先我们必须做一个小改变。
@@ -290,6 +369,10 @@ de: [
 ja: [
   `debug::exit()`の呼び出しが、コメントアウトされているか削除されていることを確認して下さい。
   これは、QEMUで実行する時のみ、使用します。
+],
+ru: [
+  В `examples/hello.rs` убедитесь, что вызов `debug::exit()`
+  закомментирован или удалён. Он нужен только для запуска в QEMU.
 ],
 zh: [
   在`examples/hello.rs`中，确保`debug::exit()`调用被注释掉了或者移除掉了。它只能用于在QEMU中运行的情况。
@@ -310,6 +393,9 @@ fn main() -> ! {
     // debug::exit(debug::EXIT_SUCCESS);",
         ja: "QEMUを終了する
     // 注記、ハードウェア上で実行しないで下さい。OpenOCDの状態を破壊する可能性があります。
+    // debug::exit(debug::EXIT_SUCCESS);",
+        ru: "выход из QEMU
+    // ПРИМЕЧАНИЕ: не запускайте это на реальном оборудовании; это может повредить состояние OpenOCD
     // debug::exit(debug::EXIT_SUCCESS);",
         zh: "退出 QEMU
     // 注意 不要在硬件上运行这个；它会打破OpenOCD的状态",
@@ -339,6 +425,13 @@ ja: [
   `cortex-m-rt`クレートは、チップを動作させるために必要な、全てのおまじないを処理します。
   便利なことに、ほとんど全てのCortex-M CPUが同じ方法で起動します。
 ],
+ru: [
+  Теперь можно кросс-компилировать программы командой `cargo build`, а
+  бинарные файлы исследовать с помощью `cargo-binutils`, как вы делали
+  раньше. Крейт `cortex-m-rt` берёт на себя всю магию, необходимую, чтобы
+  ваш чип заработал: практически все процессоры Cortex-M загружаются
+  одинаковым образом.
+],
 zh: [
   你可以像你之前做的一样，使用`cargo build`检查编译程序，使用`cargo-binutils`观察二进制项。`cortex-m-rt`库可以处理所有让芯片运行起来所需的魔法，几乎所有的Cortex-M
   CPUs都按同样的方式启动。
@@ -352,6 +445,7 @@ cargo build --example hello
   en: [Debugging],
   de: [Fehlerbehebung (Debugging)],
   ja: [デバッグ],
+  ru: [Отладка],
   zh: [调试],
 ))
 
@@ -378,6 +472,14 @@ ja: [
   これは、参考の役目を果たします。デバイス固有のデバッグ情報は、
   #link(url_dn)[the Debugonomicon]を参照して下さい。
 ],
+ru: [
+  Отладка будет выглядеть немного иначе. Более того, первые шаги могут
+  отличаться в зависимости от целевого устройства. В этом разделе мы
+  покажем шаги, необходимые для отладки программы, запущенной на
+  STM32F3DISCOVERY. Это справочный материал; за информацией об отладке
+  конкретного устройства обращайтесь к
+  #link(url_dn)[Debugonomicon].
+],
 zh: [
   调试会看起来有点不一样。事实上，取决于不同的目标设备，第一步可能看起来不一样。在这个章节里，我们将展示，调试一个在STM32F3DISCOVERY上运行的程序，所需要的步骤。这作为一个参考。关于调试有关的设备特定的信息，可以看#link(url_dn)[the Debugonomicon]。
 ]))
@@ -394,6 +496,10 @@ de: [
 ja: [
   以前と同様に、リモートデバッグを行います。クライアントがGDBプロセスであることも同様です。
   しかし、今回、サーバはOpenOCDになります。
+],
+ru: [
+  Как и раньше, мы будем использовать удалённую отладку, а клиентом будет
+  процесс GDB. На этот раз сервером будет OpenOCD.
 ],
 zh: [
   像之前一样，我们将进行远程调试，客户端将是一个GDB进程。不同的是，OpenOCD将是服务器。
@@ -414,6 +520,11 @@ de: [
 ja: [
   #link(<verify-installation>)[インストールの確認]セクションでやったように、ノートPCまたはPCをdiscoveryボードに接続し、
   ST-LINKヘッダが設定されていることを確認して下さい。
+],
+ru: [
+  Как и в разделе #link(<verify-installation>)[проверка установки],
+  подключите отладочную плату к ноутбуку или ПК и проверьте, что разъём
+  ST-LINK установлен.
 ],
 zh: [
   像是在#link(<verify-installation>)[安装验证]中做的那样，把你的笔记本/个人电脑和discovery开发板连接起来，检查ST-LINK的短路帽是否被安装了。
@@ -437,6 +548,12 @@ ja: [
   discoveryボードのST-LINKに接続するために、端末で`openocd`を実行して下さい。
   このコマンドは、テンプレートプロジェクトのルートディレクトリから実行して下さい。
   `openocd`は、どのインタフェースファイルとターゲットファイルを使うか、が記述されている`openocd.cfg`ファイルを見つけます。
+],
+ru: [
+  В терминале запустите `openocd`, чтобы подключиться к ST-LINK на
+  отладочной плате. Запускайте эту команду из корня шаблона: `openocd`
+  найдёт файл `openocd.cfg`, в котором указано, какой файл интерфейса и
+  какой файл целевого устройства использовать.
 ],
 zh: [
   在一个终端上运行 `openocd` 连接到你的开发板上的 ST-LINK
@@ -469,6 +586,12 @@ cat openocd.cfg
 # 常に、1つのインタフェースがコメントアウトされているべきです。
 
 # リビジョンC （新しいリビジョン）",
+    ru: "Пример конфигурации OpenOCD для отладочной платы STM32F3DISCOVERY
+
+# В зависимости от ревизии вашей платы выберите ОДИН из этих интерфейсов.
+# В любой момент времени должна быть раскомментирована только одна строка source.
+
+# Ревизия C (более новая)",
   )) + "
 source [find interface/stlink.cfg]
 
@@ -476,6 +599,7 @@ source [find interface/stlink.cfg]
     en: "Revision A and B (older revisions)",
     de: "Revision A and B (aeltere Revisionen)",
     ja: "リビジョンAとB（古いリビジョン）",
+    ru: "Ревизии A и B (более старые)",
   )) + "
 # source [find interface/stlink-v2.cfg]
 
@@ -500,6 +624,12 @@ ja: [
   *注記*
   #link(<verify-installation>)[インストールの確認]セクションで、古いバージョンのdiscoveryボードを持っていることが判明している場合、
   `interface/stlink-v2.cfg`を使うように`openocd.cfg`ファイルを修正する必要があります。
+],
+ru: [
+  *ПРИМЕЧАНИЕ* Если на шаге
+  #link(<verify-installation>)[проверки установки] вы выяснили, что
+  у вас более старая ревизия отладочной платы, то на этом этапе нужно
+  изменить файл `openocd.cfg`, чтобы использовать `interface/stlink-v2.cfg`.
 ],
 zh: [
   *注意*
@@ -538,6 +668,9 @@ de: [
 ],
 ja: [
   別の端末で、GDBを実行します。こちらも、テンプレートプロジェクトのルートディレクトから実行して下さい。
+],
+ru: [
+  В другом терминале запустите GDB, тоже из корня шаблона.
 ]))
 
 ```text
@@ -556,6 +689,12 @@ de: [
   welche Version Sie im Installationskapitel installiert haben. Dies
   könnte beispielsweise `arm-none-eabi-gdb` oder einfach `gdb` sein.
 ],
+ru: [
+  *ПРИМЕЧАНИЕ*: как и раньше, вместо `gdb-multiarch` может
+  понадобиться другая версия gdb --- в зависимости от той, что вы
+  установили в главе об установке. Это также может быть
+  `arm-none-eabi-gdb` или просто `gdb`.
+],
 zh: [
   *注意*:
   像之前一样，你可能需要另一个版本的gdb而不是`gdb-multiarch`，取决于你在之前的章节安装了什么工具。这也可能使用的是`arm-none-eabi-gdb`或者只是`gdb`
@@ -570,6 +709,9 @@ de: [
 ],
 ja: [
   次に、TCP 3333ポートで接続待ちしているOpenOCDに、GDBを接続します。
+],
+ru: [
+  Далее подключите GDB к OpenOCD, который ждёт TCP-соединения на порту 3333.
 ],
 zh: [
   接下来把GDB连接到OpenOCD，它正在等待一个在端口3333上的TCP链接。
@@ -592,6 +734,9 @@ de: [
 ],
 ja: [
   それでは、`load`コマンドを使って、マイクロコントローラにプログラムを_書き込んで_下さい。
+],
+ru: [
+  Теперь прошейте (загрузите) программу в микроконтроллер командой `load`.
 ],
 zh: [
   接下来使用`load`命令，继续 _flash_(加载) 程序到微控制器上。
@@ -623,6 +768,12 @@ ja: [
   セミホスティングを呼び出して何かを行う前に、OpenOCDにセミホスティングを有効にするように、
   指示する必要があります。
 ],
+ru: [
+  Программа загружена. Она использует semihosting, поэтому перед любым
+  вызовом semihosting нужно сообщить OpenOCD, что semihosting следует
+  включить. Команды для OpenOCD можно отправлять с помощью команды
+  `monitor`.
+],
 zh: [
   程序现在被加载了。这个程序使用半主机模式，因此在我们调用半主机模式之前，我们必须告诉OpenOCD使能半主机。你可以使用
   `monitor` 命令，发送命令给OpenOCD 。
@@ -644,6 +795,9 @@ de: [
 ja: [
   `monitor help`コマンドを実行することで、全てのOpenOCDコマンドを見ることができます。
 ],
+ru: [
+  Все команды OpenOCD можно посмотреть, вызвав команду `monitor help`.
+],
 zh: [
   通过调用 `monitor help` 命令，你能看到所有的OpenOCD命令。
 ])))
@@ -659,6 +813,10 @@ de: [
 ],
 ja: [
   以前のように、ブレイクポイントと`continue`コマンドを使用することで、`main`までスキップすることができます。
+],
+ru: [
+  Как и раньше, можно перейти сразу к `main` с помощью точки останова и
+  команды `continue`.
 ],
 zh: [
   像我们之前一样，使用一个断点和 `continue` 命令我们可以跳过所有的步骤到
@@ -691,6 +849,12 @@ de: [
   Speicherbereich in der Datei `memory.x` für Ihr Gerät korrekt
   konfiguriert sind (sowohl die Startadressen _als auch_ die Längen).
 ],
+ru: [
+  *ПРИМЕЧАНИЕ* Если после команды `continue` GDB блокирует терминал
+  вместо того, чтобы остановиться на точке останова, стоит перепроверить,
+  правильно ли в файле `memory.x` заданы области памяти для вашего
+  устройства (и начало, _и_ длина).
+],
 zh: [
   *注意*
   如果在你使用了上面的`continue`命令后，GDB阻塞住了终端而不是停在了断点处，你可能需要检查下`memory.x`文件中的存储分区的信息，对于你的设备来说是否被正确的设置了起始位置*和*大小
@@ -703,6 +867,9 @@ en: [
 ],
 de: [
   Springen Sie mit `step` in die main-Funktion.
+],
+ru: [
+  Войдите в функцию main командой `step`.
 ],
 zh: [
   使用`step`步进main函数里。
@@ -728,6 +895,10 @@ ja: [
   #todoupd("ja")
   この時点で、OpenOCDコンソールに、他のものと入り混じって「Hello,
   world!」と表示されるはずです。
+],
+ru: [
+  После продвижения программы командой `next` вы должны увидеть «Hello,
+  world!», выведенное в консоли OpenOCD, среди прочего.
 ],
 zh: [
   在使用了`next`让函数继续执行之后，你应该看到 "Hello, world!"
@@ -756,6 +927,10 @@ de: [
   Die Meldung wird nur einmal angezeigt, kurz bevor das Programm in die in
   Zeile 19 definierte Endlosschleife eintritt: `loop {}`
 ],
+ru: [
+  Сообщение выводится только один раз, потому что программа входит в
+  бесконечный цикл, определённый в строке 19: `loop {}`.
+],
 zh: [
   消息只打印一次，然后进入定义在19行的无限循环中: `loop {}`
 ]))
@@ -766,6 +941,9 @@ en: [
 ],
 de: [
   Sie können GDB nun mit dem Befehl `quit` beenden.
+],
+ru: [
+  Теперь можно выйти из GDB командой `quit`.
 ],
 zh: [
   使用 `quit` 命令，你现在可以退出 GDB 了。
@@ -793,6 +971,11 @@ de: [
   zusammengefasst. Die Datei wurde während des Schritts `cargo generate`
   erstellt und sollte ohne Änderungen funktionieren. Werfen wir einen Blick darauf:
 ],
+ru: [
+  Отладка теперь требует ещё нескольких шагов, поэтому мы упаковали их в
+  один скрипт GDB с именем `openocd.gdb`. Файл был создан на шаге
+  `cargo generate` и должен работать без изменений. Давайте взглянем:
+],
 zh: [
   现在调试比之前多了点步骤，因此我们要把所有步骤打包进一个名为
   `openocd.gdb` 的GDB脚本中。这个文件在 `cargo generate`
@@ -803,13 +986,19 @@ zh: [
 cat openocd.gdb
 ```
 
-```text
-target extended-remote :3333
+#raw(block: true, lang: "text",
+"target extended-remote :3333
 
-# print demangled symbols
+# " + ts((
+    en: "print demangled symbols",
+    ru: "выводить демангленные (demangled) символы",
+  )) + "
 set print asm-demangle on
 
-# detect unhandled exceptions, hard faults and panics
+# " + ts((
+    en: "detect unhandled exceptions, hard faults and panics",
+    ru: "обнаруживать необработанные исключения, hard fault'ы и паники",
+  )) + "
 break DefaultHandler
 break HardFault
 break rust_begin_unwind
@@ -818,9 +1007,13 @@ monitor arm semihosting enable
 
 load
 
-# start the process but immediately halt the processor
+# " + ts((
+    en: "start the process but immediately halt the processor",
+    ru: "запустить процесс, но сразу остановить процессор",
+  )) + "
 stepi
-```
+")
+
 #let cmd_gdb_hello = `<gdb> -x openocd.gdb target/thumbv7em-none-eabihf/debug/examples/hello`
 #tr((
 en: [
@@ -836,6 +1029,11 @@ de: [
 ja: [
   #cmd_gdb_hello;を実行することで、GDBはすぐにOpenOCDに接続し、
   セミホスティングを有効化し、プログラムをロードした上で、プロセスを開始します。
+],
+ru: [
+  Теперь запуск #cmd_gdb_hello
+  сразу подключит GDB к OpenOCD, включит semihosting, загрузит программу и
+  запустит процесс.
 ],
 zh: [
   现在运行 #cmd_gdb_hello
@@ -859,6 +1057,11 @@ ja: [
   _さらに_GDBセッションを開始することもできます。このランナーは、`.cargo/config`に含まれていますが、
   コメントアウトされています。
 ],
+ru: [
+  Кроме того, можно превратить `<gdb> -x openocd.gdb` в пользовательский
+  runner, чтобы `cargo run` собирал программу _и_ запускал сеанс GDB.
+  Этот runner уже включён в `.cargo/config.toml`, но закомментирован.
+],
 zh: [
   另外，你能将 `<gdb> -x openocd.gdb` 放进一个自定义的 runner 中，使
   `cargo run` 能编译程序并启动一个GDB会话。这个 runner 在
@@ -875,6 +1078,7 @@ head -n10 .cargo/config.toml
     en: "uncomment this to make `cargo run` execute programs on QEMU",
     de: "Dies auskommentieren, damit `cargo run` Programme auf QEMU ausfuehrt.",
     ja: "ここのコメントアウトを外すと、`cargo run`はQEMUでプログラムを実行します",
+    ru: "раскомментируйте, чтобы `cargo run` запускал программы на QEMU",
     zh: "uncomment this to make `cargo run` execute programs on QEMU",
   )) + "
 # runner = \"qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel\"
@@ -888,6 +1092,8 @@ head -n10 .cargo/config.toml
 # Welche Option Sie waehlen sollten, haengt von Ihrem System ab.",
     ja: "3つの選択肢のうち、1つのコメントアウトを外すと、`cargo run`はGDBセッションを開始します。
 # どの選択肢を使うか、は対象システムによって異なります。",
+    ru: "раскомментируйте ОДИН из этих трёх вариантов, чтобы `cargo run` запускал сеанс GDB
+# выбор зависит от вашей системы",
     zh: "uncomment ONE of these three option to make `cargo run` start a GDB session
 # which option to pick depends on your system",
   )) + "
