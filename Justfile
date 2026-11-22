@@ -20,12 +20,17 @@ build-uk:
     typst compile typ/book.typ --input lang=uk --input target=pdf book/book_uk.pdf
     typst compile typ/book.typ --input lang=uk --input target=pdf book/book_uk_tr.pdf --input goal=translation
 
+build-ru:
+    typst compile typ/book.typ --input lang=ru --input target=html book --features bundle,html -f bundle
+    typst compile typ/book.typ --input lang=ru --input target=pdf book/book_ru.pdf
+    typst compile typ/book.typ --input lang=ru --input target=pdf book/book_ru_tr.pdf --input goal=translation
+
 build-zh:
     typst compile typ/book.typ --input lang=zh --input target=html book --features bundle,html -f bundle
     typst compile typ/book.typ --input lang=zh --input target=pdf book/book_zh.pdf
     typst compile typ/book.typ --input lang=zh --input target=pdf book/book_zh_tr.pdf --input goal=translation
 
-build: build-en build-de build-ja build-uk build-zh
+build: build-en build-de build-ja build-ru build-uk build-zh
 
 check-links:
     linkchecker book
