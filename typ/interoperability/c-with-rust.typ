@@ -149,14 +149,14 @@ zh: [
 /* File: cool_bindings.rs */
 #[repr(C)]
 pub struct CoolStruct {
-    pub x: cty::c_int,
-    pub y: cty::c_int,
+    pub x: core::ffi::c_int,
+    pub y: core::ffi::c_int,
 }
 
 extern "C" {
     pub fn cool_function(
-        i: cty::c_int,
-        c: cty::c_char,
+        i: core::ffi::c_int,
+        c: core::ffi::c_char,
         cs: *mut CoolStruct
     );
 }
@@ -208,8 +208,8 @@ zh: [
 
 
 ```rust
-pub x: cty::c_int,
-pub y: cty::c_int,
+pub x: core::ffi::c_int,
+pub y: core::ffi::c_int,
 ```
 
 #tr((
@@ -260,8 +260,8 @@ zh: [
 ]))
 
 ```rust
-    i: cty::c_int,
-    c: cty::c_char,
+    i: core::ffi::c_int,
+    c: core::ffi::c_char,
     cs: *mut CoolStruct
 ```
 
