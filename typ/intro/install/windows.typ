@@ -27,6 +27,13 @@ ja: [
   インストールプロセスが終了する直前に"環境変数にパスを追加"オプションを選択します。
   その後、ツールが`%PATH%`にあることを確認します。
 ],
+ru: [
+  ARM предоставляет установщики `.exe` для Windows.
+  Скачайте один из них #link(url_arm_gnu)[здесь]
+  и следуйте инструкциям. Перед самым завершением установки отметьте опцию
+  «Add path to environment variable» (добавить путь в переменную
+  окружения). Затем убедитесь, что инструменты доступны в вашем `%PATH%`:
+],
 zh: [
   ARM提供了用于Windows的`.exe`安装程序。从#link(url_arm_gnu)[这里]获取,
   然后按照说明操作。 在完成安装之前，勾选/选择"Add path to environment
@@ -62,6 +69,15 @@ de: [
   dem die Binärdateien installiert wurden (z. B. #bin_path,
   falls Sie die einfache Installation verwendet haben).
 ],
+ru: [
+  Официального бинарного релиза OpenOCD для Windows нет. Но если вам не
+  хочется собирать его самостоятельно, проект xPack предоставляет готовую
+  бинарную сборку, #link(url_openocd)[здесь].
+  Следуйте приведённым там инструкциям по установке. Затем обновите
+  переменную окружения `%PATH%`, добавив в неё путь, по которому
+  установлены исполняемые файлы
+  (#bin_path, если вы использовали простую установку).
+],
 zh: [
   OpenOCD 官方没有提供Windows的二进制版本，
   若你没有心情去折腾编译，#link(url_openocd)[这里]有xPack提供的一个二进制发布.。按照说明进行安装。然后更新你的`%PATH%` 环境变量，将安装目录包括进去。 (#bin_path, 如果使用简易安装)
@@ -73,6 +89,9 @@ en: [
 ],
 de: [
   Überprüfen Sie mit folgendem Befehl, ob OpenOCD in Ihrem `%PATH%` enthalten ist:
+],
+ru: [
+  Убедитесь, что OpenOCD доступен в вашем `%PATH%`:
 ],
 zh: [
   使用以下命令验证OpenOCD是否在你的`%PATH%`环境变量中 :
@@ -97,6 +116,9 @@ de: [
 ja: [
   #link(url_qemu)[QEMU公式サイト]からQEMUを入手します。
 ],
+ru: [
+  Скачайте QEMU #link(url_qemu)[с официального сайта].
+],
 zh: [
   从#link(url_qemu)[官网]获取QEMU。
 ]))
@@ -105,6 +127,7 @@ zh: [
   en: [ST-LINK USB driver],
   de: [ST-LINK USB driver],
   ja: [ST-LINK USBドライバ],
+  ru: [Драйвер USB для ST-LINK],
   zh: [ST-LINK USB driver],
 ))
 
@@ -125,6 +148,12 @@ ja: [
   #link(url_stlink)[USBドライバ]もインストールする必要があります。そうでなければOpenOCDは動きません。インストーラの手順に従って下さい。
   そして、正しいドライバのバージョン(32ビットか64ビット)をインストールすることを確認して下さい。
 ],
+ru: [
+  Также вам нужно установить #link(url_stlink)[этот USB-драйвер],
+  иначе OpenOCD не будет работать. Следуйте инструкциям установщика и
+  убедитесь, что вы выбрали подходящую версию драйвера (32-битную или
+  64-битную).
+],
 zh: [
   你还需要安装这个
   #link(url_stlink)[USB驱动]
@@ -140,6 +169,9 @@ de: [
 ],
 ja: [
   以上です！#link(<verify-installation>)[次のセクション]に進んで下さい。
+],
+ru: [
+  Всё! Перейдите к #link(<verify-installation>)[следующему разделу].
 ],
 zh: [
   以上是全部内容！转到 #link(<verify-installation>)[下个章节]。

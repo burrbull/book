@@ -2,6 +2,7 @@
 
 #h1((en: [Performing math functionality with `#[no_std]`],
   de: [Mathematische Funktionen mit `#[no_std]` nutzen],
+  ru: [Математические вычисления в `#[no_std]`],
   zh: [在`#[no_std]`下执行数学运算],
 ), offset: whole)
 
@@ -17,6 +18,11 @@ de: [
   und Ihnen die vollständige Standardbibliothek zur Verfügung steht,
   könnte Ihr Code folgendermaßen aussehen:
 ],
+ru: [
+  Если вы хотите выполнять математические вычисления, например извлекать
+  квадратный корень или экспоненту числа, и у вас доступна полная
+  стандартная библиотека, ваш код может выглядеть так:
+],
 zh: [
   如果你想要执行数学相关的函数，像是计算平方根或者一个数的指数并有完整的标准库支持，代码可能看起来像这样:
 ]))
@@ -25,6 +31,7 @@ zh: [
 "//! " + ts((
     en: "Some mathematical functions with standard support available",
     de: "Einige mathematische Funktionen mit Standardunterstützung verfügbar",
+    ru: "Некоторые математические функции с поддержкой стандартной библиотеки",
     zh: "可用一些标准支持的数学函数",
   )) + "
 
@@ -59,6 +66,11 @@ de: [
   nicht zur Verfügung. Stattdessen kann ein externes Crate wie
   #ln_libm verwendet werden. Der
   Beispielcode sähe dann folgendermaßen aus:
+],
+ru: [
+  Без поддержки стандартной библиотеки эти функции недоступны. Вместо них
+  можно использовать внешний крейт, например #ln_libm.
+  Тогда пример кода будет выглядеть так:
 ],
 zh: [
   没有标准库支持的时候，这些函数不可用。反而可以使用像是#ln_libm;这样一个外部库。示例的代码将会看起来像这样:
@@ -98,6 +110,8 @@ fn main() -> ! {
         de: "exit QEMU
     // HINWEIS: Fuehren Sie dies nicht auf der Hardware aus; es kann den 
     //          OpenOCD-Zustand beschaedigen.",
+        ru: "выход из QEMU
+    // ПРИМЕЧАНИЕ: не запускайте это на реальном оборудовании; это может повредить состояние OpenOCD",
         zh: "退出QEMU
     // 注意不要在硬件上使用这个; 它能破坏OpenOCD的状态"
       )) + "
@@ -118,10 +132,18 @@ de: [
   fortgeschrittene lineare Algebra auf Ihrem Mikrocontroller durchführen
   müssen, könnten Ihnen die folgenden Crates weiterhelfen.
 ],
+ru: [
+  Если вам нужно выполнять более сложные операции, например обработку
+  сигналов (DSP) или продвинутую линейную алгебру на вашем MCU, могут
+  помочь следующие крейты:
+],
 zh: [
   如果需要在MCU上执行更复杂的操作，像是DSP信号处理或者更高级的线性代数，下列的crates可能可以帮到你
 ]))
-- #link("https://github.com/jacobrosenthal/cmsis-dsp-sys")[CMSIS DSP library binding]
+- #link("https://github.com/jacobrosenthal/cmsis-dsp-sys", tr((
+    en: [CMSIS DSP library binding],
+    ru: [Привязки к библиотеке CMSIS DSP],
+  )))
 - #link("https://crates.io/crates/constgebra")[`constgebra`]
 - #link("https://github.com/tarcieri/micromath")[`micromath`]
 - #link("https://crates.io/crates/microfft")[`microfft`]

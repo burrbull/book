@@ -70,8 +70,17 @@ ja: [
   このLM3S6965を最初のターゲットとして選んだ理由は、QEMUを使ってエミュレーションできるからです。
   このセクションでは、ハードウェアをいじる必要がなく、ツールと開発プロセスに集中できます。
 ],
+ru: [
+  Мы начнём писать программу для #ln_lm3s6965 ---
+  микроконтроллера Cortex-M3. Мы выбрали его в качестве первой цели,
+  потому что его
+  #link(url_qemu)[можно эмулировать]
+  с помощью QEMU. Поэтому в этом разделе вам не придётся возиться с
+  железом, и мы сможем сосредоточиться на инструментах и процессе
+  разработки.
+],
 zh: [
-  我们将开始为#ln_lm3s6965;编写程序，一个Cortex-M3微控制器。因为它能使用#link("https://wiki.qemu.org/Documentation/Platforms/ARM#Supported_in_qemu-system-arm")[QEMU仿真]，所以我们选择它作为我们的第一个目标，本节中，不需要使用硬件，我们注意力可以集中在工具和开发过程上。
+  我们将开始为#ln_lm3s6965;编写程序，一个Cortex-M3微控制器。因为它能使用#link(url_qemu)[QEMU仿真]，所以我们选择它作为我们的第一个目标，本节中，不需要使用硬件，我们注意力可以集中在工具和开发过程上。
 ]))
 
 #tr((
@@ -88,6 +97,12 @@ de: [
   können Sie Ihr Projekt auch „app" nennen und so die Ersetzungen
   vermeiden.
 ],
+ru: [
+  *ВАЖНО* В этом руководстве мы будем называть проект «app». Всякий
+  раз, когда вы видите слово «app», замените его на имя, которое вы
+  выбрали для своего проекта. Либо назовите проект «app», и подстановки не
+  понадобятся.
+],
 zh: [
   *重要*
   在这个引导里，我们将使用"app"这个名字来代指项目名。无论何时你看到单词"app"，你应该用你选择的项目名来替代"app"。或者你也可以选择把你的项目命名为"app"，避免要替换掉。
@@ -97,6 +112,7 @@ zh: [
   en: [Creating a non standard Rust program],
   de: [Erstellen eines nicht standardmäßigen Rust-Programms],
   ja: [標準ライブラリを使わないRustプログラム],
+  ru: [Создание нестандартной программы на Rust],
   zh: [生成一个非标准的 Rust program],
 ))
 
@@ -118,6 +134,14 @@ de: [
   ein Verzeichnis `examples` mit mehreren separaten Anwendungen, die
   einige der wichtigsten Funktionen von Embedded Rust veranschaulichen.
 ],
+ru: [
+  Мы используем шаблон проекта #ln_quick,
+  чтобы создать из него новый проект. Созданный проект будет содержать
+  минимальное приложение --- хорошую отправную точку для нового
+  встраиваемого приложения на Rust. Кроме того, проект будет содержать
+  каталог `examples` с несколькими отдельными приложениями, которые
+  демонстрируют ключевые возможности встраиваемого Rust.
+],
 zh: [
   我们将使用#ln_quick;项目模板来生成一个新项目。生成的项目将包含一个最基本的应用:对于一个新的嵌入式rust应用来说，是一个很好的开始。另外，项目将包含一个`example`文件夹，文件夹中有许多独立的应用，突出了一些关键的嵌入式rust的功能。
 ]))
@@ -125,6 +149,7 @@ zh: [
 == #tr((
   en: [Using `cargo-generate`],
   de: [Verwendung von `cargo-generate`],
+  ru: [Использование `cargo-generate`],
   zh: [使用 `cargo-generate`],
 ))
 
@@ -134,6 +159,9 @@ en: [
 ],
 de: [
   Installieren Sie zunächst cargo-generate
+],
+ru: [
+  Сначала установите cargo-generate:
 ],
 zh: [
   首先安装 cargo-generate
@@ -149,6 +177,9 @@ en: [
 ],
 de: [
   Erstellen Sie anschließend ein neues Projekt
+],
+ru: [
+  Затем создайте новый проект:
 ],
 zh: [
   然后生成一个新项目
@@ -171,6 +202,7 @@ cd app
 == #tr((
   en: [Using `git`],
   de: [Verwendung von `git`],
+  ru: [Использование `git`],
   zh: [使用 `git`],
 ))
 
@@ -180,6 +212,9 @@ en: [
 ],
 de: [
   Das Repository klonen
+],
+ru: [
+  Клонируйте репозиторий:
 ],
 zh: [
   克隆仓库
@@ -196,6 +231,9 @@ en: [
 ],
 de: [
   Und fülle dann die Platzhalter in der Datei `Cargo.toml` aus
+],
+ru: [
+  Затем заполните плейсхолдеры в файле `Cargo.toml`:
 ],
 zh: [
   然后补充`Cargo.toml`文件中的占位符
@@ -219,6 +257,7 @@ bench = false
 == #tr((
   en: [Using neither],
   de: [Keines von beiden verwenden],
+  ru: [Без использования инструментов],
   zh: [要么使用],
 ))
 
@@ -230,6 +269,9 @@ en: [
 de: [
   Laden Sie den neuesten Snapshot der Vorlage `cortex-m-quickstart`
   herunter und entpacken Sie ihn.
+],
+ru: [
+  Скачайте последний снимок шаблона `cortex-m-quickstart` и распакуйте его.
 ],
 zh: [
   抓取最新的 `cortex-m-quickstart` 模板，解压它。
@@ -250,6 +292,10 @@ de: [
   Oder Sie navigieren zu #ln_quick,
   klicken auf die grüne Schaltfläche „Clone or download" und anschließend auf „Download ZIP".
 ],
+ru: [
+  Или вы можете открыть страницу #ln_quick,
+  нажать зелёную кнопку «Clone or download», а затем «Download ZIP».
+],
 zh: [
   或者你可以浏览#ln_quick，点击绿色的
   "Clone or download" 按钮，然后点击 "Download ZIP" 。
@@ -264,6 +310,10 @@ de: [
   Füllen Sie anschließend die Platzhalter in der Datei `Cargo.toml` aus,
   wie im zweiten Teil der Version „Verwendung von `git` beschrieben.
 ],
+ru: [
+  Затем заполните плейсхолдеры в файле `Cargo.toml`, как во второй части
+  варианта «Использование `git`».
+],
 zh: [
   然后像在 "使用 `git`" 那里的第二部分写的那样填充 `Cargo.toml` 。
 ]))
@@ -271,6 +321,7 @@ zh: [
 = #tr((
   en: [Program Overview],
   de: [Programmübersicht],
+  ru: [Обзор программы],
   zh: [项目概览],
 ))
 
@@ -281,6 +332,9 @@ en: [
 de: [
   Der Einfachheit halber sind hier die wichtigsten Teile des Quellcodes in
   `src/main.rs` aufgeführt:
+],
+ru: [
+  Для удобства здесь приведены самые важные части исходного кода из `src/main.rs`:
 ],
 zh: [
   这是`src/main.rs`中源码最重要的部分。
@@ -301,6 +355,7 @@ fn main() -> ! {
             en: "your code goes here",
             de: "Hier kommt Ihr Code hin.",
             ja: "あなたのコードはここに書きます",
+            ru: "здесь будет ваш код",
           )) + "
     }
 }
@@ -315,6 +370,10 @@ de: [
   Dieses Programm unterscheidet sich ein wenig von einem typischen
   Rust-Programm, schauen wir es uns also einmal genauer an.
 ],
+ru: [
+  Эта программа немного отличается от стандартной программы на Rust,
+  поэтому давайте присмотримся к ней внимательнее.
+],
 zh: [
   这个程序与标准Rust程序有一点不同，让我们走近点看看。
 ]))
@@ -328,6 +387,11 @@ de: [
   `#![no_std]` gibt an, dass dieses Programm _nicht_ mit der
   Standard-Crate `std` verknüpft wird. Stattdessen wird es mit deren
   Teilmenge verknüpft: der Crate `core`.
+],
+ru: [
+  `#![no_std]` указывает, что программа _не_ будет связываться со
+  стандартным крейтом `std`. Вместо этого она будет связываться с его
+  подмножеством --- крейтом `core`.
 ],
 zh: [
   `#![no_std]`指出这个程序将 _不会_
@@ -348,6 +412,13 @@ de: [
   `no_main` ist, dass die Nutzung der `main`-Schnittstelle im
   `no_std`-Kontext „Nightly" erfordert.
 ],
+ru: [
+  `#![no_main]` указывает, что программа не будет использовать стандартный
+  интерфейс `main`, который применяют большинство программ на Rust.
+  Главная причина использовать `no_main` (тут без каламбура) в том, что
+  интерфейс `main` в контексте `no_std` требует nightly-версии
+  компилятора.
+],
 zh: [
   `#![no_main]`指出这个程序将不会使用标准的且被大多数Rust程序使用的`main`接口。使用`no_main`的主要理由是，在`no_std`上下文中使用`main`接口需要
   nightly 版的 Rust。
@@ -364,6 +435,11 @@ de: [
   der das Verhalten des Programms im Panikfall definiert. Wir werden
   darauf im Kapitel #link(<getting-started-panicking>)[In Panik geraten] des Buches
   näher eingehen.
+],
+ru: [
+  `use panic_halt as _;`. Этот крейт предоставляет `panic_handler`,
+  который определяет поведение программы при панике. Мы подробнее
+  рассмотрим это в главе #link(<getting-started-panicking>)[Паника] этой книги.
 ],
 zh: [
   `use panic_halt as _;`。这个crate提供了一个`panic_handler`，它定义了程序陷入`panic`时的行为。我们将会在这本书的#link(<getting-started-panicking>)[运行时恐慌(Panicking)]章节中覆盖更多的细节。
@@ -385,6 +461,12 @@ de: [
   andere Möglichkeit, den Einstiegspunkt des Programms anzugeben, und das
   wäre `#[entry]`.
 ],
+ru: [
+  #ln_entry --- атрибут, который предоставляет крейт #ln_rt и который
+  используется, чтобы пометить точку входа программы. Поскольку мы не
+  используем стандартный интерфейс `main`, нам нужен другой способ указать
+  точку входа, и таким способом является `#[entry]`.
+],
 zh: [
   #ln_entry 是一个由#ln_rt;提供的属性，它用来标记程序的入口。当我们不使用标准的`main`接口时，我们需要其它方法来指示程序的入口，那就是`#[entry]`。
 ]))
@@ -405,6 +487,13 @@ de: [
   (das `-> !` in der Funktionssignatur), um bereits zur Kompilierungszeit
   sicherzustellen, dass dies auch der Fall ist.
 ],
+ru: [
+  `fn main() -> !`. Наша программа будет _единственным_ процессом,
+  работающим на целевом оборудовании, поэтому мы не хотим, чтобы она
+  завершалась! Мы используем #link(url_div)[расходящуюся функцию]
+  (часть `-> !` в сигнатуре функции), чтобы на этапе компиляции
+  гарантировать это.
+],
 zh: [
   `fn main() -> !`。我们的程序将会是运行在目标板子上的 _唯一_
   的进程，因此我们不想要它结束！我们使用一个#link(url_div)[发散函数]
@@ -414,6 +503,7 @@ zh: [
 = #tr((
   en: [Cross compiling],
   de: [Cross-Kompilierung],
+  ru: [Кросс-компиляция],
   zh: [交叉编译],
 ))
 
@@ -430,6 +520,12 @@ de: [
   Images beim Build fehl. Erstellen Sie eine Datei mit dem Namen
   `memory.x` im Stammverzeichnis des Projekts und fügen Sie den folgenden
   Inhalt ein:
+],
+ru: [
+  Прежде всего нам понадобится раскладка памяти для целевого
+  микроконтроллера --- в нашем случае LM3S6965. Без неё сборка не сможет
+  скомпоновать образ. Создайте в корне проекта файл `memory.x` и вставьте
+  в него следующее содержимое:
 ]))
 
 #raw(block: true, lang: "text",
@@ -444,6 +540,9 @@ de: [
   /* TODO Passen Sie diese Speicherbereiche an das Speicherlayout Ihres Geräts an. */
   /* Diese Werte entsprechen dem LM3S6965, einem der wenigen Bausteine, die 
   QEMU emulieren kann */",
+    ru: "ЗАМЕЧАНИЕ: 1 K = 1 KiBi = 1024 байта */
+  /* TODO: подстройте эти области памяти под раскладку памяти вашего устройства */
+  /* Эти значения соответствуют LM3S6965 — одному из немногих устройств, которые может эмулировать QEMU */",
   )) + "
   FLASH : ORIGIN = 0x00000000, LENGTH = 256K
   RAM : ORIGIN = 0x20000000, LENGTH = 64K
@@ -458,7 +557,11 @@ de: [
 /* Der Stapel ist vom Typ „vollständig absteigend“. */
 /* Möglicherweise möchten Sie diese Variable verwenden, um den Aufrufstapel und 
   statische Variablen in verschiedenen Speicherbereichen zu lokalisieren. 
-  Nachstehend ist der Standardwert aufgeführt */"
+  Nachstehend ist der Standardwert aufgeführt */",
+    ru: "Здесь будет выделен стек вызовов. */
+/* Стек имеет полный нисходящий (full descending) тип. */
+/* Эту переменную можно использовать, чтобы разместить стек вызовов и статические
+  переменные в разных областях памяти. Ниже показано значение по умолчанию */",
   )) + "
 /* _stack_start = ORIGIN(RAM) + LENGTH(RAM); */
 
@@ -472,7 +575,11 @@ de: [
 /* Wird dies weggelassen, wird der .text-Abschnitt direkt nach dem .vector_table-
   Abschnitt platziert */
 /* Dies ist nur bei Mikrocontrollern erforderlich, die bestimmte 
-  Konfigurationsdaten direkthinter der Vektortabelle speichern */"
+  Konfigurationsdaten direkthinter der Vektortabelle speichern */",
+    ru: "Этим символом можно задать расположение секции .text */
+/* Если его не указывать, секция .text будет размещена сразу после секции .vector_table */
+/* Это требуется только на микроконтроллерах, которые хранят некоторую конфигурацию
+  сразу после таблицы векторов */",
   )) + "
 /* _stext = ORIGIN(FLASH) + 0x400; */
 
@@ -488,7 +595,12 @@ benutzerdefinierten RAM-Speicherplätzen. */
 in den Rust-Quelldateien das Attribut `#[link_section = „.ram2bss“]` zu den 
 Daten hinzugefügt haben, die Sie dort platzieren möchten. */
 /* Beachten Sie, dass der Bereich von der Laufzeitumgebung nicht auf Null 
-initialisiert wird! */"
+initialisiert wird! */",
+    ru: "Пример размещения неинициализированных переменных в произвольных областях RAM. */
+/* Предполагается, что вы определили область RAM2 выше, а в исходниках на Rust
+  добавили атрибут `#[link_section = \".ram2bss\"]` к данным,
+  которые хотите там разместить. */
+/* Обратите внимание, что эта секция не будет обнулена рантаймом! */",
   )) + "
 /* SECTIONS {
      .ram2bss (NOLOAD) : ALIGN(4) {
@@ -513,6 +625,13 @@ de: [
   das Kompilierungsziel (`$TRIPLE`) lauten soll. Glücklicherweise finden
   Sie die Antwort in der Datei `.cargo/config.toml` in der Vorlage:
 ],
+ru: [
+  Следующий шаг --- _кросс_-компиляция программы для архитектуры
+  Cortex-M3. Это так же просто, как выполнить
+  `cargo build --target $TRIPLE`, если вы знаете, какой должна быть
+  целевая платформа (`$TRIPLE`). К счастью, `.cargo/config.toml` в шаблоне
+  уже содержит ответ:
+],
 zh: [
   下一步是为Cortex-M3架构_交叉_编译程序。如果你知道编译目标(`$TRIPLE`)应该是什么，运行`cargo build --target $TRIPLE`就可以了。幸运地，模板中的`.cargo/config.toml`有这个答案:
 ]))
@@ -523,6 +642,7 @@ tail -n6 .cargo/config.toml
 
 #let _and_ = tr((
   en: " and ",
+  ru: " и ",
 ), default: " and ")
 
 #raw(block: true, lang: "toml",
@@ -530,6 +650,7 @@ tail -n6 .cargo/config.toml
 # " + ts((
     en: "Pick ONE of these compilation targets",
     de: "Waehlen Sie EINES dieser Kompilierungsziele aus",
+    ru: "Выберите ОДНУ из этих целевых платформ",
   )) + "
 # target = \"thumbv6m-none-eabi\"    # Cortex-M0"+_and_+"Cortex-M0+
 target = \"thumbv7m-none-eabi\"    # Cortex-M3
@@ -551,6 +672,12 @@ de: [
   Zeitpunkt, dieses Ziel zu den Werkzeugen hinzuzufügen, falls Sie dies
   noch nicht getan haben:
 ],
+ru: [
+  Для кросс-компиляции под архитектуру Cortex-M3 нужно использовать
+  `thumbv7m-none-eabi`. Эта целевая платформа не устанавливается
+  автоматически вместе с тулчейном Rust, поэтому сейчас самое время
+  добавить его в тулчейн, если вы ещё этого не сделали:
+],
 zh: [
   为了交叉编译Cortex-M3架构我们不得不使用`thumbv7m-none-eabi`。当安装Rust工具时，target不会自动被安装，如果还没有添加，现在可以去添加那个target到工具链上。
 ]))
@@ -569,6 +696,10 @@ de: [
   `.cargo/config.toml` als Standard festgelegt wurde, haben die beiden
   folgenden Befehle dieselbe Wirkung:
 ],
+ru: [
+  Поскольку целевая платформа `thumbv7m-none-eabi` указана по умолчанию в
+  вашем `.cargo/config.toml`, две команды ниже делают одно и то же:
+],
 zh: [
   因为`thumbv7m-none-eabi`编译目标在你的`.cargo/config.toml`中被设置成默认值，下面的两个命令是一样的效果:
 ]))
@@ -581,6 +712,7 @@ cargo build
 = #tr((
   en: [Inspecting],
   de: [Überprüfen],
+  ru: [Инспекция],
   zh: [检查],
 ))
 
@@ -595,6 +727,11 @@ de: [
   `target/thumbv7m-none-eabi/debug/app`. Wir können sie mit
   `cargo-binutils` untersuchen.
 ],
+ru: [
+  Теперь у нас есть ELF-бинарный файл, не нативный для вашей машины, в
+  `target/thumbv7m-none-eabi/debug/app`. Мы можем исследовать его с
+  помощью `cargo-binutils`.
+],
 zh: [
   现在在`target/thumbv7m-none-eabi/debug/app`中有一个非主机环境的ELF二进制文件。我们能使用`cargo-binutils`检查它。
 ]))
@@ -607,6 +744,10 @@ en: [
 de: [
   Mit `cargo-readobj` können wir die ELF-Header ausgeben, um zu
   überprüfen, ob es sich um eine ARM- Binärdatei handelt.
+],
+ru: [
+  С помощью `cargo-readobj` мы можем вывести заголовки ELF, чтобы
+  убедиться, что это бинарный файл для ARM.
 ],
 zh: [
   使用`cargo-readobj`我们能打印ELF头，确认这是一个ARM二进制。
@@ -627,6 +768,12 @@ de: [
   - `--bin app` ist eine vereinfachte Schreibweise
     für die Überprüfung der Binärdatei unter `target/$TRIPLE/debug/app`
   - `--bin app` kompiliert die Binärdatei bei Bedarf auch (neu)
+],
+ru: [
+  Обратите внимание:
+  - `--bin app` --- сокращение для инспекции бинарного
+    файла `target/$TRIPLE/debug/app`;
+  - `--bin app` также (пере)компилирует бинарный файл, если это необходимо
 ],
 zh: [
   注意:
@@ -665,6 +812,9 @@ de: [
   Mit `cargo-size` lässt sich die Größe der Linker-Abschnitte der
   Binärdatei anzeigen.
 ],
+ru: [
+  `cargo-size` может вывести размеры секций компоновщика бинарного файла.
+],
 zh: [
   `cargo-size` 能打印二进制项的linker section的大小。
 ]))
@@ -679,6 +829,10 @@ en: [
 ],
 de: [
   Wir verwenden `--release`, um die optimierte Version zu überprüfen.
+],
+ru: [
+  здесь мы используем `--release`, чтобы посмотреть оптимизированную
+  версию
 ],
 zh: [
   我们使用`--release`查看优化后的版本
@@ -735,6 +889,19 @@ de: [
     und werden _nicht_ beim Flashen der Binärdatei auf das Zielgerät
     geladen werden.
 ],
+ru: [
+  Напоминание о секциях компоновщика ELF
+  - `.text` содержит инструкции программы
+  - `.rodata` содержит константы, например строки
+  - `.data` содержит статически выделенные переменные, начальные значения
+    которых _не_ равны нулю
+  - `.bss` также содержит статически выделенные переменные, но их
+    начальные значения равны нулю
+  - `.vector_table` --- _нестандартная_ секция, которую мы используем
+    для хранения таблицы векторов (прерываний)
+  - `.ARM.attributes` и секции `.debug_*` содержат метаданные и _не_
+    загружаются на целевое устройство при прошивке бинарного файла.
+],
 zh: [
   ELF linker sections的复习
   - `.text` 包含程序指令
@@ -762,6 +929,13 @@ de: [
   _immer_ `cargo-size`, um zu überprüfen, wie groß eine Binärdatei
   tatsächlich ist.
 ],
+ru: [
+  *ВАЖНО*: файлы ELF содержат метаданные, например отладочную
+  информацию, поэтому их _размер на диске_ _не_ отражает точно
+  объём памяти, который программа займёт на устройстве после прошивки.
+  _Всегда_ используйте `cargo-size`, чтобы проверить, насколько
+  большой бинарный файл на самом деле.
+],
 zh: [
   *重要*:
   ELF文件包含像是调试信息这样的元数据，因此它们在_硬盘上的尺寸_没有正确地反应处程序被烧录到设备上时将占据的空间的大小。要_一直_使用`cargo-size`检查一个二进制项的大小。
@@ -773,6 +947,10 @@ en: [
 ],
 de: [
   Mit `cargo-objdump` lässt sich die Binärdatei disassemblieren.
+],
+ru: [
+  С помощью `cargo-objdump` можно выполнить дизассемблирование бинарного
+  файла.
 ],
 zh: [
 `cargo-objdump` 能用来反编译二进制项。
@@ -793,6 +971,11 @@ de: [
   *HINWEIS*: Falls der obige Befehl die Fehlermeldung „Unbekanntes
   Befehlszeilenargument" ausgibt, siehe den folgenden Fehlerbericht: #ln_issue269
 ],
+ru: [
+  *ПРИМЕЧАНИЕ* если приведённая выше команда выдаёт
+  `Unknown command line argument`, см. следующий баг-репорт:
+  #ln_issue269
+],
 zh: [
   *注意* 如果上面的命令抱怨 `Unknown command line argument`
   看下面的bug报告:#ln_issue269
@@ -811,6 +994,12 @@ de: [
   Versionen von rustc, LLVM und Bibliotheken können unterschiedlichen
   Assemblercode erzeugen. Wir haben einige der Befehle gekürzt, um den
   Ausschnitt kurz zu halten.
+],
+ru: [
+  *ПРИМЕЧАНИЕ* этот вывод может отличаться в вашей системе. Новые
+  версии rustc, LLVM и библиотек могут генерировать другой ассемблерный
+  код. Мы сократили некоторые инструкции, чтобы фрагмент оставался
+  компактным.
 ],
 zh: [
   *注意* 在你的系统上这个输出可能不一样。rustc, LLVM
@@ -860,6 +1049,7 @@ HardFault:
 = #tr((
   en: [Running],
   de: [Ausführen],
+  ru: [Запуск],
   zh: [运行],
 ))
 
@@ -874,6 +1064,11 @@ de: [
   QEMU ausführt! Diesmal verwenden wir das `hello`-Beispiel, das
   tatsächlich etwas tut. Standardmäßig nutzt dieses Beispiel `[defmt]` und
   RTT, um Text auszugeben.
+],
+ru: [
+  Теперь посмотрим, как запустить встраиваемую программу на QEMU! На этот
+  раз мы используем пример `hello`, который уже что-то делает. По
+  умолчанию этот пример использует `[defmt]` и RTT, чтобы выводить текст.
 ],
 zh: [
   #todoupd("zh")
@@ -891,6 +1086,10 @@ de: [
   *HINWEIS* `defmt` ist eine Abhängigkeit eines Drittanbieters
   (d. h. keine Kernkomponente), die im Embedded-Rust-Ökosystem weit
   verbreitet ist.
+],
+ru: [
+  *ПРИМЕЧАНИЕ* `defmt` --- сторонняя зависимость (то есть не
+  входящая в core), широко используемая в экосистеме Embedded Rust.
 ]))
 ]
 
@@ -907,6 +1106,12 @@ de: [
   umstellen. Bei Verwendung von echter Hardware erfordert dies eine
   Debug-Sitzung, bei Verwendung von QEMU funktioniert dies jedoch einfach
   so.
+],
+ru: [
+  Чтобы читать и декодировать сообщения, которые `defmt` выдаёт на хосте,
+  нам нужно переключить транспорт вывода RTT на semihosting. При работе с
+  реальным оборудованием для этого нужна отладочная сессия, а при
+  использовании QEMU всё работает само собой.
 ]))
 
 #tr((
@@ -915,6 +1120,9 @@ en: [
 ],
 de: [
   Stellen wir die Abhängigkeiten um:
+],
+ru: [
+  Переключим зависимости:
 ]))
 
 ```console
@@ -929,6 +1137,10 @@ en: [
 de: [
   Öffnen Sie `src/lib.rs` und ersetzen Sie `use defmt_rtt as _;` durch
   `use defmt_semihosting as _;`.
+],
+ru: [
+  Откройте `src/lib.rs` и замените `use defmt_rtt as _;` на
+  `use defmt_semihosting as _;`
 ]))
 
 #tr((
@@ -937,19 +1149,26 @@ en: [
 ],
 de: [
   Nun können wir das Beispiel kompilieren:
+],
+ru: [
+  Теперь можно собрать пример:
 ]))
 
 ```console
 cargo build --bin hello
 ```
 
+#let hello_pth = `target/thumbv7m-none-eabi/debug/hello`
+
 #tr((
 en: [
-  The output binary will be located at `target/thumbv7m-none-eabi/debug/hello`.
+  The output binary will be located at #hello_pth.
 ],
 de: [
-  Die ausgegebene Binärdatei befindet sich unter
-  `target/thumbv7m-none-eabi/debug/hello`.
+  Die ausgegebene Binärdatei befindet sich unter #hello_pth.
+],
+ru: [
+  Выходной бинарный файл появится по пути #hello_pth.
 ]))
 
 #tr((
@@ -959,6 +1178,10 @@ en: [
 de: [
   Um diese Binärdatei unter QEMU auszuführen, reicht in der Regel der
   folgende Befehl aus:
+],
+ru: [
+  Чтобы запустить этот бинарный файл на QEMU, обычно достаточно такой
+  команды:
 ],
 zh: [
   为了在QEMU上运行这个二进制项，执行下列的命令:
@@ -983,6 +1206,11 @@ de: [
   Da wir in unserem Fall `defmt` verwenden, kann der Host die Ausgabe
   nicht dekodieren. Stattdessen benötigen wir ein Werkzeug von Ferrous
   Systems namens #ln_run:
+],
+ru: [
+  В нашем случае, поскольку мы используем `defmt`, хост не сможет
+  декодировать вывод. Вместо этого нам понадобится инструмент от Ferrous
+  Systems под названием #ln_run:
 ]))
 
 ```console
@@ -1003,6 +1231,10 @@ en: [
 de: [
   Der Befehl sollte nach der Ausgabe des Textes erfolgreich beendet werden
   (Exit-Code = 0). Unter \*nix können Sie dies mit dem folgenden Befehl überprüfen:
+],
+ru: [
+  Команда должна успешно завершиться (код выхода = 0) после вывода текста.
+  В \*nix-системах это можно проверить такой командой:
 ]))
 
 ```console
@@ -1053,6 +1285,26 @@ de: [
   - `-kernel $file`. Damit wird QEMU mitgeteilt, welche Binärdatei auf der
     emulierten Maschine geladen und ausgeführt werden soll.
 ],
+ru: [
+  Разберём эту команду QEMU по частям:
+  - `qemu-system-arm`. Это эмулятор QEMU. Существует несколько вариантов
+    этих бинарных файлов QEMU; этот выполняет полную _системную_
+    эмуляцию машин _ARM_, отсюда и название.
+  - `-cpu cortex-m3`. Указывает QEMU эмулировать процессор Cortex-M3.
+    Указание модели процессора позволяет поймать некоторые ошибки
+    компиляции: например, запуск программы, скомпилированной для
+    Cortex-M4F, у которого есть аппаратный FPU, приведёт к ошибке QEMU во
+    время выполнения.
+  - `-machine lm3s6965evb`. Указывает QEMU эмулировать LM3S6965EVB ---
+    отладочную плату, на которой стоит микроконтроллер LM3S6965.
+  - `-nographic`. Указывает QEMU не запускать графический интерфейс.
+  - `-semihosting-config (..)`. Указывает QEMU включить semihosting.
+    Semihosting позволяет эмулируемому устройству, среди прочего,
+    использовать stdout, stderr и stdin хоста, а также создавать файлы на
+    хосте.
+  - `-kernel $file`. Указывает QEMU, какой бинарный файл загрузить и
+    запустить на эмулируемой машине.
+],
 zh: [
   #todoupd("zh")
   让我们看看QEMU命令:
@@ -1064,9 +1316,6 @@ zh: [
   - `-nographic`。这告诉QEMU不要启动它的GUI。
   - `-semihosting-config (..)`。这告诉QEMU使能半主机模式。半主机模式允许被仿真的设备，使用主机的stdout，stderr，和stdin，并在主机上创建文件。
   - `-kernel $file`。这告诉QEMU在仿真机器上加载和运行哪个二进制项。
-
-  输入这么长的QEMU命令太费功夫了！我们可以设置一个自定义运行器(runner)简化步骤。`.cargo/config.toml`
-  有一个被注释掉的，可以调用QEMU的运行器。让我们去掉注释。
 ]))
 
 #tr((
@@ -1081,6 +1330,16 @@ de: [
   vereinfachen. In der Datei `.cargo/config.toml` gibt es einen
   auskommentierten Runner, der QEMU aufruft; entfernen wir die
   Auskommentierung:
+],
+ru: [
+  Вводить такую длинную команду QEMU слишком утомительно! Мы можем задать
+  пользовательский runner, чтобы упростить процесс. В `.cargo/config.toml`
+  есть закомментированный runner, который запускает QEMU; раскомментируем
+  его:
+],
+zh: [
+  输入这么长的QEMU命令太费功夫了！我们可以设置一个自定义运行器(runner)简化步骤。`.cargo/config.toml`
+  有一个被注释掉的，可以调用QEMU的运行器。让我们去掉注释。
 ]))
 
 ```console
@@ -1093,6 +1352,7 @@ head -n3 .cargo/config.toml
     en: "uncomment this to make `cargo run` execute programs on QEMU",
     de: "Entferne den Kommentar hier, damit `cargo run` Programme auf QEMU ausfuehrt",
     ja: "`cargo run`で、プログラムをQEMUで実行するため、コメントアウトを外して下さい。",
+    ru: "раскомментируйте, чтобы `cargo run` запускал программы на QEMU",
   )) + "
 runner = \"qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel\"
 ")
@@ -1111,6 +1371,11 @@ de: [
 ja: [
   このランナーは、デフォルトのコンパイルターゲットである`thumbv7m-none-eabi`のみに適用されます。
   これで、`cargo run`はプログラムをコンパイルしてQEMUで実行します。
+],
+ru: [
+  Этот runner применяется только к целевой платформе `thumbv7m-none-eabi`,
+  которая у нас выбрана по умолчанию. Теперь `cargo run` будет
+  компилировать программу и запускать её на QEMU:
 ],
 zh: [
   这个运行器只会应用于 `thumbv7m-none-eabi`
@@ -1135,6 +1400,7 @@ Hello, world!
   en: [Debugging],
   de: [Fehlerbehebung (Debugging)],
   ja: [デバッグ],
+  ru: [Отладка],
   zh: [调试],
 ))
 
@@ -1148,6 +1414,10 @@ de: [
 ],
 ja: [
   デバッグは組込み開発にとって非常に重要です。どのように行うのか、見てみましょう。
+],
+ru: [
+  Отладка критически важна для разработки встраиваемых систем. Давайте
+  посмотрим, как её выполнять.
 ],
 zh: [
   对于嵌入式开发来说，调试非常重要。让我们来看下如何调试它。
@@ -1167,6 +1437,11 @@ de: [
 ja: [
   組込みデバイスのデバッグは、_リモート_デバッグを伴います。デバッグしたいプログラムは、
   デバッガプログラム（GDBまたはLLDB）を実行しているマシン上で実行されないためです。
+],
+ru: [
+  Отладка встраиваемого устройства подразумевает _удалённую_ отладку,
+  потому что программа, которую мы хотим отлаживать, не будет работать на
+  той же машине, где запущен отладчик (GDB или LLDB).
 ],
 zh: [
   因为我们想要调试的程序所运行的机器上并没有运行一个调试器程序(GDB或者LLDB)，所以调试一个嵌入式设备就涉及到了
@@ -1188,6 +1463,11 @@ ja: [
   リモートデバッグは、クライアントとサーバからなります。QEMUのセットアップで、
   クライアントはGDB（またはLLDB）プロセスとなり、サーバは組込みプログラムを実行しているQEMUプロセスとなります。
 ],
+ru: [
+  Удалённая отладка включает клиента и сервер. В конфигурации с QEMU
+  клиентом будет процесс GDB (или LLDB), а сервером --- процесс QEMU,
+  который также запускает встраиваемую программу.
+],
 zh: [
   远程调试涉及一个客户端和一个服务器。在QEMU的情况中，客户端将是一个GDB(或者LLDM)进程且服务器将会是运行着嵌入式程序的QEMU进程。
 
@@ -1203,6 +1483,9 @@ de: [
 ja: [
   このセクションでは、コンパイル済みの`hello`の例を使用します。
 ],
+ru: [
+  В этом разделе мы будем использовать уже собранный пример `hello`.
+],
 zh: [
   在这部分，我们要使用我们已经编译的 `hello` 示例。
 ]))
@@ -1216,6 +1499,9 @@ de: [
 ],
 ja: [
   最初のデバッグステップは、QEMUをデバッグモードで起動することです。
+],
+ru: [
+  Первый шаг отладки --- запустить QEMU в режиме отладки:
 ],
 zh: [
   调试的第一步是在调试模式中启动QEMU：
@@ -1259,6 +1545,14 @@ ja: [
   - `-S`。QEMUが、起動時に、マシンをフリーズします。このフラグがないと、
     デバッガを起動する前に、プログラムがmain関数の終わりに到達してしまいます。
 ],
+ru: [
+  Эта команда ничего не выведет в консоль и заблокирует терминал. На этот
+  раз мы передали два дополнительных флага:
+  - `-gdb tcp::3333`. Указывает QEMU ждать подключения GDB по TCP-порту 3333.
+  - `-S`. Указывает QEMU заморозить машину при запуске. Без этого
+    программа дошла бы до конца main раньше, чем у нас появилась бы
+    возможность подключить отладчик!
+],
 zh: [
   这个命令将不打印任何东西到调试台上，且将会阻塞住终端。此刻我们还传递了两个额外的标志。
   - `-gdb tcp::3333`。这告诉QEMU在3333的TCP端口上等待一个GDB连接。
@@ -1276,6 +1570,10 @@ de: [
 ],
 ja: [
   次に別の端末でGDBを起動し、`hello`の例のデバッグシンボルをロードします。
+],
+ru: [
+  Далее запустите GDB в другом терминале и укажите ему загрузить
+  отладочные символы примера:
 ],
 zh: [
   接下来我们在另一个终端启动GDB，且告诉它去加载示例的调试符号。
@@ -1297,6 +1595,11 @@ de: [
   Kapitel zur Installation installiert haben. Dies könnte auch
   `arm-none-eabi-gdb` oder einfach nur `gdb` sein.
 ],
+ru: [
+  *ПРИМЕЧАНИЕ*: в зависимости от того, что вы установили в главе об
+  установке, вместо `gdb-multiarch` может понадобиться другая версия gdb.
+  Это также может быть `arm-none-eabi-gdb` или просто `gdb`.
+],
 zh: [
   *注意*: 你可能需要另一个gdb版本而不是
   `gdb-multiarch`，取决于你在安装章节中安装了哪个。这个可能是
@@ -1311,6 +1614,10 @@ en: [
 de: [
   Anschließend stellen wir innerhalb der GDB-Shell eine Verbindung zu QEMU
   her, das auf dem TCP-Port 3333 auf eine Verbindung wartet.
+],
+ru: [
+  Затем в оболочке GDB подключаемся к QEMU, который ждёт подключения на
+  TCP-порту 3333.
 ],
 zh: [
   然后在GDB shell中，我们连接QEMU，QEMU正在等待一个在3333
@@ -1338,25 +1645,35 @@ de: [
   Programmzähler auf eine Funktion namens `Reset` zeigt. Das ist der
   Reset-Handler: das, was Cortex-M-Kerne beim Booten ausführen.
 ],
+ru: [
+  Вы увидите, что процесс остановлен, а счётчик команд указывает на
+  функцию с именем `Reset`. Это обработчик сброса --- то, что ядра
+  Cortex-M выполняют при загрузке.
+],
 zh: [
   你将看到，进程被挂起了，程序计数器正指向一个名为 `Reset` 的函数。那是
   reset 句柄：Cortex-M 内核在启动时执行的中断函数。
 ]))
 
 #quote(block: true)[
+#let reset_line = `Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473`
 #tr((
 en: [
   Note that on some setup, instead of displaying the line
-  `Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473` as shown above,
-  gdb may print some warnings like:
+  #reset_line as shown above, gdb may print some warnings like:
 ],
 de: [
   Beachten Sie, dass gdb in manchen Konfigurationen anstelle der oben
-  gezeigten Zeile `Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473`
+  gezeigten Zeile #reset_line
   möglicherweise Warnungen wie die folgenden ausgibt:
 ],
+ru: [
+  Обратите внимание, что в некоторых конфигурациях вместо строки
+  #reset_line, как показано
+  выше, gdb может выводить предупреждения вида:
+],
 zh: [
-  注意在一些配置中，可能不会像上面一样，显示`Reset() at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473`，gdb可能打印一些警告，比如:
+  注意在一些配置中，可能不会像上面一样，显示#reset_line，gdb可能打印一些警告，比如:
 ]))
 
 `core::num::bignum::Big32x40::mul_small () at src/libcore/num/bignum.rs:254`
@@ -1370,6 +1687,10 @@ en: [
 de: [
   Das ist ein bekannter Fehler. Sie können diese Warnungen getrost
   ignorieren, da Sie sich höchstwahrscheinlich bei `Reset()` befinden.
+],
+ru: [
+  Это известная особенность. Такие предупреждения можно спокойно
+  игнорировать: скорее всего, вы находитесь в `Reset()`.
 ],
 zh: [
   那是一个已知的小bug，你可以安全地忽略这些警告，你非常大可能已经进入Reset()了。
@@ -1390,6 +1711,12 @@ de: [
   wir uns zunächst mit dem Befehl `list` an, an welcher Stelle in unserem
   Code wir anhalten möchten.
 ],
+ru: [
+  Этот обработчик сброса в итоге вызовет нашу функцию main. Давайте
+  перейдём туда с помощью точки останова и команды `continue`. Чтобы
+  установить точку останова, сначала посмотрим, где бы мы хотели
+  остановиться в коде, с помощью команды `list`.
+],
 zh: [
   这个reset句柄最终将调用我们的主函数，让我们使用一个断点和`continue`命令跳过所有的步骤。为了设置断点，让我们首先看下我们想要在我们代码哪里打断点，使用`list`指令
 ]))
@@ -1404,6 +1731,9 @@ en: [
 ],
 de: [
   Dadurch wird der Quellcode aus der Datei „examples/hello.rs" angezeigt.
+],
+ru: [
+  Это покажет исходный код из файла examples/hello.rs.
 ],
 zh: [
   这将显示从examples/hello.rs文件来的源代码。
@@ -1431,6 +1761,10 @@ de: [
   Wir möchten einen Haltepunkt direkt vor „Hello, world!" setzen, das sich
   in Zeile 13 befindet. Dazu verwenden wir den Befehl `break`:
 ],
+ru: [
+  Мы хотим добавить точку останова непосредственно перед «Hello, world!»,
+  то есть на строке 13. Делаем это командой `break`:
+],
 zh: [
   我们想要在"Hello,
   world!"之前添加一个断点，在13行那里。我们可以使用`break`命令
@@ -1448,6 +1782,10 @@ en: [
 de: [
   Wir können gdb nun mit dem Befehl `continue` anweisen, bis zu unserer
   Hauptfunktion weiterzulaufen:
+],
+ru: [
+  Теперь можно велеть gdb выполнить код до нашей функции main командой
+  `continue`:
 ],
 zh: [
   我们现在能使用`continue`命令指示gdb运行到我们的主函数。
@@ -1477,6 +1815,10 @@ ja: [
   「Hello, world!」を表示するコードに近づいてきました。
   `next`コマンドを使って、先へ進みましょう。
 ],
+ru: [
+  Мы находимся близко к коду, который выводит «Hello, world!». Продвинемся
+  дальше командой `next`.
+],
 zh: [
   我们现在靠近打印"Hello, world!"的代码。让我们使用`next`命令继续前进。
 ]))
@@ -1502,6 +1844,10 @@ ja: [
   この時点で、`qemu-system-arm`を実行している端末に「Hello,
   world」が表示されるはずです。
 ],
+ru: [
+  В этот момент вы должны увидеть «Hello, world!», выведенное в терминале,
+  где запущен `qemu-system-arm`.
+],
 zh: [
   在这里，你应该看到 "Hello, world!" 被打印到正在运行 `qemu-system-arm` 的终端上。
 ]))
@@ -1520,6 +1866,9 @@ de: [
 ],
 ja: [
   もう1度`next`を実行すると、QEMUプロセスが終了します。
+],
+ru: [
+  Повторный вызов `next` завершит процесс QEMU.
 ],
 zh: [
   再次调用`next`将会终止QEMU进程。
@@ -1542,6 +1891,9 @@ de: [
 ],
 ja: [
   これでGDBセッションを終了できます。
+],
+ru: [
+  Теперь можно выйти из сеанса GDB.
 ],
 zh: [
   你现在能退出GDB的会话了。

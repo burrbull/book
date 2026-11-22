@@ -2,6 +2,7 @@
 
 #h1((en: [Interoperability],
   de: [Interoperabilität],
+  ru: [Совместимость],
   zh: [互用性],
 ), offset: whole*2)
 <hal-interoperability>
@@ -9,6 +10,7 @@
 = #tr((
   en: [Wrapper types provide a destructor method],
   de: [Wrapper-Typen stellen eine Destruktor-Methode bereit],
+  ru: [Типы-обёртки предоставляют метод деструктора],
   zh: [封装类型提供一个析构方法],
 )) (C-FREE)
 <c-free>
@@ -24,6 +26,11 @@ de: [
   implementiert, sollte eine `free`-Methode anbieten; diese verbraucht den
   Wrapper und gibt das rohe Peripheriegerät (sowie gegebenenfalls weitere
   Objekte), aus dem er erstellt wurde, wieder frei.
+],
+ru: [
+  Любой не-`Copy` тип-обёртка, предоставляемый HAL, должен предоставлять
+  метод `free`, который поглощает обёртку и возвращает сырую периферию (и,
+  возможно, другие объекты), из которых она была создана.
 ],
 zh: [
   任何由HAL提供的非`Copy`封装类型应该提供一个`free`方法，这个方法消费封装类且返回最初生成它的外设(可能是其它对象)。
@@ -41,6 +48,11 @@ de: [
   rohen Peripheriegerät darf nicht aufgrund eines unerwarteten Zustands
   des Geräts fehlschlagen.
 ],
+ru: [
+  Метод должен при необходимости выключать и сбрасывать периферию. Вызов
+  `new` с сырой периферией, возвращённой `free`, не должен завершаться с
+  ошибкой из-за неожиданного состояния периферии.
+],
 zh: [
   如果有必要，方法应该关闭和重置外设。使用由`free`返回的原始外设去调用`new`不应该由于设备的意外状态而失败，
 ]))
@@ -57,6 +69,12 @@ de: [
   auch diese Objekte durch `free` freigegeben und zurückgegeben werden. In
   diesem Fall sollte `free` ein Tupel zurückgeben.
 ],
+ru: [
+  Если типу HAL требуется создать другие не-`Copy` объекты (например,
+  выводы ввода-вывода), все такие объекты также должны освобождаться и
+  возвращаться через `free`. В этом случае `free` должен возвращать
+  кортеж.
+],
 zh: [
   如果HAL类型要求构造其它的非`Copy`对象(比如 I/O
   管脚)，任何这样的对象应该也由`free`返回和释放。在这种情况下`free`应该返回一个元组。
@@ -68,6 +86,9 @@ en: [
 ],
 de: [
   Zum Beispiel:
+],
+ru: [
+  Например:
 ],
 zh: [
   比如:
@@ -91,6 +112,7 @@ impl Timer {
 = #tr((
   en: [HALs reexport their register access crate],
   de: [HALs exportieren ihr Registerzugriffs-Crate erneut],
+  ru: [HAL реэкспортируют свой крейт доступа к регистрам],
   zh: [HALs重新导出它们的寄存器访问crate],
 )) (C-REEXPORT-PAC)
 <c-reexport-pac>
@@ -104,12 +126,17 @@ en: [
   their crate root.
 ],
 de: [
-  HALs können auf der Basis von mit
-  #ln_svd2rust generierten
+  HALs können auf der Basis von mit #ln_svd2rust generierten
   PACs oder anderen Crates implementiert werden, die einen direkten
   Registerzugriff ermöglichen. HALs sollten das Crate für den
   Registerzugriff, auf dem sie aufbauen, stets an der Wurzel ihres eigenen
   Crates erneut exportieren (re-exportieren).
+],
+ru: [
+  HAL можно писать поверх PAC, сгенерированных #ln_svd2rust, или поверх
+  других крейтов, которые предоставляют прямой доступ к регистрам. HAL
+  всегда должны реэкспортировать в корне своего крейта крейт доступа к
+  регистрам, на котором они основаны.
 ],
 zh: [
   可以在#ln_svd2rust;生成的PACs之上，或在其它纯寄存器访问的crates之上编写HALs。HALs需要在crate
@@ -127,6 +154,11 @@ de: [
   vom eigentlichen Namen des Crates --, da bereits der Name der HAL
   verdeutlichen sollte, auf welches PAC zugegriffen wird.
 ],
+ru: [
+  PAC следует реэкспортировать под именем `pac` независимо от фактического
+  имени крейта, так как название HAL уже должно ясно показывать, к какому
+  PAC выполняется доступ.
+],
 zh: [
   一个PAC应该被重新导出在`pac`名下，无论这个crate实际的名字是什么，因为HAL的名字应该已经明确了正被访问的是什么PAC
 ]))
@@ -134,6 +166,7 @@ zh: [
 = #tr((
   en: [Types implement the `embedded-hal` traits],
   de: [Typen implementieren die `embedded-hal`-Traits],
+  ru: [Типы реализуют трейты `embedded-hal`],
   zh: [类型实现`embedded-hal` traits],
 )) (C-HAL-TRAITS)
 <c-hal-traits>
@@ -148,6 +181,11 @@ de: [
   Vom HAL bereitgestellte Typen sollten alle anwendbaren Traits
   implementieren, die vom #ln_hal;-Crate bereitgestellt werden.
 ],
+ru: [
+  Типы, предоставляемые HAL, должны реализовывать все применимые трейты,
+  которые предоставляет крейт
+  #link("https://github.com/rust-embedded/embedded-hal")[`embedded-hal`].
+],
 zh: [
   HAL提供的类型应该实现所有的由#ln_hal crate提供的能用的traits。
 ]))
@@ -158,6 +196,9 @@ en: [
 ],
 de: [
   Für denselben Typ können mehrere Traits implementiert werden.
+],
+ru: [
+  Для одного типа может быть реализовано несколько трейтов.
 ],
 zh: [
   同个类型可能实现多个traits。

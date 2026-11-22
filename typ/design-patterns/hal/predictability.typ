@@ -2,6 +2,7 @@
 
 #h1((en: [Predictability],
   de: [Vorhersehbarkeit],
+  ru: [Предсказуемость],
   zh: [可预见性],
 ), offset: whole*2)
 <hal-predictability>
@@ -9,6 +10,7 @@
 = #tr((
   en: [Constructors are used instead of extension traits],
   de: [Anstelle von Extension Traits werden Konstruktoren verwendet],
+  ru: [Конструкторы используются вместо extension-трейтов],
   zh: [使用构造函数而不是扩展traits],
 )) (C-CTOR)
 <c-ctor>
@@ -24,6 +26,11 @@ de: [
   in einen neuen Typ gekapselt werden -- selbst dann, wenn für diese
   Funktionalität keine zusätzlichen Felder erforderlich sind.
 ],
+ru: [
+  Вся периферия, к которой HAL добавляет функциональность, должна
+  оборачиваться в новый тип, даже если для этой функциональности не
+  требуются дополнительные поля.
+],
 zh: [
   所有由HAL添加功能的外设应该被封装进一个新类型，即使该功能不需要额外的字段。
 ]))
@@ -36,6 +43,9 @@ de: [
   Die Implementierung von Extension Traits für das rohe Peripheriegerät
   (Raw Peripheral) sollte vermieden werden.
 ],
+ru: [
+  Следует избегать extension-трейтов, реализованных для сырой периферии.
+],
 zh: [
   应该避免为基本外设扩展traits。
 ]))
@@ -44,6 +54,7 @@ zh: [
   en: [Methods are decorated with `#[inline]` where appropriate],
   de: [Methoden werden dort, wo es angebracht ist, mit `#[inline]`
   versehen],
+  ru: [Методы помечаются `#[inline]` там, где это уместно],
   zh: [方法在适当的地方用`#[inline]`修饰],
 )) (C-INLINE)
 <c-inline>
@@ -77,6 +88,20 @@ de: [
     ermöglicht es dem Compiler, selbst komplexe Initialisierungslogik zur
     Kompilierzeit zu berechnen, sofern die Eingabewerte der Funktion
     bekannt sind.
+],
+ru: [
+  Компилятор Rust по умолчанию не выполняет полную инлайнизацию через
+  границы крейтов. Поскольку встраиваемые приложения чувствительны к
+  неожиданному росту размера кода, `#[inline]` следует использовать, чтобы
+  направлять компилятор следующим образом:
+  - Все «маленькие» функции следует помечать `#[inline]`. Что считать
+    «маленькой» функцией --- вопрос субъективный, но, как правило, к
+    маленьким относятся все функции, которые, как ожидается, компилируются
+    в последовательности из одной или нескольких инструкций.
+  - Функции, которые с большой вероятностью получат константные значения в
+    качестве параметров, следует помечать как `#[inline]`. Это позволяет
+    компилятору вычислить даже сложную логику инициализации на этапе
+    компиляции, если входные данные функции известны.
 ],
 zh: [
   Rust编译器默认不会越过crate边界执行完全内联。因为嵌入式应用对于不可预期的代码大小的增加很敏感，`#[inline]`应该如下所示用来指导编译器:

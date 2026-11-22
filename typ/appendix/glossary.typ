@@ -2,6 +2,7 @@
 
 #h1((en: [Appendix A: Glossary],
   de: [Anhang A: Glossar],
+  ru: [Приложение A: Глоссарий],
   zh: [附录A: 词汇表],
 ))
 
@@ -17,6 +18,12 @@ de: [
   Protokolle, Hardwarekomponenten und herstellerspezifischer Elemente, für
   die jeweils eigene Begriffe und Abkürzungen verwendet werden. Dieses
   Glossar soll diese auflisten und Hinweise zum besseren Verständnis geben.
+],
+ru: [
+  Экосистема встраиваемых систем полна разных протоколов, аппаратных
+  компонентов и специфичных для производителей вещей, которые используют
+  собственные термины и сокращения. Этот глоссарий пытается перечислить их
+  и даёт ссылки для лучшего понимания.
 ],
 zh: [
   嵌入式生态系统中充满了不同的协议，硬件组件，还有许多与生产商相关的东西，它们都使用自己的缩写和项目名。这个词汇表尝试列出它们以便更好理解它们。
@@ -42,6 +49,13 @@ de: [
   oder für einen umfassenderen Überblick sehen Sie sich
   #link(url_bspvideo)[dieses Video] an.
 ],
+ru: [
+  Board Support Crate (BSP) предоставляет высокоуровневый интерфейс,
+  настроенный для конкретной платы. Обычно он зависит от крейта
+  #link(<glossary-hal>)[HAL]. Более подробное описание есть на
+  #link(<memory-mapped-registers>)[странице про регистры, отображённые в память],
+  а для общего обзора см. #link(url_bspvideo)[это видео].
+],
 zh: [
   板级支持的Crate(Board Support
   Crate)提供为某个特定板子配置的高级接口。它通常依赖一个#link(<glossary-hal>)[HAL]
@@ -58,6 +72,11 @@ en: [
 de: [
   Gleitkommaeinheit. Ein „Mathematikprozessor", der ausschließlich
   Operationen mit Gleitkommazahlen ausführt.
+],
+ru: [
+  Floating-point Unit (блок вычислений с плавающей точкой).
+  «Математический процессор», который выполняет только операции с числами
+  с плавающей точкой.
 ],
 zh: [
   浮点单元(Floating-Point Unit)。一个只运行在浮点数上的'数学处理器'。
@@ -87,6 +106,16 @@ de: [
   #link(<memory-mapped-registers>)[Seite zu den im Speicher abgebildeten Registern]
   oder für einen umfassenderen Überblick in #link(url_hal_video)[diesem Video].
 ],
+ru: [
+  Hardware Abstraction Layer crate (крейт слоя аппаратной абстракции)
+  предоставляет удобный для разработчика интерфейс к возможностям и
+  периферии микроконтроллера. Обычно он реализуется поверх
+  #link(<glossary-pac>)[Peripheral Access Crate (PAC)].
+  Также он может реализовывать трейты из крейта #ln_hal.
+  Более подробное описание есть на
+  #link(<memory-mapped-registers>)[странице про регистры, отображённые в память],
+  а для общего обзора см. #link(url_hal_video)[это видео].
+],
 zh: [
   硬件抽象层(Hardware Abstraction Layer)
   crate为微控制器的功能和外设提供一个开发者友好的接口。它通常在#link(<glossary-pac>)[Peripheral Access Crate (PAC)]之上被实现。它可能也会实现来自#ln_hal
@@ -108,6 +137,11 @@ de: [
   um ein Protokoll für die Hardware-Kommunikation innerhalb eines
   einzelnen integrierten Schaltkreises. Weitere Informationen finden Sie
   #link(wiki_i2c)[hier].
+],
+ru: [
+  Иногда обозначается как `I²C` или Inter-IC. Это протокол для обмена
+  данными между микросхемами на одной плате. Подробнее см.
+  #link(wiki_i2c)[здесь].
 ],
 zh: [
   有时又被称为 `I²C` 或者 Intere-IC
@@ -142,6 +176,16 @@ de: [
   oder für einen umfassenderen Überblick in
   #link(url_pacvideo)[diesem Video].
 ],
+ru: [
+  Peripheral Access Crate (крейт доступа к периферии) предоставляет доступ
+  к периферии микроконтроллера. Это один из крейтов самого низкого уровня,
+  обычно он генерируется непосредственно из предоставленного файла
+  #link(<glossary-svd>)[SVD], часто с помощью #ln_svd2rust.
+  #link(<glossary-hal>)[Слой аппаратной абстракции] обычно зависит от этого крейта.
+  Более подробное описание есть на
+  #link(<memory-mapped-registers>)[странице про регистры, отображённые в память],
+  а для общего обзора см. #link(url_pacvideo)[это видео].
+],
 zh: [
   一个外设访问 Crate (Peripheral Access
   Crate)提供了对一个微控制器的外设的访问。它是一个底层的crates且通常从提供的#link(<glossary-svd>)[SVD]被直接生成，经常使用#ln_svd2rust。#link(<glossary-hal>)[硬件抽象层]应该依赖这个crate。在#link(<memory-mapped-registers>)[存储映射的寄存器那页]有更细节的描述或者看#link(url_pacvideo)[这个视频]获取一个更广泛的概述。
@@ -158,6 +202,10 @@ en: [
 de: [
   Serial Peripheral Interface.
   Weitere Informationen finden Sie #link(wiki_spi)[hier].
+],
+ru: [
+  Serial Peripheral Interface (последовательный периферийный интерфейс).
+  Подробнее см. #link(wiki_spi)[здесь].
 ],
 zh: [
   串行外设接口。看#link(wiki_spi)[这里]获取更多信息。
@@ -178,6 +226,12 @@ de: [
   Informationen hierzu finden Sie auf
   #link(url_svd)[der ARM CMSIS-Dokumentationsseite].
 ],
+ru: [
+  System View Description --- формат файла на основе XML, который
+  описывает представление программиста об устройстве микроконтроллера.
+  Подробнее о нём можно прочитать на
+  #link(url_svd)[сайте документации ARM CMSIS].
+],
 zh: [
   系统视图描述文件(System View
   Description)是一个XML文件格式，以程序员视角来描述一个微控制器设备。你能在#link(url_svd)[the ARM CMSIS documentation site]上获取更多信息。
@@ -195,6 +249,10 @@ de: [
   Universeller asynchroner Empfänger-Sender.
   Weitere Informationen finden Sie #link(wiki_uart)[hier].
 ],
+ru: [
+  Universal asynchronous receiver-transmitter (универсальный асинхронный
+  приёмопередатчик). Подробнее см. #link(wiki_uart)[здесь].
+],
 zh: [
   通用异步收发器。看#link(wiki_uart)[这里]获取更多信息。
 ]))
@@ -210,6 +268,11 @@ en: [
 de: [
   Universeller synchroner und asynchroner Empfänger-Sender.
   Weitere Informationen finden Sie #link(wiki_usart)[hier].
+],
+ru: [
+  Universal synchronous and asynchronous receiver-transmitter
+  (универсальный синхронный и асинхронный приёмопередатчик).
+  Подробнее см. #link(wiki_usart)[здесь].
 ],
 zh: [
   通用同步异步收发器。看#link(wiki_usart)[这里]获取更多信息。

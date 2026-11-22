@@ -2,6 +2,7 @@
 
 #h1((en: [HAL Design Patterns Checklist],
   de: [Checkliste HAL-Design-Muster],
+  ru: [Чек-лист паттернов проектирования HAL],
   zh: [HAL设计检查清单],
 ), offset: whole*2)
 <hal-checklist>
@@ -35,17 +36,42 @@ de: [
     - ☐ Pin-Typen stellen Methoden zum Löschen von Pins und Ports bereit. (#link(<c-erased-pin>)[C-ERASED-PIN])
     - ☐ Der Pin-Zustand sollte als Typparameter kodiert werden. (#link(<c-pin-state>)[C-PIN-STATE])
 ],
+ru: [
+  - *Именование* (_крейт соответствует соглашениям Rust об
+    именовании_)
+    - ☐ Крейт назван надлежащим образом (#link(<c-crate-name>)[C-CRATE-NAME])
+  - *Совместимость* (_крейт корректно взаимодействует с
+    другой библиотечной функциональностью_)
+    - ☐ Типы-обёртки предоставляют метод деструктора
+      (#link(<c-free>)[C-FREE])
+    - ☐ HAL реэкспортируют свой крейт доступа к регистрам
+      (#link(<c-reexport-pac>)[C-REEXPORT-PAC])
+    - ☐ Типы реализуют трейты `embedded-hal`
+      (#link(<c-hal-traits>)[C-HAL-TRAITS])
+  - *Предсказуемость* (_крейт делает код понятным, а его
+    поведение соответствует внешнему виду кода_)
+    - ☐ Используются конструкторы вместо extension-трейтов
+      (#link(<c-ctor>)[C-CTOR])
+  - *Интерфейсы GPIO* (_интерфейсы GPIO следуют общему
+    шаблону_)
+    - ☐ Типы выводов по умолчанию имеют нулевой размер
+      (#link(<c-zst-pin>)[C-ZST-PIN])
+    - ☐ Типы выводов предоставляют методы стирания типа вывода и порта
+      (#link(<c-erased-pin>)[C-ERASED-PIN])
+    - ☐ Состояние вывода должно кодироваться как параметры типа
+      (#link(<c-pin-state>)[C-PIN-STATE])
+],
 zh: [
-- *命名* (_crate要符合Rust命名规则_)
-  - ☐ crate被恰当地命名 (#link(<c-crate-name>)[C-CRATE-NAME])
-- *互用性* (_crate要很好地与其它的库功能交互_)
-  - ☐ 封装类型提供一种析构方法 (#link(<c-free>)[C-FREE])
-  - ☐ HALs重新导出了它们的寄存器访问crate (#link(<c-reexport-pac>)[C-REEXPORT-PAC])
-  - ☐ 类型实现了 `embedded-hal` traits (#link(<c-hal-traits>)[C-HAL-TRAITS])
-- *可预见性* (_crate的代码清晰可读，行为和看起来的一样_)
-  - ☐ 使用构造函数而不是扩展traits (#link(<c-ctor>)[C-CTOR])
-- *GPIO接口* (_GPIO接口要遵循一个公共的模式_)
-  - ☐ Pin类型默认是零大小类型 (#link(<c-zst-pin>)[C-ZST-PIN])
-  - ☐ Pin类型提供擦除管脚和端口的方法 (#link(<c-erased-pin>)[C-ERASED-PIN])
-  - ☐ Pin状态应该被编码为类型参数 (#link(<hal-gpio>)[C-PIN-STATE])
+  - *命名* (_crate要符合Rust命名规则_)
+    - ☐ crate被恰当地命名 (#link(<c-crate-name>)[C-CRATE-NAME])
+  - *互用性* (_crate要很好地与其它的库功能交互_)
+    - ☐ 封装类型提供一种析构方法 (#link(<c-free>)[C-FREE])
+    - ☐ HALs重新导出了它们的寄存器访问crate (#link(<c-reexport-pac>)[C-REEXPORT-PAC])
+    - ☐ 类型实现了 `embedded-hal` traits (#link(<c-hal-traits>)[C-HAL-TRAITS])
+  - *可预见性* (_crate的代码清晰可读，行为和看起来的一样_)
+    - ☐ 使用构造函数而不是扩展traits (#link(<c-ctor>)[C-CTOR])
+  - *GPIO接口* (_GPIO接口要遵循一个公共的模式_)
+    - ☐ Pin类型默认是零大小类型 (#link(<c-zst-pin>)[C-ZST-PIN])
+    - ☐ Pin类型提供擦除管脚和端口的方法 (#link(<c-erased-pin>)[C-ERASED-PIN])
+    - ☐ Pin状态应该被编码为类型参数 (#link(<hal-gpio>)[C-PIN-STATE])
 ]))

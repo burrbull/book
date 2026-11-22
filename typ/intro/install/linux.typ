@@ -14,6 +14,9 @@ de: [
 ja: [
   いくつかのLinuxディストリビューションのインストールコマンドを示します。
 ],
+ru: [
+  Ниже приведены команды установки для нескольких дистрибутивов Linux.
+],
 zh: [
   这部分是在某些Linux发行版下的安装指令。
 ]))
@@ -22,6 +25,7 @@ zh: [
   en: [Packages],
   de: [Pakete],
   ja: [Packages],
+  ru: [Пакеты],
   zh: [依赖包],
 ))
 
@@ -34,6 +38,9 @@ de: [
 ],
 ja: [
   - Ubuntu 18.04以上 / Debian stretch以降
+],
+ru: [
+  - Ubuntu 18.04 или новее / Debian stretch или новее
 ],
 zh: [
   - Ubuntu 18.04 或者更新的版本 / Debian stretch 或者更新的版本
@@ -53,6 +60,10 @@ ja: [
   *注記* `gdb-multiarch`は、ARM
   Cortex-Mプログラムをデバッグするために使用するGDBのコマンドです。
 ],
+ru: [
+  *ПРИМЕЧАНИЕ* `gdb-multiarch` --- команда GDB, которую вы будете
+  использовать для отладки программ ARM Cortex-M
+],
 zh: [
   * 注意* `gdb-multiarch` 是你将用来调试你的ARM
 ]))
@@ -66,6 +77,7 @@ sudo apt install gdb-multiarch openocd qemu-system-arm
   en: [ and ],
   de: [ und ],
   ja: [と],
+  ru: [ и ],
 ), default: [ and ])
 
 - Ubuntu 14.04#_and_;16.04
@@ -83,6 +95,10 @@ de: [
 ja: [
   *注記* `arm-none-eabi-gdb`は、ARM
   Cortex-Mプログラムをデバッグするために使用するGDBのコマンドです。
+],
+ru: [
+  *ПРИМЕЧАНИЕ* `arm-none-eabi-gdb` --- команда GDB, которую вы
+  будете использовать для отладки программ ARM Cortex-M
 ],
 zh: [
   *注意* `arm-none-eabi-gdb` 是你将用来调试你的ARM
@@ -103,6 +119,9 @@ de: [
 ],
 ja: [
   - Fedora 27以上
+],
+ru: [
+  - Fedora 27 или новее
 ],
 zh: [
   - Fedora 27 或者更新的版本
@@ -128,6 +147,10 @@ ja: [
   *注記* `arm-none-eabi-gdb`は、ARM
   Cortex-Mプログラムをデバッグするために使用するGDBのコマンドです。
 ],
+ru: [
+  *ПРИМЕЧАНИЕ* `arm-none-eabi-gdb` --- команда GDB, которую вы
+  будете использовать для отладки программ ARM Cortex-M
+],
 zh: [
   *注意* `arm-none-eabi-gdb` 是你将用来调试你的ARM Cortex-M程序的GDB命令
 ]))
@@ -141,6 +164,7 @@ sudo pacman -S arm-none-eabi-gdb qemu-system-arm openocd
   en: [udev rules],
   de: [udev-Regeln],
   ja: [udevルール],
+  ru: [Правила udev],
   zh: [udev 规则],
 ))
 <linux-udev-rules>
@@ -154,6 +178,9 @@ de: [
 ],
 ja: [
   このルールにより、ルート権限なしで、OpenOCDをDiscoveryボードに対して使えるようにします。
+],
+ru: [
+  Это правило позволяет использовать OpenOCD с отладочной платой без прав root.
 ],
 zh: [
   这个规则可以让你在不使用超级用户权限的情况下，使用OpenOCD和Discovery开发板。
@@ -170,6 +197,9 @@ de: [
 ja: [
   #todoupd("ja")
   下記の内容で、`/etc/udev/rules.d`ディレクトリにファイルを作成します。
+],
+ru: [
+  Создайте файл #file_stlink с содержимым, показанным ниже.
 ],
 zh: [
   生成包含下列内容的 #file_stlink 文件
@@ -193,6 +223,9 @@ de: [
 ja: [
   その後、全てのudevルールをリロードします。
 ],
+ru: [
+  Затем перезагрузите все правила udev командой:
+],
 zh: [
   然后重新加载所有的udev规则
 ]))
@@ -212,6 +245,9 @@ de: [
 ja: [
   既にボードをノートPCに接続している場合、一度抜いてから、もう一度接続します。
 ],
+ru: [
+  Если плата была подключена к ноутбуку, отключите её и подключите снова.
+],
 zh: [
   如果你已经把开发板插入到笔记本中了，请拔下它然后再插上它。
 ]))
@@ -225,6 +261,9 @@ de: [
 ],
 ja: [
   これらのコマンド実行することで、パーミッションを確認できます。
+],
+ru: [
+  Проверить права доступа можно командой:
 ],
 zh: [
   你可以通过运行这个命令检查权限:
@@ -241,6 +280,9 @@ en: [
 de: [
   Was so etwas wie
 ],
+ru: [
+  Результат должен выглядеть примерно так:
+],
 zh: [
   终端可能有如下显示
 ]))
@@ -254,19 +296,24 @@ Bus 001 Device 018: ID 0483:374b STMicroelectronics ST-LINK/V2.1
   anzeigen sollte.
 ]
 
+#let dev_pth = `/dev/bus/usb/<bus>/<device>`
+
 #tr((
 en: [
   Take note of the bus and device numbers. Use those numbers to create a
-  path like `/dev/bus/usb/<bus>/<device>`. Then use this path like so:
+  path like #dev_pth. Then use this path like so:
 ],
 de: [
   Notieren Sie sich die Bus- und Gerätenummern. Verwenden Sie diese
-  Nummern, um einen Pfad wie `/dev/bus/usb/<bus>/<device>` zu bilden.
+  Nummern, um einen Pfad wie #dev_pth zu bilden.
   Verwenden Sie diesen Pfad anschließend wie folgt:
 ],
+ru: [
+  Запомните номера шины и устройства. Используйте их, чтобы составить путь
+  вида #dev_pth. Затем используйте этот путь так:
+],
 zh: [
-  记住bus和device号，使用这些数字组合成一个像是
-  `/dev/bus/usb/<bus>/<device>` 这样的路径。然后像这样使用这个路径:
+  记住bus和device号，使用这些数字组合成一个像是 #dev_pth 这样的路径。然后像这样使用这个路径:
 ]))
 
 ```console
@@ -301,6 +348,11 @@ ja: [
   #todoupd("ja")
   パーミッションに追加された`+`は、パーミッションが拡張されたことを意味しています。
 ],
+ru: [
+  Знак `+` в конце прав доступа означает наличие расширенных прав
+  (extended permission). Команда `getfacl` показывает, что пользователь
+  `you` (ваш пользователь) может использовать это устройство.
+],
 zh: [
   权限后的 `+` 指出存在一个扩展权限。`getfacl`
   命令显示，`user`也就是`你`，可以使用这个设备。
@@ -315,6 +367,9 @@ de: [
 ],
 ja: [
   それでは、#link(<verify-installation>)[次のセクション]に進んで下さい。
+],
+ru: [
+  Теперь перейдите к #link(<verify-installation>)[следующему разделу].
 ],
 zh: [
   现在，去往#link(<verify-installation>)[下个章节].

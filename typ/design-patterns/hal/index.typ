@@ -2,6 +2,7 @@
 
 #h1((en: [HAL Design Patterns],
   de: [HAL-Design-Muster],
+  ru: [Паттерны проектирования HAL],
   zh: [HAL设计模式],
 ), offset: whole)
 
@@ -31,13 +32,25 @@ de: [
   - #link(<hal-predictability>)[Vorhersehbarkeit]
   - #link(<hal-gpio>)[GPIO]
 ],
+ru: [
+  Это набор общих и рекомендуемых паттернов для написания слоёв аппаратной
+  абстракции (HAL) для микроконтроллеров на Rust. Эти паттерны
+  предназначены для использования наряду с существующими
+  #link(url_quide)[Rust API Guidelines]
+  при написании HAL для микроконтроллеров.
+  #link(<hal-checklist>)[Чек-лист]
+  - #link(<hal-naming>)[Именование]
+  - #link(<hal-interoperability>)[Совместимость]
+  - #link(<hal-predictability>)[Предсказуемость]
+  - #link(<hal-gpio>)[GPIO]
+],
 zh: [
   这是一组关于使用Rust为微控制器写硬件抽象层的常见的和推荐的模式。当为微控制器编写HALs时，除了现有的
   #link(url_quide)[Rust API 指南]
   外，也可以使用这些模式。
   #link(<hal-checklist>)[检查清单]
-  - #link(<hal-interoperability>)[命名]
-  - #link(<hal-predictability>)[互用性]
+  - #link(<hal-naming>)[命名]
+  - #link(<hal-interoperability>)[互用性]
   - #link(<hal-predictability>)[可预见性]
   - #link(<hal-gpio>)[GPIO]
 ]))
