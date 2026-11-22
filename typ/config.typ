@@ -5,6 +5,7 @@
   "en": [English],
   "de": [German],
   "ja": [Japanese],
+  "ru": [Russian],
   "uk": [Ukrainian],
   "zh": [Chinese]
 )
@@ -17,6 +18,7 @@
     en: "untranslated",
     de: "unübersetzt",
     ja: "未翻訳",
+    ru: "не переведено",
     uk: "не перекладено",
     zh: "未翻译",
   ).at(lang)
@@ -32,6 +34,7 @@
     en: "translation is outdated",
     de: "die Übersetzung ist veraltet",
     ja: "翻訳が古くなっています",
+    ru: "перевод устарел",
     uk: "переклад застарів",
     zh: "翻译已过时",
   ).at(lang)
